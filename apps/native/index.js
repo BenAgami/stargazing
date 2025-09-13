@@ -1,1 +1,2 @@
-import "expo-router/entry"
+import "@expo/metro-runtime";
+import "expo-router/entry";
