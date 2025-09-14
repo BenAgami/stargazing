@@ -5,7 +5,7 @@
     "version": "1.0.0",
     "scheme": "com.turbo.example",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/logo.png",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "splash": {
