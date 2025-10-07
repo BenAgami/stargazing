@@ -1,7 +1,13 @@
-import { Stack } from "expo-router"
+import { Stack } from "expo-router";
+
+import ThemeProvider from "../src/context/ThemeContext";
 
 const AppLayout = () => {
-  return <Stack />
-}
+  return (
+    <ThemeProvider>
+      <Stack />
+    </ThemeProvider>
+  );
+};
 
-export default AppLayout
+export default AppLayout;
