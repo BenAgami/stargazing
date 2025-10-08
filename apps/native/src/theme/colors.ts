@@ -1,9 +1,13 @@
-export const lightTheme = {
-  background: "#ffffff",
-  text: "#000000",
-};
+export const themes = {
+  light: {
+    background: "#ffffff",
+    text: "#000000",
+  },
+  dark: {
+    background: "#000000",
+    text: "#ffffff",
+  },
+} as const;
 
-export const darkTheme = {
-  background: "#000000",
-  text: "#ffffff",
-};
+export type ThemeNames = keyof typeof themes;
+export type ThemeColors = (typeof themes)[keyof typeof themes];
