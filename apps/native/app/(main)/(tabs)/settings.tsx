@@ -2,10 +2,12 @@ import { useContext } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { Stack } from "expo-router";
 
+import { SwitchRow } from "@repo/ui";
+
 import { ThemeContext } from "@src/context/ThemeContext";
 
-export default function Native() {
-  const { currentTheme, colors } = useContext(ThemeContext);
+const Settings = () => {
+  const { currentTheme, toggleTheme, colors } = useContext(ThemeContext);
 
   return (
     <>
@@ -21,21 +23,28 @@ export default function Native() {
         }}
       />
       <View style={[styles.container, { backgroundColor: colors.background }]}>
-        <Text style={[styles.header, { color: colors.text }]}>Clear Night</Text>
+        <Text style={[styles.title, { color: colors.text }]}>Theme Switch</Text>
+        <SwitchRow
+          label="Dark Theme"
+          isEnabled={currentTheme === "dark"}
+          onToggle={toggleTheme}
+          colors={colors}
+        />
       </View>
     </>
   );
-}
+};
+
+export default Settings;
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
+    padding: 20,
   },
-  header: {
+  title: {
+    fontSize: 18,
     fontWeight: "bold",
-    marginBottom: 20,
-    fontSize: 36,
+    marginVertical: 10,
   },
 });
