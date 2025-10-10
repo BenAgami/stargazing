@@ -1,11 +1,13 @@
 export const themes = {
   light: {
-    background: "#ffffff",
+    background: "#F2F2F7",
     text: "#000000",
+    secondary: "#FFFFFF",
   },
   dark: {
     background: "#000000",
-    text: "#ffffff",
+    text: "#FFFFFF",
+    secondary: "#767577",
   },
 } as const;
 

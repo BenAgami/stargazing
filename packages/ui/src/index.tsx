@@ -1,1 +1,1 @@
-export { Button, type ButtonProps } from "./button";
+export { SwitchRow, type SwitchRowProps } from "./SwitchRow";
