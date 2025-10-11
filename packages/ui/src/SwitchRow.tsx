@@ -6,7 +6,7 @@ export type SwitchRowProps = {
   isEnabled: boolean;
   onToggle: (value: boolean) => void;
   colors?: {
-    secondary?: string;
+    surface?: string;
     text?: string;
   };
 };
@@ -17,7 +17,7 @@ export const SwitchRow: React.FC<SwitchRowProps> = ({
   onToggle,
   colors,
 }) => {
-  const backgroundColor = colors?.secondary || styles.container.backgroundColor;
+  const backgroundColor = colors?.surface || styles.container.backgroundColor;
   const textColor = colors?.text || styles.text.color;
 
   return (
