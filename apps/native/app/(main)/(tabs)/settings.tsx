@@ -1,13 +1,12 @@
-import { useContext } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { Stack } from "expo-router";
 
 import { SwitchRow } from "@repo/ui";
 
-import { ThemeContext } from "@src/context/ThemeContext";
+import { useTheme } from "@src/context/ThemeContext";
 
 const Settings = () => {
-  const { currentTheme, toggleTheme, colors } = useContext(ThemeContext);
+  const { currentTheme, toggleTheme, colors } = useTheme();
 
   return (
     <>

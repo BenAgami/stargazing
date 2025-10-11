@@ -1,11 +1,10 @@
-import { useContext } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { Stack } from "expo-router";
 
-import { ThemeContext } from "@src/context/ThemeContext";
+import { useTheme } from "@src/context/ThemeContext";
 
 export default function Native() {
-  const { currentTheme, colors } = useContext(ThemeContext);
+  const { currentTheme, colors } = useTheme();
 
   return (
     <>

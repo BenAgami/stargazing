@@ -1,12 +1,11 @@
-import { useContext } from "react";
 import { Tabs } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { Entypo, Ionicons } from "@expo/vector-icons";
 
-import { ThemeContext } from "@src/context/ThemeContext";
+import { useTheme } from "@src/context/ThemeContext";
 
 const TabsLayout = () => {
-  const { currentTheme } = useContext(ThemeContext);
+  const { currentTheme } = useTheme();
 
   return (
     <>
