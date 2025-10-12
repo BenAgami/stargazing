@@ -1,4 +1,5 @@
-import { StyleSheet, Text, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { Stack } from "expo-router";
 
 import { SwitchRow } from "@repo/ui";
@@ -12,24 +13,48 @@ const Settings = () => {
     <>
       <Stack.Screen
         options={{
-          title: "Settings",
-          headerTitleStyle: {
-            color: currentTheme === "dark" ? "white" : "black",
-          },
-          headerStyle: {
-            backgroundColor: currentTheme === "dark" ? "black" : "white",
-          },
+          headerShown: false,
         }}
       />
-      <View style={[styles.container, { backgroundColor: colors.background }]}>
-        <Text style={[styles.title, { color: colors.text }]}>Theme Switch</Text>
-        <SwitchRow
-          label="Dark Theme"
-          isEnabled={currentTheme === "dark"}
-          onToggle={toggleTheme}
-          colors={colors}
-        />
-      </View>
+      <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
+        <View style={styles.container}>
+          <View style={styles.header}>
+            <Text style={[styles.headerTitle, { color: colors.text }]}>
+              Settings
+            </Text>
+
+            <Text style={[styles.headerSubtitle, { color: colors.text }]}>
+              Customize your experience
+            </Text>
+          </View>
+
+          <ScrollView>
+            <View style={styles.section}>
+              <Text style={[styles.sectionTitle, { color: colors.text }]}>
+                Preferences
+              </Text>
+
+              <View
+                style={[
+                  styles.sectionBody,
+                  { backgroundColor: colors.background },
+                ]}
+              >
+                <View style={[styles.rowWrapper, styles.rowFirst]}>
+                  <SwitchRow
+                    label="Dark Mode"
+                    isEnabled={currentTheme === "dark"}
+                    onToggle={toggleTheme}
+                    colors={colors}
+                    iconName="moon"
+                    iconBackground="#007AFF"
+                  />
+                </View>
+              </View>
+            </View>
+          </ScrollView>
+        </View>
+      </SafeAreaView>
     </>
   );
 };
@@ -38,12 +63,49 @@ export default Settings;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    padding: 20,
+    paddingVertical: 24,
+    flexGrow: 1,
+    flexShrink: 1,
+    flexBasis: 0,
   },
-  title: {
-    fontSize: 18,
-    fontWeight: "bold",
-    marginVertical: 10,
+  /** Header */
+  header: {
+    marginHorizontal: 24,
+    marginBottom: 12,
+  },
+  headerTitle: {
+    fontSize: 32,
+    fontWeight: "700",
+  },
+  headerSubtitle: {
+    fontSize: 15,
+    fontWeight: "400",
+    marginTop: 6,
+  },
+  /** Section */
+  section: {
+    paddingTop: 12,
+  },
+  sectionTitle: {
+    marginVertical: 8,
+    marginHorizontal: 24,
+    fontSize: 14,
+    fontWeight: "600",
+    textTransform: "uppercase",
+    letterSpacing: 1.2,
+  },
+  sectionBody: {
+    marginVertical: 8,
+    borderTopWidth: 1,
+    borderBottomWidth: 1,
+    borderColor: "#e3e3e3",
+  },
+  /** Row */
+  rowWrapper: {
+    borderTopWidth: 1,
+    borderColor: "#e3e3e3",
+  },
+  rowFirst: {
+    borderTopWidth: 0,
   },
 });
