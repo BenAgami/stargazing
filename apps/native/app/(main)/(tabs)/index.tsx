@@ -1,22 +1,17 @@
+import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { Stack } from "expo-router";
 
 import { useTheme } from "@src/context/ThemeContext";
 
-export default function Native() {
-  const { currentTheme, colors } = useTheme();
+const Home: React.FC = () => {
+  const { colors } = useTheme();
 
   return (
     <>
       <Stack.Screen
         options={{
-          title: "Settings",
-          headerTitleStyle: {
-            color: currentTheme === "dark" ? "white" : "black",
-          },
-          headerStyle: {
-            backgroundColor: currentTheme === "dark" ? "black" : "white",
-          },
+          headerShown: false,
         }}
       />
       <View style={[styles.container, { backgroundColor: colors.background }]}>
@@ -24,7 +19,9 @@ export default function Native() {
       </View>
     </>
   );
-}
+};
+
+export default Home;
 
 const styles = StyleSheet.create({
   container: {

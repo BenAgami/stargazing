@@ -1,3 +1,4 @@
+import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { Stack } from "expo-router";
@@ -6,7 +7,7 @@ import { SwitchRow } from "@repo/ui";
 
 import { useTheme } from "@src/context/ThemeContext";
 
-const Settings = () => {
+const Settings: React.FC = () => {
   const { currentTheme, toggleTheme, colors } = useTheme();
 
   return (
