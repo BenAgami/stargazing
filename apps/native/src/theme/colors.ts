@@ -1,11 +1,21 @@
+export const baseColors = {
+  white: "#FFFFFF",
+  black: "#000000",
+  grayLight: "#F2F2F7",
+  grayDark: "#767577",
+  blue: "#007AFF",
+};
+
 export const themes = {
   light: {
-    background: "#ffffff",
-    text: "#000000",
+    background: baseColors.grayLight,
+    text: baseColors.black,
+    surface: baseColors.white,
   },
   dark: {
-    background: "#000000",
-    text: "#ffffff",
+    background: baseColors.black,
+    text: baseColors.white,
+    surface: baseColors.grayDark,
   },
 } as const;
 
