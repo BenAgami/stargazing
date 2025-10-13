@@ -4,16 +4,17 @@ import { StatusBar } from "expo-status-bar";
 import { Entypo, Ionicons } from "@expo/vector-icons";
 
 import { useTheme } from "@src/context/ThemeContext";
+import { baseColors } from "@src/theme/colors";
 
 const TabsLayout: React.FC = () => {
-  const { currentTheme, colors } = useTheme();
+  const { currentTheme } = useTheme();
 
   return (
     <>
       <StatusBar style={currentTheme === "dark" ? "light" : "dark"} />
       <Tabs
         screenOptions={{
-          tabBarActiveTintColor: colors.text,
+          tabBarActiveTintColor: baseColors.black,
         }}
       >
         <Tabs.Screen

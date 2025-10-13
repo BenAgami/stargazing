@@ -6,6 +6,7 @@ import { Stack } from "expo-router";
 import { SwitchRow } from "@repo/ui";
 
 import { useTheme } from "@src/context/ThemeContext";
+import { baseColors } from "@src/theme/colors";
 
 const Settings: React.FC = () => {
   const { currentTheme, toggleTheme, colors } = useTheme();
@@ -48,7 +49,7 @@ const Settings: React.FC = () => {
                     onToggle={toggleTheme}
                     colors={colors}
                     iconName="moon"
-                    iconBackground="#007AFF"
+                    iconBackground={baseColors.blue}
                   />
                 </View>
               </View>
@@ -96,15 +97,14 @@ const styles = StyleSheet.create({
     letterSpacing: 1.2,
   },
   sectionBody: {
-    marginVertical: 8,
     borderTopWidth: 1,
     borderBottomWidth: 1,
-    borderColor: "#e3e3e3",
+    borderColor: "#5f5f5f",
   },
   /** Row */
   rowWrapper: {
     borderTopWidth: 1,
-    borderColor: "#e3e3e3",
+    borderColor: "#5f5f5f",
   },
   rowFirst: {
     borderTopWidth: 0,
