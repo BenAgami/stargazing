@@ -15,7 +15,9 @@ export const ScreenHeader: React.FC<ScreenHeaderProps> = ({
   return (
     <View style={styles.container}>
       <Text style={[styles.title, { color }]}>{title}</Text>
-      {subtitle ?? <Text style={[styles.subtitle, { color }]}>{subtitle}</Text>}
+      {subtitle ? (
+        <Text style={[styles.subtitle, { color }]}>{subtitle}</Text>
+      ) : null}
     </View>
   );
 };
