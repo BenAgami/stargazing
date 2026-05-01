@@ -18,7 +18,7 @@ const envSchema = z.object({
   R2_ACCESS_KEY_ID: z.string().min(1),
   R2_SECRET_ACCESS_KEY: z.string().min(1),
   R2_BUCKET_NAME: z.string().min(1),
-  R2_PUBLIC_DOMAIN: z.string().min(1),
+  R2_PUBLIC_DOMAIN: z.string().min(1).transform((v) => v.replace(/^https?:\/\//, "")),
 });
 
 const parsed = envSchema.safeParse(process.env);
