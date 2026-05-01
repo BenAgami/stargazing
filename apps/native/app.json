@@ -3,7 +3,7 @@
     "name": "cali-ai",
     "slug": "cali-ai",
     "version": "1.0.0",
-    "scheme": "com.turbo.example",
+    "scheme": "cali-ai",
     "orientation": "portrait",
     "icon": "./assets/logo.png",
     "userInterfaceStyle": "automatic",
@@ -25,7 +25,7 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
-      "package": "com.turbo.example"
+      "package": "com.cali.ai"
     },
     "web": {
       "favicon": "./assets/favicon.png",
@@ -44,7 +44,9 @@
         {
           "enableAndroidGpuLibraries": false
         }
-      ]
+      ],
+      "@react-native-community/datetimepicker",
+      "expo-notifications"
     ]
   }
 }

@@ -5,7 +5,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   Text,
-  TouchableOpacity,
+  Pressable,
 } from "react-native";
 
 import { StatusBar } from "expo-status-bar";
@@ -25,7 +25,7 @@ import {
 import AuthFormFields, {
   type FieldConfig,
 } from "@src/components/AuthFormFields";
-import { baseColors } from "@src/theme/colors";
+import { useLogin } from "@src/hooks/useLogin";
 
 const defaultFormData: LoginValues = {
   email: "",
@@ -52,40 +52,16 @@ const signInFields: FieldConfig<LoginValues>[] = [
 
 const SignInScreen: React.FC = () => {
   const [rememberMe, setRememberMe] = useState(false);
-
+  const { handleSignIn, error } = useLogin();
   const router = useRouter();
 
-  const handleSignIn = (data: LoginValues) => {
-    console.log("Sign in data:", data, "Remember me:", rememberMe);
-    // Handle sign-in logic here
-    // Example: call your API endpoint
-  };
-
   const handleGoogleSignIn = () => {
-    console.log("Google sign-in clicked");
-    // Handle Google sign-in logic here
-  };
-
-  const handleForgotPassword = () => {
-    console.log("Forgot password clicked");
-    // Navigate to forgot password screen
-  };
-
-  const handleSignUp = () => {
-    router.push("/register");
-  };
-
-  const handleNavigateHome = () => {
-    router.push("/");
+    // Google sign-in not yet implemented
   };
 
   return (
     <>
-      <Stack.Screen
-        options={{
-          headerShown: false,
-        }}
-      />
+      <Stack.Screen options={{ headerShown: false }} />
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={{ flex: 1 }}
@@ -95,14 +71,12 @@ const SignInScreen: React.FC = () => {
           colors={["#0f0c29", "#302b63", "#24243e"]}
           style={{ flex: 1 }}
         >
-          <TouchableOpacity
-            onPress={() => handleNavigateHome()}
-            style={styles.navigateHomeButton}
-            activeOpacity={0.8}
+          <Pressable
+            onPress={() => router.push("/")}
+            style={({ pressed }) => [styles.backButton, pressed && styles.pressed]}
           >
-            <Text style={styles.navigateHomeButtonText}>{"←"}</Text>
-          </TouchableOpacity>
-
+            <Text style={styles.backButtonText}>{"←"}</Text>
+          </Pressable>
           <AuthImageHeader
             image={require("@assets/images/mars.png")}
             overlay={
@@ -120,6 +94,9 @@ const SignInScreen: React.FC = () => {
             />
 
             <View style={styles.formContainer}>
+              {error && (
+                <Text style={styles.errorText}>{error}</Text>
+              )}
               <AuthFormFields
                 schema={loginSchema}
                 defaultValues={defaultFormData}
@@ -129,14 +106,13 @@ const SignInScreen: React.FC = () => {
                   <AuthRememberRow
                     rememberMe={rememberMe}
                     onToggleRemember={() => setRememberMe(!rememberMe)}
-                    onForgotPassword={handleForgotPassword}
+                    onForgotPassword={() => {}}
                   />
                 }
                 renderSubmit={(submit) => (
-                  <TouchableOpacity
-                    style={styles.submitButton}
+                  <Pressable
+                    style={({ pressed }) => [styles.submitButton, pressed && styles.pressed]}
                     onPress={submit}
-                    activeOpacity={0.8}
                   >
                     <LinearGradient
                       colors={["#667eea", "#764ba2"]}
@@ -146,7 +122,7 @@ const SignInScreen: React.FC = () => {
                     >
                       <Text style={styles.submitButtonText}>Sign In</Text>
                     </LinearGradient>
-                  </TouchableOpacity>
+                  </Pressable>
                 )}
               />
 
@@ -157,7 +133,7 @@ const SignInScreen: React.FC = () => {
               <AuthFooter
                 text="Don't have an account?"
                 linkText="Sign Up"
-                onPressLink={handleSignUp}
+                onPressLink={() => router.push("/register")}
               />
             </View>
           </View>
@@ -170,15 +146,18 @@ const SignInScreen: React.FC = () => {
 export default SignInScreen;
 
 const styles = StyleSheet.create({
-  navigateHomeButton: {
+  backButton: {
     position: "absolute",
     top: 36,
     left: 24,
     padding: 10,
     zIndex: 10,
   },
-  navigateHomeButtonText: {
-    color: baseColors.grayDark,
+  pressed: {
+    opacity: 0.8,
+  },
+  backButtonText: {
+    color: "#767577",
     fontSize: 26,
     fontWeight: "bold",
   },
@@ -215,5 +194,11 @@ const styles = StyleSheet.create({
     color: "#ffffff",
     fontSize: 16,
     fontWeight: "600",
+  },
+  errorText: {
+    color: "#E57373",
+    fontSize: 13,
+    textAlign: "center",
+    marginBottom: 12,
   },
 });

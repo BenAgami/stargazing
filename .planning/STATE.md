@@ -1,3 +1,17 @@
+---
+gsd_state_version: 1.0
+milestone: v1.0
+milestone_name: milestone
+status: unknown
+stopped_at: Completed Phase 02 user-profile — verification passed (14/14)
+last_updated: "2026-05-01T14:48:50.196Z"
+progress:
+  total_phases: 7
+  completed_phases: 1
+  total_plans: 3
+  completed_plans: 3
+---
+
 # Project State
 
 ## Project Reference
@@ -5,20 +19,17 @@
 See: .planning/PROJECT.md (updated 2026-03-21)
 
 **Core value:** Users can record themselves doing calisthenics exercises and get actionable AI feedback on their form — what they did well and what to fix.
-**Current focus:** Phase 1 — Infrastructure
+**Current focus:** Phase 03 — manual-workout-builder
 
 ## Current Position
 
-Phase: 1 of 7 (Infrastructure)
-Plan: 0 of TBD in current phase
-Status: Ready to plan
-Last activity: 2026-03-21 — Roadmap created, requirements mapped, STATE.md initialized
-
-Progress: [░░░░░░░░░░] 0%
+Phase: 3
+Plan: Not started
 
 ## Performance Metrics
 
 **Velocity:**
+
 - Total plans completed: 0
 - Average duration: - min
 - Total execution time: 0.0 hours
@@ -30,10 +41,14 @@ Progress: [░░░░░░░░░░] 0%
 | - | - | - | - |
 
 **Recent Trend:**
+
 - Last 5 plans: -
 - Trend: -
 
 *Updated after each plan completion*
+| Phase 02-user-profile P01 | 9 | 2 tasks | 12 files |
+| Phase 02-user-profile P02 | 5 | 2 tasks | 8 files |
+| Phase 02-user-profile P03 | 15 | 2 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -46,6 +61,13 @@ Recent decisions affecting current work:
 - Phase 1: processingStatus state machine must implement full PENDING → PROCESSING → COMPLETED / FAILED with a 10-minute server-side timeout cleanup job. It currently never advances beyond PENDING.
 - Phase 5 before Phase 6: Post-set analysis validates the angle-detection approach and locks the feedback format that the real-time rule engine keys off.
 - Phase 2 before Phase 4: AI workout generation prompt requires fitness level and goal from user profile for calibration.
+- [Phase 02-user-profile]: Catch P2002 without meta.target check — Prisma 7 with pg driver adapter omits target field; code check alone is sufficient
+- [Phase 02-user-profile]: Mock getSignedUrl in avatar upload tests — appropriate exception to no-mock rule for external AWS SDK I/O
+- [Phase 02-user-profile]: useFocusEffect not useEffect on profile screen: Expo Router stack does not remount on back-navigation; useEffect with [] shows stale data after returning from profile-edit
+- [Phase 02-user-profile]: Goal change detection snapshots initial goal on load, compares all fields before POST /me/goals to prevent duplicate UserGoal records on unchanged Save
+- [Phase 02-user-profile]: AuthContext created as Rule 3 fix: native app had no JWT persistence; stores token in AsyncStorage under @cali_auth_token
+- [Phase 02-user-profile]: One scheduleNotificationAsync call per selected weekday — WeeklyTriggerInput only accepts one weekday, so scheduling N days requires N calls
+- [Phase 02-user-profile]: AsyncStorage stores both notification IDs (for cancellation) and config (for display) under separate keys workoutReminderIds and workoutReminderConfig
 
 ### Pending Todos
 
@@ -59,6 +81,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-21
-Stopped at: Roadmap and STATE.md created. No planning started yet.
+Last session: 2026-04-08T15:49:04.950Z
+Stopped at: Completed Phase 02 user-profile — verification passed (14/14)
 Resume file: None

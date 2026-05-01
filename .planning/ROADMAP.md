@@ -13,7 +13,7 @@ The project delivers its core value — AI-powered calisthenics form feedback �
 Decimal phases appear between their surrounding integers in numeric order.
 
 - [ ] **Phase 1: Infrastructure** - Async job pipeline, video upload, SSE, session state machine, and custom Expo dev build
-- [ ] **Phase 2: User Profile** - Display name, avatar, fitness level, goal, and workout reminder notifications
+- [x] **Phase 2: User Profile** - Display name, avatar, fitness level, goal, and workout reminder notifications (completed 2026-04-03)
 - [ ] **Phase 3: Manual Workout Builder** - Browse exercises, create and edit named workouts, start workout sessions
 - [ ] **Phase 4: AI Workout Generation** - Goal-to-workout via Claude Sonnet, catalog-validated structured output
 - [ ] **Phase 5: AI Form Analysis** - Camera open during set; recording auto-submitted when set ends; form score + coaching feedback
@@ -44,7 +44,12 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. User can set a primary goal in free text and it persists across sessions
   4. Profile edits are reflected immediately on the profile screen without requiring a logout/login cycle
   5. User can schedule a local workout reminder notification and it fires at the chosen time
-**Plans**: TBD
+**Plans:** 3/3 plans complete
+
+Plans:
+- [x] 02-01-PLAN.md — Schema migration, Zod schemas, API endpoints (PATCH /me, POST /me/avatar-upload-url, POST /me/goals), integration tests
+- [x] 02-02-PLAN.md — Native profile screens: AvatarDisplay, Home header, read-only profile, edit form with avatar upload
+- [x] 02-03-PLAN.md — Workout reminder notifications: expo-notifications hook, ReminderCard widget on Home screen
 
 ### Phase 3: Manual Workout Builder
 **Goal**: Users can browse the exercise catalog, assemble named workouts with sets/reps/rest, and start a workout session from a saved workout
@@ -74,7 +79,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 **Requirements**: FORM-01, FORM-02, FORM-03, FORM-04, FORM-05, FORM-06, FORM-07, FORM-08, NOTF-02
 **Success Criteria** (what must be TRUE):
   1. User selects an exercise (push-up, pull-up, dip, or squat), the camera opens when the set starts, and the recording is automatically submitted when the set ends — no upload screen
-  2. User receives a numeric form score (0–100) and a breakdown by dimension (range of motion, core stability, symmetry) when analysis completes
+  2. User receives a numeric form score (0-100) and a breakdown by dimension (range of motion, core stability, symmetry) when analysis completes
   3. Feedback text references specific reps and leads with at least one positive observation before corrections; no more than 2 corrections are surfaced per set
   4. User receives an in-app notification and the feedback screen updates automatically when analysis is complete — no manual refresh required
   5. A failed analysis (worker error, network loss) presents a retry option rather than a silent dead end
@@ -88,7 +93,7 @@ Decimal phases appear between their surrounding integers in numeric order.
   1. User can toggle real-time form cues on before starting a set and the live skeleton overlay appears on the camera feed
   2. A form deviation (e.g. elbow flare, hip drop, insufficient depth) triggers an audio or visual cue within 2 seconds of the deviation occurring
   3. Cues are non-intrusive — they appear as a banner or audio prompt without covering the camera feed or pausing the set
-  4. Pose inference runs at capped frame rate (8–10 FPS) and the device remains responsive for the full duration of a 15-minute session without thermal throttling
+  4. Pose inference runs at capped frame rate (8-10 FPS) and the device remains responsive for the full duration of a 15-minute session without thermal throttling
 **Plans**: TBD
 
 ### Phase 7: Progress Tracking
@@ -105,12 +110,12 @@ Decimal phases appear between their surrounding integers in numeric order.
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7
+Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Infrastructure | 0/TBD | Not started | - |
-| 2. User Profile | 0/TBD | Not started | - |
+| 2. User Profile | 3/3 | Complete   | 2026-04-03 |
 | 3. Manual Workout Builder | 0/TBD | Not started | - |
 | 4. AI Workout Generation | 0/TBD | Not started | - |
 | 5. Post-Set AI Form Analysis | 0/TBD | Not started | - |

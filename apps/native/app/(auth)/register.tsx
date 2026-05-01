@@ -6,7 +6,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   Text,
-  TouchableOpacity,
+  Pressable,
 } from "react-native";
 
 import { Stack, useRouter } from "expo-router";
@@ -25,6 +25,7 @@ import {
 import AuthFormFields, {
   type FieldConfig,
 } from "@src/components/AuthFormFields";
+import { useRegister } from "@src/hooks/useRegister";
 import { baseColors } from "@src/theme/colors";
 
 const defaultFormData: RegisterValues = {
@@ -58,34 +59,16 @@ const registerFields: FieldConfig<RegisterValues>[] = [
 ];
 
 const RegistrationScreen: React.FC = () => {
+  const { handleSignUp, error } = useRegister();
   const router = useRouter();
 
-  const handleSignUp = (data: RegisterValues) => {
-    console.log("Registration data:", data);
-    // Handle registration logic here
-    // Example: call API endpoint
-  };
-
   const handleGoogleSignIn = () => {
-    console.log("Google sign-in clicked");
-    // Handle Google sign-in logic here
-  };
-
-  const handleSignIn = () => {
-    router.push("/login");
-  };
-
-  const handleNavigateHome = () => {
-    router.push("/");
+    // Google sign-in not yet implemented
   };
 
   return (
     <>
-      <Stack.Screen
-        options={{
-          headerShown: false,
-        }}
-      />
+      <Stack.Screen options={{ headerShown: false }} />
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={{ flex: 1 }}
@@ -100,13 +83,15 @@ const RegistrationScreen: React.FC = () => {
             bounces={false}
             showsVerticalScrollIndicator={false}
           >
-            <TouchableOpacity
-              onPress={() => handleNavigateHome()}
-              style={styles.navigateHomeButton}
-              activeOpacity={0.8}
+            <Pressable
+              onPress={() => router.push("/")}
+              style={({ pressed }) => [
+                styles.navigateHomeButton,
+                pressed && styles.pressed,
+              ]}
             >
               <Text style={styles.navigateHomeButtonText}>{"←"}</Text>
-            </TouchableOpacity>
+            </Pressable>
 
             <AuthImageHeader
               image={require("@assets/images/saturn.png")}
@@ -125,16 +110,21 @@ const RegistrationScreen: React.FC = () => {
               />
 
               <View style={styles.formContainer}>
+                {error && (
+                  <Text style={styles.errorText}>{error}</Text>
+                )}
                 <AuthFormFields
                   schema={registerSchema}
                   defaultValues={defaultFormData}
                   fields={registerFields}
                   onSubmit={handleSignUp}
                   renderSubmit={(submit) => (
-                    <TouchableOpacity
-                      style={styles.submitButton}
+                    <Pressable
+                      style={({ pressed }) => [
+                        styles.submitButton,
+                        pressed && styles.pressed,
+                      ]}
                       onPress={submit}
-                      activeOpacity={0.8}
                     >
                       <LinearGradient
                         colors={["#9333ea", "#4f46e5"]}
@@ -146,7 +136,7 @@ const RegistrationScreen: React.FC = () => {
                           Create Account
                         </Text>
                       </LinearGradient>
-                    </TouchableOpacity>
+                    </Pressable>
                   )}
                 />
 
@@ -157,7 +147,7 @@ const RegistrationScreen: React.FC = () => {
                 <AuthFooter
                   text="Already have an account?"
                   linkText="Sign In"
-                  onPressLink={handleSignIn}
+                  onPressLink={() => router.push("/login")}
                 />
               </View>
             </View>
@@ -177,6 +167,9 @@ const styles = StyleSheet.create({
     left: 24,
     padding: 10,
     zIndex: 10,
+  },
+  pressed: {
+    opacity: 0.8,
   },
   navigateHomeButtonText: {
     color: baseColors.grayDark,
@@ -216,5 +209,11 @@ const styles = StyleSheet.create({
     color: "#ffffff",
     fontSize: 16,
     fontWeight: "600",
+  },
+  errorText: {
+    color: "#E57373",
+    fontSize: 13,
+    textAlign: "center",
+    marginBottom: 12,
   },
 });
