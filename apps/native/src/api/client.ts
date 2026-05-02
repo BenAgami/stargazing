@@ -87,6 +87,10 @@ const sendRequest = async (
 };
 
 const parseResponse = async <T>(res: Response): Promise<T> => {
+  // 204 No Content has no body — resolve immediately without parsing.
+  if (res.status === StatusCode.NO_CONTENT) {
+    return undefined as unknown as T;
+  }
   const json = await parseJson(res);
   if (!res.ok || !json.success) {
     throw new ApiError(
