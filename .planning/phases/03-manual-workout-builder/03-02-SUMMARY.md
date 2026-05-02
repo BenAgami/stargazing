@@ -154,6 +154,10 @@ Each task was committed atomically:
 
 None — the migration was applied automatically by the test runner on next run.
 
+## Self-Check: PASSED
+
+All 11 created/modified files confirmed present on disk. Both task commits (d795dd9, fcda8c8) confirmed in git log.
+
 ## Next Phase Readiness
 
 - All 33 tests are RED and executable — `yarn workspace api test workouts` confirms RED state
