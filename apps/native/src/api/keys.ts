@@ -7,3 +7,17 @@ export const userKeys = {
 export const authKeys = {
   all: ["auth"] as const,
 };
+
+export const workoutKeys = {
+  all: ["workouts"] as const,
+  lists: () => ["workouts", "list"] as const,
+  detail: (id: number) => ["workouts", id] as const,
+};
+
+export const exerciseKeys = {
+  all: ["exercises"] as const,
+  lists: () => ["exercises", "list"] as const,
+  list: (params: { search?: string; type?: string }) =>
+    ["exercises", "list", params] as const,
+  detail: (code: string) => ["exercises", "detail", code] as const,
+};
