@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-stopped_at: Completed 03-02-PLAN.md
-last_updated: "2026-05-02T15:16:00.244Z"
+stopped_at: Completed 03-03-PLAN.md
+last_updated: "2026-05-02T15:26:40.002Z"
 progress:
   total_phases: 7
   completed_phases: 0
   total_plans: 8
-  completed_plans: 2
+  completed_plans: 3
 ---
 
 # Project State
@@ -24,7 +24,7 @@ See: .planning/PROJECT.md (updated 2026-03-21)
 ## Current Position
 
 Phase: 03 (manual-workout-builder) — EXECUTING
-Plan: 3 of 8
+Plan: 4 of 8
 
 ## Performance Metrics
 
@@ -51,6 +51,7 @@ Plan: 3 of 8
 | Phase 02-user-profile P03 | 15 | 2 tasks | 5 files |
 | Phase 03 P01 | 5 | 2 tasks | 5 files |
 | Phase 03 P02 | 9 | 2 tasks | 11 files |
+| Phase 03 P03 | 6 | 3 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -74,6 +75,8 @@ Recent decisions affecting current work:
 - [Phase 03-01]: workoutExerciseInputSchema excludes position field — position assigned server-side from array index (0-based) in delete+createMany transaction
 - [Phase 03]: Migration 20260502000000_add_workout_tables created manually — when db:push is used on dev, always write a migration file before integration tests that use migrate deploy on test DB
 - [Phase 03]: @repo/db dist must be rebuilt after prisma generate — TypeScript reads from dist/index.d.ts not generated/ directory
+- [Phase 03]: Cross-user workout access returns 404 (NotFoundError) not 403 — ownership enforced at Prisma query layer via where: { id, userId }
+- [Phase 03]: Static Hold / Dynamic cross-field validation (reps XOR durationSecs) lives in WorkoutService.validateExerciseInput — Zod cannot enforce cross-field constraints on workoutExerciseInputSchema
 
 ### Pending Todos
 
@@ -87,6 +90,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-02T15:16:00.238Z
-Stopped at: Completed 03-02-PLAN.md
+Last session: 2026-05-02T15:26:39.996Z
+Stopped at: Completed 03-03-PLAN.md
 Resume file: None
