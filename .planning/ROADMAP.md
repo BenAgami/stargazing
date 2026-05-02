@@ -116,7 +116,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7
 |-------|----------------|--------|-----------|
 | 1. Infrastructure | 0/TBD | Not started | - |
 | 2. User Profile | 3/3 | Complete   | 2026-04-03 |
-| 3. Manual Workout Builder | 6/8 | In Progress|  |
+| 3. Manual Workout Builder | 7/8 | In Progress|  |
 | 4. AI Workout Generation | 0/TBD | Not started | - |
 | 5. Post-Set AI Form Analysis | 0/TBD | Not started | - |
 | 6. Real-Time Form Cues | 0/TBD | Not started | - |

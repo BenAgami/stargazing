@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-stopped_at: Completed 03-06-PLAN.md
-last_updated: "2026-05-02T21:26:24.973Z"
+stopped_at: Completed 03-08-PLAN.md
+last_updated: "2026-05-02T21:32:04.867Z"
 progress:
   total_phases: 7
   completed_phases: 0
   total_plans: 8
-  completed_plans: 6
+  completed_plans: 7
 ---
 
 # Project State
@@ -24,7 +24,7 @@ See: .planning/PROJECT.md (updated 2026-03-21)
 ## Current Position
 
 Phase: 03 (manual-workout-builder) — EXECUTING
-Plan: 7 of 8
+Plan: 8 of 8
 
 ## Performance Metrics
 
@@ -55,6 +55,7 @@ Plan: 7 of 8
 | Phase 03 P04 | 6 | 3 tasks | 10 files |
 | Phase 03-manual-workout-builder P05 | 6 | 3 tasks | 7 files |
 | Phase 03 P06 | 4 | 3 tasks | 8 files |
+| Phase 03-manual-workout-builder P08 | 15 | 2 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -90,6 +91,9 @@ Recent decisions affecting current work:
 - [Phase 03]: useFocusEffect invalidates workoutKeys.lists() in the SCREEN not the hook — keeps useWorkouts composable for other consumers
 - [Phase 03]: useDeleteWorkout does not call router.back() — navigation passed via mutate() options in the screen, keeping the hook navigation-free
 - [Phase 03]: Start/Edit navigation targets (/workout-execute, /workout-builder) wired in workout-detail.tsx but screens do not exist yet — plans 07 and 08 register those routes
+- [Phase 03-manual-workout-builder]: gestureEnabled: false on workout-execute Stack.Screen prevents accidental swipe-back mid-set losing the workout log
+- [Phase 03-manual-workout-builder]: Static Hold exercises show 'Hold for X' label informational only; no auto-timing during hold — user taps Complete set when done (v1 UX simplification)
+- [Phase 03-manual-workout-builder]: restSecs <= 0 check in completeSet bypasses rest phase entirely for exercises with no rest configured
 
 ### Pending Todos
 
@@ -103,6 +107,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-02T21:26:24.967Z
-Stopped at: Completed 03-06-PLAN.md
+Last session: 2026-05-02T21:32:04.861Z
+Stopped at: Completed 03-08-PLAN.md
 Resume file: None
