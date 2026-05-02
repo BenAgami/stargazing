@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-stopped_at: Completed 03-05-PLAN.md
-last_updated: "2026-05-02T21:04:38.384Z"
+stopped_at: Completed 03-06-PLAN.md
+last_updated: "2026-05-02T21:26:24.973Z"
 progress:
   total_phases: 7
   completed_phases: 0
   total_plans: 8
-  completed_plans: 5
+  completed_plans: 6
 ---
 
 # Project State
@@ -24,7 +24,7 @@ See: .planning/PROJECT.md (updated 2026-03-21)
 ## Current Position
 
 Phase: 03 (manual-workout-builder) — EXECUTING
-Plan: 6 of 8
+Plan: 7 of 8
 
 ## Performance Metrics
 
@@ -54,6 +54,7 @@ Plan: 6 of 8
 | Phase 03 P03 | 6 | 3 tasks | 4 files |
 | Phase 03 P04 | 6 | 3 tasks | 10 files |
 | Phase 03-manual-workout-builder P05 | 6 | 3 tasks | 7 files |
+| Phase 03 P06 | 4 | 3 tasks | 8 files |
 
 ## Accumulated Context
 
@@ -86,6 +87,9 @@ Recent decisions affecting current work:
 - [Phase 03-05]: pickerReturnTo query param for dual-mode catalog navigation: standalone push /exercise-catalog, builder passes pickerReturnTo; detail screen router.replace back with pickedExercise* params
 - [Phase 03-05]: Client-side filter over full list fetch (PAGE_SIZE=100) — no API search params needed for small catalog; useMemo over fetched list
 - [Phase 03-05]: Pressable-based ExerciseTypeSegmented instead of @react-native-segmented-control — avoids extra dep for 3-option toggle
+- [Phase 03]: useFocusEffect invalidates workoutKeys.lists() in the SCREEN not the hook — keeps useWorkouts composable for other consumers
+- [Phase 03]: useDeleteWorkout does not call router.back() — navigation passed via mutate() options in the screen, keeping the hook navigation-free
+- [Phase 03]: Start/Edit navigation targets (/workout-execute, /workout-builder) wired in workout-detail.tsx but screens do not exist yet — plans 07 and 08 register those routes
 
 ### Pending Todos
 
@@ -99,6 +103,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-02T21:04:38.378Z
-Stopped at: Completed 03-05-PLAN.md
+Last session: 2026-05-02T21:26:24.967Z
+Stopped at: Completed 03-06-PLAN.md
 Resume file: None
