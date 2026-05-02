@@ -38,6 +38,15 @@ const TabsLayout: React.FC = () => {
           }}
         />
         <Tabs.Screen
+          name="workouts"
+          options={{
+            title: "Workouts",
+            tabBarIcon: ({ color }) => (
+              <Ionicons name="barbell-outline" size={24} color={color} />
+            ),
+          }}
+        />
+        <Tabs.Screen
           name="settings"
           options={{
             title: "Settings",
