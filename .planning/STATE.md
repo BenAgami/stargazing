@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-stopped_at: Completed 03-04-PLAN.md
-last_updated: "2026-05-02T16:11:10.329Z"
+stopped_at: Completed 03-05-PLAN.md
+last_updated: "2026-05-02T21:04:38.384Z"
 progress:
   total_phases: 7
   completed_phases: 0
   total_plans: 8
-  completed_plans: 4
+  completed_plans: 5
 ---
 
 # Project State
@@ -24,7 +24,7 @@ See: .planning/PROJECT.md (updated 2026-03-21)
 ## Current Position
 
 Phase: 03 (manual-workout-builder) — EXECUTING
-Plan: 5 of 8
+Plan: 6 of 8
 
 ## Performance Metrics
 
@@ -53,6 +53,7 @@ Plan: 5 of 8
 | Phase 03 P02 | 9 | 2 tasks | 11 files |
 | Phase 03 P03 | 6 | 3 tasks | 4 files |
 | Phase 03 P04 | 6 | 3 tasks | 10 files |
+| Phase 03-manual-workout-builder P05 | 6 | 3 tasks | 7 files |
 
 ## Accumulated Context
 
@@ -82,6 +83,9 @@ Recent decisions affecting current work:
 - [Phase 03]: babel.config.* left unchanged — Reanimated 4 auto-configured by babel-preset-expo via react-native-worklets
 - [Phase 03]: Response types in src/types/workout.ts not @repo/common — API has no formal response Zod schemas yet
 - [Phase 03]: apiClient.delete<void> fixed via 204 No Content guard in parseResponse — 204 returns undefined without parsing body
+- [Phase 03-05]: pickerReturnTo query param for dual-mode catalog navigation: standalone push /exercise-catalog, builder passes pickerReturnTo; detail screen router.replace back with pickedExercise* params
+- [Phase 03-05]: Client-side filter over full list fetch (PAGE_SIZE=100) — no API search params needed for small catalog; useMemo over fetched list
+- [Phase 03-05]: Pressable-based ExerciseTypeSegmented instead of @react-native-segmented-control — avoids extra dep for 3-option toggle
 
 ### Pending Todos
 
@@ -95,6 +99,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-02T16:11:10.324Z
-Stopped at: Completed 03-04-PLAN.md
+Last session: 2026-05-02T21:04:38.378Z
+Stopped at: Completed 03-05-PLAN.md
 Resume file: None
