@@ -20,6 +20,8 @@ model User {
   goals           UserGoal[]
   workoutSessions WorkoutSession[]
   userMilestones  UserMilestone[]
+  workouts        Workout[]
+  workoutLogs     WorkoutLog[]
 
   @@map("users")
 }
