@@ -25,6 +25,14 @@ const MainLayout: React.FC = () => {
         name="workout-detail"
         options={{ headerShown: true, title: "Workout" }}
       />
+      <Stack.Screen
+        name="workout-execute"
+        options={{ headerShown: true, title: "Workout in progress", gestureEnabled: false }}
+      />
+      <Stack.Screen
+        name="workout-builder"
+        options={{ headerShown: true, title: "Build workout" }}
+      />
     </Stack>
   );
 };
