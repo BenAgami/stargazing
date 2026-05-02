@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-stopped_at: Completed 03-08-PLAN.md
-last_updated: "2026-05-02T21:32:04.867Z"
+stopped_at: Completed 03-07-PLAN.md
+last_updated: "2026-05-02T21:32:51.220Z"
 progress:
   total_phases: 7
-  completed_phases: 0
+  completed_phases: 1
   total_plans: 8
-  completed_plans: 7
+  completed_plans: 8
 ---
 
 # Project State
@@ -56,6 +56,7 @@ Plan: 8 of 8
 | Phase 03-manual-workout-builder P05 | 6 | 3 tasks | 7 files |
 | Phase 03 P06 | 4 | 3 tasks | 8 files |
 | Phase 03-manual-workout-builder P08 | 15 | 2 tasks | 5 files |
+| Phase 03-manual-workout-builder P07 | 4 | 3 tasks | 7 files |
 
 ## Accumulated Context
 
@@ -94,6 +95,9 @@ Recent decisions affecting current work:
 - [Phase 03-manual-workout-builder]: gestureEnabled: false on workout-execute Stack.Screen prevents accidental swipe-back mid-set losing the workout log
 - [Phase 03-manual-workout-builder]: Static Hold exercises show 'Hold for X' label informational only; no auto-timing during hold — user taps Complete set when done (v1 UX simplification)
 - [Phase 03-manual-workout-builder]: restSecs <= 0 check in completeSet bypasses rest phase entirely for exercises with no rest configured
+- [Phase 03-manual-workout-builder]: router.setParams(undefined) clears picker params after consuming — prevents duplicate addExercise on re-render
+- [Phase 03-manual-workout-builder]: useWorkoutBuilder.save() takes onCreated/onUpdated callbacks — navigation stays in screen layer, hook remains nav-free
+- [Phase 03-manual-workout-builder]: buildPayload enforces reps XOR durationSecs: STATIC_HOLD sends reps:null, DYNAMIC sends durationSecs:null
 
 ### Pending Todos
 
@@ -107,6 +111,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-02T21:32:04.861Z
-Stopped at: Completed 03-08-PLAN.md
+Last session: 2026-05-02T21:32:51.214Z
+Stopped at: Completed 03-07-PLAN.md
 Resume file: None
