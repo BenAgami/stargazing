@@ -4,12 +4,12 @@ import {
   KeyboardAvoidingView,
   Platform,
   Pressable,
-  SafeAreaView,
   StyleSheet,
   Text,
   TextInput,
   View,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { router, useLocalSearchParams } from "expo-router";
 import DraggableFlatList, {
   ScaleDecorator,
@@ -63,7 +63,12 @@ const WorkoutBuilderScreen: React.FC = () => {
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [params.pickedExerciseId, params.pickedExerciseCode, params.pickedExerciseType, params.pickedExerciseDisplayName]);
+  }, [
+    params.pickedExerciseId,
+    params.pickedExerciseCode,
+    params.pickedExerciseType,
+    params.pickedExerciseDisplayName,
+  ]);
 
   const handleAddExercise = () => {
     router.push({
@@ -76,25 +81,39 @@ const WorkoutBuilderScreen: React.FC = () => {
     builder.save(
       (createdId) => {
         // Replace so the back button skips the builder.
-        router.replace({ pathname: "/workout-detail", params: { id: String(createdId) } });
+        router.replace({
+          pathname: "/workout-detail",
+          params: { id: String(createdId) },
+        });
       },
       (updatedId) => {
-        router.replace({ pathname: "/workout-detail", params: { id: String(updatedId) } });
+        router.replace({
+          pathname: "/workout-detail",
+          params: { id: String(updatedId) },
+        });
       },
     );
   };
 
   if (builder.isLoading) {
     return (
-      <SafeAreaView style={[styles.safeArea, { backgroundColor: colors.background }]}>
-        <ActivityIndicator size="large" color={colors.text} style={styles.loader} />
+      <SafeAreaView
+        style={[styles.safeArea, { backgroundColor: colors.background }]}
+      >
+        <ActivityIndicator
+          size="large"
+          color={colors.text}
+          style={styles.loader}
+        />
       </SafeAreaView>
     );
   }
 
   if (builder.error) {
     return (
-      <SafeAreaView style={[styles.safeArea, { backgroundColor: colors.background }]}>
+      <SafeAreaView
+        style={[styles.safeArea, { backgroundColor: colors.background }]}
+      >
         <Text style={[styles.errorText, { color: "#E57373" }]}>
           Failed to load workout.
         </Text>
@@ -103,7 +122,9 @@ const WorkoutBuilderScreen: React.FC = () => {
   }
 
   return (
-    <SafeAreaView style={[styles.safeArea, { backgroundColor: colors.background }]}>
+    <SafeAreaView
+      style={[styles.safeArea, { backgroundColor: colors.background }]}
+    >
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : undefined}
         style={styles.flex1}
@@ -133,7 +154,10 @@ const WorkoutBuilderScreen: React.FC = () => {
               onPress={handleAddExercise}
               style={({ pressed }) => [
                 styles.addButton,
-                { backgroundColor: colors.surface, opacity: pressed ? 0.85 : 1 },
+                {
+                  backgroundColor: colors.surface,
+                  opacity: pressed ? 0.85 : 1,
+                },
               ]}
               accessibilityRole="button"
               accessibilityLabel="Add exercise"
@@ -148,7 +172,11 @@ const WorkoutBuilderScreen: React.FC = () => {
               No exercises yet. Tap "+ Add exercise" above.
             </Text>
           }
-          renderItem={({ item, drag, isActive }: RenderItemParams<DraftExercise>) => (
+          renderItem={({
+            item,
+            drag,
+            isActive,
+          }: RenderItemParams<DraftExercise>) => (
             <ScaleDecorator>
               <WorkoutExerciseRow
                 exerciseDisplayName={item.exerciseDisplayName}
@@ -159,7 +187,9 @@ const WorkoutBuilderScreen: React.FC = () => {
                   durationSecs: item.durationSecs,
                   restSecs: item.restSecs,
                 }}
-                onChange={(values) => builder.updateExercise(item.localId, values)}
+                onChange={(values) =>
+                  builder.updateExercise(item.localId, values)
+                }
                 onRemove={() => builder.removeExercise(item.localId)}
                 onDragStart={drag}
                 isActive={isActive}
@@ -169,7 +199,13 @@ const WorkoutBuilderScreen: React.FC = () => {
         />
 
         <View
-          style={[styles.footer, { backgroundColor: colors.background, borderTopColor: colors.surface }]}
+          style={[
+            styles.footer,
+            {
+              backgroundColor: colors.background,
+              borderTopColor: colors.surface,
+            },
+          ]}
         >
           <Pressable
             onPress={handleSave}
@@ -181,19 +217,21 @@ const WorkoutBuilderScreen: React.FC = () => {
                   !builder.validation.valid || builder.saving
                     ? "#A0A0A0"
                     : pressed
-                    ? "#006EE6"
-                    : "#007AFF",
+                      ? "#006EE6"
+                      : "#007AFF",
               },
             ]}
             accessibilityRole="button"
-            accessibilityLabel={builder.isEdit ? "Save changes" : "Save workout"}
+            accessibilityLabel={
+              builder.isEdit ? "Save changes" : "Save workout"
+            }
           >
             <Text style={styles.saveButtonText}>
               {builder.saving
                 ? "Saving..."
                 : builder.isEdit
-                ? "Save changes"
-                : "Save workout"}
+                  ? "Save changes"
+                  : "Save workout"}
             </Text>
           </Pressable>
           {!builder.validation.valid && builder.validation.message && (

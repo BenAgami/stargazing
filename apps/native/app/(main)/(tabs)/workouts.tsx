@@ -3,11 +3,11 @@ import {
   ActivityIndicator,
   FlatList,
   Pressable,
-  SafeAreaView,
   StyleSheet,
   Text,
   View,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { router, useFocusEffect } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { useQueryClient } from "@tanstack/react-query";
@@ -32,7 +32,10 @@ const WorkoutsTab: React.FC = () => {
   );
 
   const handleCardPress = (workoutId: number) => {
-    router.push({ pathname: "/workout-detail", params: { id: String(workoutId) } });
+    router.push({
+      pathname: "/workout-detail",
+      params: { id: String(workoutId) },
+    });
   };
 
   const handleCreatePress = () => {
@@ -50,7 +53,11 @@ const WorkoutsTab: React.FC = () => {
       />
 
       {isLoading && (
-        <ActivityIndicator size="large" color={colors.text} style={styles.loader} />
+        <ActivityIndicator
+          size="large"
+          color={colors.text}
+          style={styles.loader}
+        />
       )}
 
       {error && !isLoading && (
@@ -82,10 +89,7 @@ const WorkoutsTab: React.FC = () => {
 
       <Pressable
         onPress={handleCreatePress}
-        style={({ pressed }) => [
-          styles.fab,
-          { opacity: pressed ? 0.85 : 1 },
-        ]}
+        style={({ pressed }) => [styles.fab, { opacity: pressed ? 0.85 : 1 }]}
         accessibilityRole="button"
         accessibilityLabel="Create new workout"
       >
@@ -102,9 +106,18 @@ const styles = StyleSheet.create({
   loader: { marginTop: 60 },
   errorText: { fontSize: 14, marginTop: 40, textAlign: "center" },
   listContent: { paddingTop: 8, paddingBottom: 96 },
-  emptyContainer: { paddingTop: 80, paddingHorizontal: 24, alignItems: "center" },
+  emptyContainer: {
+    paddingTop: 80,
+    paddingHorizontal: 24,
+    alignItems: "center",
+  },
   emptyText: { fontSize: 16, fontWeight: "600", textAlign: "center" },
-  emptySubtext: { fontSize: 14, opacity: 0.6, textAlign: "center", marginTop: 8 },
+  emptySubtext: {
+    fontSize: 14,
+    opacity: 0.6,
+    textAlign: "center",
+    marginTop: 8,
+  },
   fab: {
     position: "absolute",
     right: 24,

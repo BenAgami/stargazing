@@ -2,12 +2,12 @@ import React from "react";
 import {
   ActivityIndicator,
   Pressable,
-  SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
   View,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { router, useLocalSearchParams } from "expo-router";
 
 import { useTheme } from "@src/context/ThemeContext";
@@ -46,10 +46,16 @@ const ExerciseDetailScreen: React.FC = () => {
   };
 
   return (
-    <SafeAreaView style={[styles.safeArea, { backgroundColor: colors.background }]}>
+    <SafeAreaView
+      style={[styles.safeArea, { backgroundColor: colors.background }]}
+    >
       <ScrollView contentContainerStyle={styles.container}>
         {isLoading && (
-          <ActivityIndicator size="large" color={colors.text} style={styles.loader} />
+          <ActivityIndicator
+            size="large"
+            color={colors.text}
+            style={styles.loader}
+          />
         )}
         {error && !isLoading && (
           <Text style={[styles.errorText, { color: "#E57373" }]}>
@@ -62,7 +68,9 @@ const ExerciseDetailScreen: React.FC = () => {
               {data.displayName}
             </Text>
             <View style={styles.badge}>
-              <Text style={styles.badgeText}>{formatType(data.exerciseType)}</Text>
+              <Text style={styles.badgeText}>
+                {formatType(data.exerciseType)}
+              </Text>
             </View>
             <Text style={[styles.description, { color: colors.text }]}>
               {data.description ?? "No description available yet."}

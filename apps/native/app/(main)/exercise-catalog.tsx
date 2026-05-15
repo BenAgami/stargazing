@@ -2,12 +2,12 @@ import React, { useMemo, useState } from "react";
 import {
   ActivityIndicator,
   FlatList,
-  SafeAreaView,
   StyleSheet,
   Text,
   TextInput,
   View,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { router, useLocalSearchParams } from "expo-router";
 
 import { ScreenHeader } from "@repo/ui";
@@ -51,11 +51,15 @@ const ExerciseCatalog: React.FC = () => {
   };
 
   return (
-    <SafeAreaView style={[styles.safeArea, { backgroundColor: colors.background }]}>
+    <SafeAreaView
+      style={[styles.safeArea, { backgroundColor: colors.background }]}
+    >
       <ScreenHeader
         title={isPicker ? "Pick exercise" : "Exercises"}
         subtitle={
-          isPicker ? "Choose an exercise to add to your workout" : "Browse the catalog"
+          isPicker
+            ? "Choose an exercise to add to your workout"
+            : "Browse the catalog"
         }
         color={colors.text}
       />
@@ -75,7 +79,11 @@ const ExerciseCatalog: React.FC = () => {
       <ExerciseTypeSegmented value={type} onChange={setType} />
 
       {isLoading && (
-        <ActivityIndicator size="large" color={colors.text} style={styles.loader} />
+        <ActivityIndicator
+          size="large"
+          color={colors.text}
+          style={styles.loader}
+        />
       )}
 
       {error && !isLoading && (

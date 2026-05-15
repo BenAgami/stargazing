@@ -4,11 +4,11 @@ import {
   Text,
   Pressable,
   StyleSheet,
-  SafeAreaView,
   ScrollView,
   TextInput,
   ActivityIndicator,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 import { EXPERIENCE_LEVELS, GOAL_TYPES } from "@repo/common";
 import { useTheme } from "@src/context/ThemeContext";
