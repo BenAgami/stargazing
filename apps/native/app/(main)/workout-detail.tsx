@@ -3,12 +3,12 @@ import {
   ActivityIndicator,
   Alert,
   Pressable,
-  SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
   View,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { router, useLocalSearchParams } from "expo-router";
 
 import { useTheme } from "@src/context/ThemeContext";
@@ -67,7 +67,10 @@ const WorkoutDetailScreen: React.FC = () => {
             deleteMutation.mutate(id, {
               onSuccess: () => router.back(),
               onError: () => {
-                Alert.alert("Error", "Could not delete the workout. Please try again.");
+                Alert.alert(
+                  "Error",
+                  "Could not delete the workout. Please try again.",
+                );
               },
             });
           },
@@ -77,10 +80,16 @@ const WorkoutDetailScreen: React.FC = () => {
   };
 
   return (
-    <SafeAreaView style={[styles.safeArea, { backgroundColor: colors.background }]}>
+    <SafeAreaView
+      style={[styles.safeArea, { backgroundColor: colors.background }]}
+    >
       <ScrollView contentContainerStyle={styles.container}>
         {isLoading && (
-          <ActivityIndicator size="large" color={colors.text} style={styles.loader} />
+          <ActivityIndicator
+            size="large"
+            color={colors.text}
+            style={styles.loader}
+          />
         )}
         {error && !isLoading && (
           <Text style={[styles.errorText, { color: "#E57373" }]}>
@@ -89,7 +98,9 @@ const WorkoutDetailScreen: React.FC = () => {
         )}
         {data && !isLoading && (
           <>
-            <Text style={[styles.name, { color: colors.text }]}>{data.name}</Text>
+            <Text style={[styles.name, { color: colors.text }]}>
+              {data.name}
+            </Text>
             <Text style={[styles.subtle, { color: colors.text }]}>
               {data.exercises.length === 1
                 ? "1 exercise"
@@ -129,7 +140,10 @@ const WorkoutDetailScreen: React.FC = () => {
                 onPress={handleEdit}
                 style={({ pressed }) => [
                   styles.secondaryCta,
-                  { backgroundColor: colors.surface, opacity: pressed ? 0.8 : 1 },
+                  {
+                    backgroundColor: colors.surface,
+                    opacity: pressed ? 0.8 : 1,
+                  },
                 ]}
                 accessibilityRole="button"
                 accessibilityLabel="Edit workout"

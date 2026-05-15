@@ -3,12 +3,12 @@ import {
   ActivityIndicator,
   Alert,
   Pressable,
-  SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
   View,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { router, useLocalSearchParams } from "expo-router";
 
 import { useTheme } from "@src/context/ThemeContext";
@@ -71,7 +71,12 @@ const WorkoutExecuteScreen: React.FC = () => {
           Alert.alert(
             "Could not save",
             "We couldn't record this workout, but your time is shown above.",
-            [{ text: "OK", onPress: () => router.replace("/(main)/(tabs)/workouts") }],
+            [
+              {
+                text: "OK",
+                onPress: () => router.replace("/(main)/(tabs)/workouts"),
+              },
+            ],
           );
         },
       },
@@ -80,15 +85,23 @@ const WorkoutExecuteScreen: React.FC = () => {
 
   if (isLoading || !workout) {
     return (
-      <SafeAreaView style={[styles.safeArea, { backgroundColor: colors.background }]}>
-        <ActivityIndicator size="large" color={colors.text} style={styles.loader} />
+      <SafeAreaView
+        style={[styles.safeArea, { backgroundColor: colors.background }]}
+      >
+        <ActivityIndicator
+          size="large"
+          color={colors.text}
+          style={styles.loader}
+        />
       </SafeAreaView>
     );
   }
 
   if (error) {
     return (
-      <SafeAreaView style={[styles.safeArea, { backgroundColor: colors.background }]}>
+      <SafeAreaView
+        style={[styles.safeArea, { backgroundColor: colors.background }]}
+      >
         <Text style={[styles.errorText, { color: "#E57373" }]}>
           Failed to load workout.
         </Text>
@@ -99,7 +112,9 @@ const WorkoutExecuteScreen: React.FC = () => {
   // ───────── Completion summary (D-18) ─────────
   if (execution.phase === "complete") {
     return (
-      <SafeAreaView style={[styles.safeArea, { backgroundColor: colors.background }]}>
+      <SafeAreaView
+        style={[styles.safeArea, { backgroundColor: colors.background }]}
+      >
         <ScrollView contentContainerStyle={styles.summaryContainer}>
           <Text style={[styles.summaryTitle, { color: colors.text }]}>
             Workout complete
@@ -107,17 +122,24 @@ const WorkoutExecuteScreen: React.FC = () => {
           <Text style={[styles.summaryName, { color: colors.text }]}>
             {workout.name}
           </Text>
-          <View style={[styles.summaryStat, { backgroundColor: colors.surface }]}>
+          <View
+            style={[styles.summaryStat, { backgroundColor: colors.surface }]}
+          >
             <Text style={[styles.summaryStatLabel, { color: colors.text }]}>
               Total duration
             </Text>
             <Text
-              style={[styles.summaryStatValue, { color: colors.text, fontVariant: ["tabular-nums"] }]}
+              style={[
+                styles.summaryStatValue,
+                { color: colors.text, fontVariant: ["tabular-nums"] },
+              ]}
             >
               {formatElapsed(execution.totalElapsedSecs)}
             </Text>
           </View>
-          <View style={[styles.summaryStat, { backgroundColor: colors.surface }]}>
+          <View
+            style={[styles.summaryStat, { backgroundColor: colors.surface }]}
+          >
             <Text style={[styles.summaryStatLabel, { color: colors.text }]}>
               Exercises completed
             </Text>
@@ -130,7 +152,10 @@ const WorkoutExecuteScreen: React.FC = () => {
             disabled={startMutation.isPending}
             style={({ pressed }) => [
               styles.doneButton,
-              { backgroundColor: pressed ? "#006EE6" : "#007AFF", opacity: startMutation.isPending ? 0.7 : 1 },
+              {
+                backgroundColor: pressed ? "#006EE6" : "#007AFF",
+                opacity: startMutation.isPending ? 0.7 : 1,
+              },
             ]}
             accessibilityRole="button"
             accessibilityLabel="Done"
@@ -147,11 +172,18 @@ const WorkoutExecuteScreen: React.FC = () => {
   // ───────── Active set / rest (D-15, D-17) ─────────
   const ex = execution.currentExercise!;
   return (
-    <SafeAreaView style={[styles.safeArea, { backgroundColor: colors.background }]}>
+    <SafeAreaView
+      style={[styles.safeArea, { backgroundColor: colors.background }]}
+    >
       <View style={styles.topBar}>
-        <Text style={[styles.elapsedLabel, { color: colors.text }]}>Elapsed</Text>
+        <Text style={[styles.elapsedLabel, { color: colors.text }]}>
+          Elapsed
+        </Text>
         <Text
-          style={[styles.elapsedValue, { color: colors.text, fontVariant: ["tabular-nums"] }]}
+          style={[
+            styles.elapsedValue,
+            { color: colors.text, fontVariant: ["tabular-nums"] },
+          ]}
         >
           {formatElapsed(execution.totalElapsedSecs)}
         </Text>
@@ -159,7 +191,8 @@ const WorkoutExecuteScreen: React.FC = () => {
 
       <View style={styles.body}>
         <Text style={[styles.exerciseIndex, { color: colors.text }]}>
-          Exercise {execution.currentExerciseIndex + 1} of {workout.exercises.length}
+          Exercise {execution.currentExerciseIndex + 1} of{" "}
+          {workout.exercises.length}
         </Text>
         <Text style={[styles.exerciseName, { color: colors.text }]}>
           {ex.exercise.displayName}
@@ -206,9 +239,19 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     paddingVertical: 12,
   },
-  elapsedLabel: { fontSize: 13, opacity: 0.6, fontWeight: "600", textTransform: "uppercase" },
+  elapsedLabel: {
+    fontSize: 13,
+    opacity: 0.6,
+    fontWeight: "600",
+    textTransform: "uppercase",
+  },
   elapsedValue: { fontSize: 16, fontWeight: "700" },
-  body: { flex: 1, paddingTop: 32, paddingHorizontal: 24, alignItems: "stretch" },
+  body: {
+    flex: 1,
+    paddingTop: 32,
+    paddingHorizontal: 24,
+    alignItems: "stretch",
+  },
   exerciseIndex: {
     fontSize: 13,
     opacity: 0.6,
@@ -244,14 +287,24 @@ const styles = StyleSheet.create({
     textTransform: "uppercase",
     opacity: 0.6,
   },
-  summaryName: { fontSize: 32, fontWeight: "700", marginTop: 8, textAlign: "center" },
+  summaryName: {
+    fontSize: 32,
+    fontWeight: "700",
+    marginTop: 8,
+    textAlign: "center",
+  },
   summaryStat: {
     width: "100%",
     padding: 20,
     borderRadius: 12,
     marginTop: 16,
   },
-  summaryStatLabel: { fontSize: 13, fontWeight: "600", opacity: 0.6, textTransform: "uppercase" },
+  summaryStatLabel: {
+    fontSize: 13,
+    fontWeight: "600",
+    opacity: 0.6,
+    textTransform: "uppercase",
+  },
   summaryStatValue: { fontSize: 28, fontWeight: "700", marginTop: 6 },
   doneButton: {
     width: "100%",

@@ -4,10 +4,10 @@ import {
   Text,
   Pressable,
   StyleSheet,
-  SafeAreaView,
   ScrollView,
   ActivityIndicator,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { router } from "expo-router";
 
 import { useTheme } from "@src/context/ThemeContext";
