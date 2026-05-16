@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useCallback } from "react";
 import {
   ActivityIndicator,
   KeyboardAvoidingView,
@@ -10,7 +10,7 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { router, useLocalSearchParams } from "expo-router";
+import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
 import DraggableFlatList, {
   ScaleDecorator,
   type RenderItemParams,
@@ -20,14 +20,10 @@ import { useTheme } from "@src/context/ThemeContext";
 import { useWorkoutBuilder } from "@src/hooks/useWorkoutBuilder";
 import WorkoutExerciseRow from "@src/components/WorkoutExerciseRow";
 import type { DraftExercise } from "@src/hooks/useWorkoutBuilder";
-import type { ExerciseType } from "@src/types/workout";
+import { consumePickedExercise } from "@src/state/pickedExerciseStore";
 
 type BuilderParams = {
   id?: string;
-  pickedExerciseId?: string;
-  pickedExerciseCode?: string;
-  pickedExerciseType?: string;
-  pickedExerciseDisplayName?: string;
 };
 
 const BUILDER_PATH = "/workout-builder";
@@ -40,35 +36,17 @@ const WorkoutBuilderScreen: React.FC = () => {
 
   const builder = useWorkoutBuilder({ workoutId });
 
-  // Consume picker round-trip params (set by exercise-detail when pickerReturnTo === BUILDER_PATH)
-  useEffect(() => {
-    if (
-      params.pickedExerciseId &&
-      params.pickedExerciseCode &&
-      params.pickedExerciseType &&
-      params.pickedExerciseDisplayName
-    ) {
-      builder.addExercise({
-        exerciseId: Number(params.pickedExerciseId),
-        exerciseCode: String(params.pickedExerciseCode),
-        exerciseDisplayName: String(params.pickedExerciseDisplayName),
-        exerciseType: String(params.pickedExerciseType) as ExerciseType,
-      });
-      // Clear picked params so re-render doesn't re-add
-      router.setParams({
-        pickedExerciseId: undefined,
-        pickedExerciseCode: undefined,
-        pickedExerciseType: undefined,
-        pickedExerciseDisplayName: undefined,
-      });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    params.pickedExerciseId,
-    params.pickedExerciseCode,
-    params.pickedExerciseType,
-    params.pickedExerciseDisplayName,
-  ]);
+  // Pull a picked exercise from the store every time the builder regains focus.
+  // Fires after returning from the picker via router.dismiss(2).
+  // The store self-clears on consume, so it cannot fire twice for one pick.
+  useFocusEffect(
+    useCallback(() => {
+      const picked = consumePickedExercise();
+      if (picked) {
+        builder.addExercise(picked);
+      }
+    }, [builder]),
+  );
 
   const handleAddExercise = () => {
     router.push({

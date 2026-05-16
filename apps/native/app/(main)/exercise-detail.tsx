@@ -12,6 +12,7 @@ import { router, useLocalSearchParams } from "expo-router";
 
 import { useTheme } from "@src/context/ThemeContext";
 import { useExerciseDetail } from "@src/hooks/queries/useExerciseDetail";
+import { setPickedExercise } from "@src/state/pickedExerciseStore";
 
 type DetailParams = { code?: string; pickerReturnTo?: string };
 
@@ -27,20 +28,18 @@ const ExerciseDetailScreen: React.FC = () => {
 
   const handleAddToWorkout = () => {
     if (!data) return;
-    if (isPicker && params.pickerReturnTo) {
-      // Return to the builder with the selected exercise as a query param.
-      router.replace({
-        pathname: params.pickerReturnTo as "/workout-builder",
-        params: {
-          pickedExerciseId: String(data.id),
-          pickedExerciseCode: data.code,
-          pickedExerciseType: data.exerciseType,
-          pickedExerciseDisplayName: data.displayName,
-        },
+    if (isPicker) {
+      setPickedExercise({
+        exerciseId: data.id,
+        exerciseCode: data.code,
+        exerciseDisplayName: data.displayName,
+        exerciseType: data.exerciseType,
       });
+      // Pop BOTH exercise-detail and exercise-catalog so we return to the
+      // existing workout-builder instance with its draft state intact.
+      // router.replace would have created a new builder on the stack.
+      router.dismiss(2);
     } else {
-      // Standalone usage — pop back to the catalog.
-      // Full "create new workout from here" wiring is in plan 07.
       router.back();
     }
   };
