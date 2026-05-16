@@ -46,7 +46,14 @@
         }
       ],
       "@react-native-community/datetimepicker",
-      "expo-notifications"
+      "expo-notifications",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Cali AI needs access to your photo library to set a profile picture.",
+          "cameraPermission": "Cali AI needs access to your camera to take a profile picture."
+        }
+      ]
     ]
   }
 }

@@ -98,7 +98,8 @@ export const useProfileEdit = () => {
       return publicUrl;
     },
     onSuccess: (publicUrl) => {
-      setAvatarUri(publicUrl);
+      // Append timestamp to bust React Native's Image cache when the URL is unchanged
+      setAvatarUri(`${publicUrl}?t=${Date.now()}`);
       queryClient.invalidateQueries({ queryKey: userKeys.all });
     },
     onError: () => {
@@ -114,6 +115,27 @@ export const useProfileEdit = () => {
 
   const handlePickImage = async (canUseCamera: boolean) => {
     setIsAvatarPickerVisible(false);
+
+    if (canUseCamera) {
+      const { status } = await ImagePicker.requestCameraPermissionsAsync();
+      if (status !== "granted") {
+        Alert.alert(
+          "Camera Access Required",
+          "Please enable camera access in your device settings to take a photo."
+        );
+        return;
+      }
+    } else {
+      const { status } =
+        await ImagePicker.requestMediaLibraryPermissionsAsync();
+      if (status !== "granted") {
+        Alert.alert(
+          "Photo Library Access Required",
+          "Please enable photo library access in your device settings to choose a photo."
+        );
+        return;
+      }
+    }
 
     const result = canUseCamera
       ? await ImagePicker.launchCameraAsync({
@@ -136,6 +158,7 @@ export const useProfileEdit = () => {
       .renderAsync()
       .then((ctx) => ctx.saveAsync({ format: SaveFormat.JPEG, compress: 0.8 }));
 
+    setAvatarUri(manipResult.uri);
     avatarMutation.mutate(manipResult.uri);
   };
 
