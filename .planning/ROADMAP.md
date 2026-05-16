@@ -14,7 +14,8 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 - [ ] **Phase 1: Infrastructure** - Async job pipeline, video upload, SSE, session state machine, and custom Expo dev build
 - [x] **Phase 2: User Profile** - Display name, avatar, fitness level, goal, and workout reminder notifications (completed 2026-04-03)
-- [x] **Phase 3: Manual Workout Builder** - Browse exercises, create and edit named workouts, start workout sessions (completed 2026-05-02)
+- [x] **Phase 3: Manual Workout Builder** - Browse exercises, create and edit named workouts, start workout sessions
+ (completed 2026-05-02)
 - [ ] **Phase 4: AI Workout Generation** - Goal-to-workout via Claude Sonnet, catalog-validated structured output
 - [ ] **Phase 5: AI Form Analysis** - Camera open during set; recording auto-submitted when set ends; form score + coaching feedback
 - [ ] **Phase 6: Real-Time Form Cues** - On-device MoveNet pose estimation with live audio/visual coaching cues
@@ -60,7 +61,11 @@ Plans:
   2. User can create a named workout by picking exercises and configuring sets, reps, and rest per exercise
   3. User can edit an existing workout and delete a workout they no longer want
   4. User can start a workout session from any saved workout and the session is recorded
-**Plans**: TBD
+**Plans**: 8 complete + 1 gap-closure pending
+
+Plans:
+- [x] 03-01-PLAN.md through 03-08-PLAN.md (completed 2026-05-02)
+- [ ] 03-09-PLAN.md - Fix picker round-trip remount: module store + dismiss(2) [gap closure for UAT tests 7, 8]
 
 ### Phase 4: AI Workout Generation
 **Goal**: Users can describe a fitness goal in natural language and receive a ready-to-use workout plan that only references exercises in the seeded catalog and respects their fitness level and primary goal from their profile

@@ -1,5 +1,5 @@
 ---
-status: complete
+status: diagnosed
 phase: 03-manual-workout-builder
 source: [03-01-SUMMARY.md, 03-02-SUMMARY.md, 03-03-SUMMARY.md, 03-04-SUMMARY.md, 03-05-SUMMARY.md, 03-06-SUMMARY.md, 03-07-SUMMARY.md, 03-08-SUMMARY.md]
 started: 2026-05-15T00:00:00Z
@@ -77,9 +77,15 @@ blocked: 0
   reason: "User reported: I can change the name of the workout but I can't add a new exercise to it"
   severity: major
   test: 7
-  root_cause: ""
-  artifacts: []
-  missing: []
+  root_cause: "router.replace in exercise-detail.tsx creates a NEW workout-builder instance on the stack instead of returning to the existing one. In edit mode, pickerReturnTo is '/workout-builder' (bare, no ?id=...), so the new instance has no workout ID and the edit session is silently discarded."
+  artifacts:
+    - path: "apps/native/app/(main)/exercise-detail.tsx"
+      issue: "router.replace to '/workout-builder' creates a fresh screen instance instead of returning to the existing one; drops the id param in edit mode"
+    - path: "apps/native/app/(main)/workout-builder.tsx"
+      issue: "handleAddExercise passes pickerReturnTo without the workout id param, so edit-mode context is lost on the return trip"
+  missing:
+    - "picker round-trip must use router.dismiss(2) or router.back() to return to the existing builder instance"
+    - "picked exercise data must be passed via a store (Zustand/context) rather than URL params to avoid remounting"
   debug_session: ""
 
 - truth: "Adding a second exercise via the picker appends it to the list — existing exercises are not replaced"
@@ -87,7 +93,13 @@ blocked: 0
   reason: "User reported: I can't have more than one exercise in a workout. I can add only one and when I try to add another one, it changes the previous"
   severity: major
   test: 8
-  root_cause: ""
-  artifacts: []
-  missing: []
+  root_cause: "router.replace in exercise-detail.tsx pushes a new workout-builder instance onto the stack (does not return to the existing one). The new instance remounts with useState([]) resetting exercises to empty, so only the newly picked exercise appears — giving the illusion that the previous was replaced."
+  artifacts:
+    - path: "apps/native/app/(main)/exercise-detail.tsx"
+      issue: "router.replace creates a new screen instance; remount resets all draft state including the exercises array"
+    - path: "apps/native/app/(main)/workout-builder.tsx"
+      issue: "router.setParams with undefined values does not clear params in Expo Router — secondary concern once remount is fixed"
+  missing:
+    - "replace router.replace with router.dismiss(2) to pop catalog+detail and return to the original builder instance"
+    - "pass picked exercise via a shared store (not URL params) to survive the navigation without remounting"
   debug_session: ""
