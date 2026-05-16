@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   View,
   Text,
@@ -11,6 +11,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { router } from "expo-router";
 
 import { useTheme } from "@src/context/ThemeContext";
+import { useAuth } from "@src/context/AuthContext";
 import { useProfile } from "@src/hooks/queries/useProfile";
 import AvatarDisplay from "@src/components/AvatarDisplay";
 import { ApiError } from "@src/api";
@@ -20,13 +21,16 @@ const formatExperienceLevel = (level: string): string =>
 
 const ProfileScreen: React.FC = () => {
   const { colors } = useTheme();
+  const { token, isLoading: authLoading } = useAuth();
   const { data: user, isLoading, error } = useProfile();
   const activeGoal = user?.goals?.[0] ?? null;
 
-  if (error instanceof ApiError && error.status === 401) {
-    router.replace("/(auth)/login");
-    return null;
-  }
+  useEffect(() => {
+    if (authLoading) return;
+    if (!token || (error instanceof ApiError && error.status === 401)) {
+      router.replace("/(auth)/login");
+    }
+  }, [token, authLoading, error]);
 
   return (
     <SafeAreaView
