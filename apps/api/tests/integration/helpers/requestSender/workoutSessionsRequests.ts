@@ -10,7 +10,7 @@ export const createWorkoutSession = async (
 ) => {
   const request = supertest
     .agent(app)
-    .post("/api/sessions")
+    .post("/api/workout-sessions")
     .set("Content-Type", "application/json");
 
   if (token) {
@@ -25,7 +25,7 @@ export const listWorkoutSessions = async (
   token: string | undefined,
   query?: Record<string, string | number | undefined>,
 ) => {
-  const request = supertest.agent(app).get("/api/sessions");
+  const request = supertest.agent(app).get("/api/workout-sessions");
 
   if (token) {
     request.set("Authorization", `Bearer ${token}`);

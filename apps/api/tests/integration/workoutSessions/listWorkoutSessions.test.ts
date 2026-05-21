@@ -12,13 +12,13 @@ import { registerUser } from "../helpers/requestSender/authRequests";
 import {
   listWorkoutSessions,
   createWorkoutSession,
-} from "../helpers/requestSender/sessionsRequests";
+} from "../helpers/requestSender/workoutSessionsRequests";
 import { createExercise } from "../helpers/db/exerciseHelper";
 
 import { WorkoutSessionBuilder } from "../builders/workoutSessionBuilder";
 import { RegisterUserBuilder } from "../builders/registerUserBuilder";
 
-describe("GET /api/sessions", () => {
+describe("GET /api/workout-sessions", () => {
   let app: Application;
   let prisma: ReturnType<typeof getPrismaClient>;
 
