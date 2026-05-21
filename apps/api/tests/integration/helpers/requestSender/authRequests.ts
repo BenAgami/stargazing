@@ -9,7 +9,7 @@ export const registerUser = async (
 ) => {
   return supertest
     .agent(app)
-    .post("/api/users/register")
+    .post("/api/auth/register")
     .set("Content-Type", "application/json")
     .send(userRegisterData);
 };
@@ -20,7 +20,7 @@ export const loginUser = async (
 ) => {
   return supertest
     .agent(app)
-    .post("/api/users/login")
+    .post("/api/auth/login")
     .set("Content-Type", "application/json")
     .send(userLoginData);
 };

@@ -109,7 +109,7 @@ const tryRefreshAndRetry = async <T>(
   if (refreshToken) {
     try {
       const refreshRes = await sendRequest(
-        "/api/users/refresh",
+        "/api/auth/refresh",
         { method: "POST", body: JSON.stringify({ refreshToken }) },
         false,
       );

@@ -19,10 +19,10 @@ const authenticateToken = (req: Request, _: Response, next: NextFunction) => {
 
   jwt.verify(token, env.jwt.secret, (err, user) => {
     if (err instanceof TokenExpiredError) {
-      return next(new UnauthorizedError("Token expired"));
+      return next(new UnauthorizedError("Token expired: " + err.message));
     }
     if (err instanceof JsonWebTokenError) {
-      return next(new ForbiddenError("Invalid token"));
+      return next(new ForbiddenError("Invalid token: " + err.message));
     }
     req.user = user as MyJwtPayload;
     next();
