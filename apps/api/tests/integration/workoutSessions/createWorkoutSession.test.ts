@@ -8,7 +8,7 @@ import {
   teardownIntegrationTest,
 } from "../helpers/testSetup";
 import { registerUser } from "../helpers/requestSender/authRequests";
-import { createWorkoutSession } from "../helpers/requestSender/sessionsRequests";
+import { createWorkoutSession } from "../helpers/requestSender/workoutSessionsRequests";
 import { createExercise } from "../helpers/db/exerciseHelper";
 
 import {
@@ -17,7 +17,7 @@ import {
 } from "../builders/workoutSessionBuilder";
 import { RegisterUserBuilder } from "../builders/registerUserBuilder";
 
-describe("POST /api/sessions", () => {
+describe("POST /api/workout-sessions", () => {
   let app: Application;
   let prisma: ReturnType<typeof getPrismaClient>;
 
