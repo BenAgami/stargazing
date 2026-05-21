@@ -1,0 +1,32 @@
+import { Request, Response, NextFunction } from "express";
+import jwt, { JsonWebTokenError, TokenExpiredError } from "jsonwebtoken";
+
+import UnauthorizedError from "../../errors/UnauthorizedError";
+import ForbiddenError from "../../errors/ForbiddenError";
+
+import MyJwtPayload from "../../types/myJwtPayload";
+import { env } from "../../config/env";
+
+const authenticateToken = (req: Request, _: Response, next: NextFunction) => {
+  const authHeader = req.headers.authorization;
+
+  if (!authHeader?.startsWith("Bearer ")) {
+    return next(
+      new UnauthorizedError("Authorization header missing or malformed"),
+    );
+  }
+  const token = authHeader.split(" ")[1];
+
+  jwt.verify(token, env.jwt.secret, (err, user) => {
+    if (err instanceof TokenExpiredError) {
+      return next(new UnauthorizedError("Token expired"));
+    }
+    if (err instanceof JsonWebTokenError) {
+      return next(new ForbiddenError("Invalid token"));
+    }
+    req.user = user as MyJwtPayload;
+    next();
+  });
+};
+
+export default authenticateToken;

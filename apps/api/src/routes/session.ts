@@ -4,7 +4,7 @@ import z from "zod";
 import { createWorkoutSessionSchema } from "@repo/common";
 
 import validateSchema from "../middlewares/validateSchema";
-import authenticateToken from "../middlewares/authentication";
+import { authenticateToken } from "../middlewares/auth";
 import {
   createWorkoutSession,
   listWorkoutSessions,
