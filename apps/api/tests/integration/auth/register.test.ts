@@ -14,7 +14,7 @@ import {
 } from "../helpers/testSetup";
 import { registerUser } from "../helpers/requestSender/authRequests";
 
-describe("POST /api/users/register", () => {
+describe("POST /api/auth/register", () => {
   let app: Application;
   let prisma: ReturnType<typeof getPrismaClient>;
 

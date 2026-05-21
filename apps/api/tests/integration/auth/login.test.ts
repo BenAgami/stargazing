@@ -15,7 +15,7 @@ import {
 import { LoginUserBuilder, LoginUserDto } from "../builders/loginUserBuilder";
 import { registerUser, loginUser } from "../helpers/requestSender/authRequests";
 
-describe("POST /api/users/login", () => {
+describe("POST /api/auth/login", () => {
   let app: Application;
   let prisma: ReturnType<typeof getPrismaClient>;
 

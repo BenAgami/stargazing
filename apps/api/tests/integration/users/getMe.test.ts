@@ -1,8 +1,10 @@
 import { Application } from "express";
 import { StatusCodes } from "http-status-codes";
+import jwt from "jsonwebtoken";
 
 import { getPrismaClient } from "@repo/db";
 
+import { env } from "../../../src/config/env";
 import {
   setupIntegrationTest,
   teardownIntegrationTest,
@@ -59,5 +61,17 @@ describe("GET /api/me", () => {
 
     expect(response.status).toBe(StatusCodes.FORBIDDEN);
     expect(response.body.message).toBe("Invalid token: jwt malformed");
+  });
+
+  it("should return 401 if token is expired", async () => {
+    const expiredToken = jwt.sign(
+      { sub: "test", exp: Math.floor(Date.now() / 1000) - 3600 },
+      env.jwt.secret,
+    );
+
+    const response = await getMyUser(app, expiredToken);
+
+    expect(response.status).toBe(StatusCodes.UNAUTHORIZED);
+    expect(response.body.message).toBe("Token expired: jwt expired");
   });
 });
