@@ -41,6 +41,8 @@ describe("POST /api/auth/login", () => {
     expect(response.status).toBe(StatusCodes.OK);
     expect(response.body.data).toHaveProperty("user");
     expect(response.body.data).toHaveProperty("token");
+    expect(response.body.data).toHaveProperty("refreshToken");
+    expect(typeof response.body.data.refreshToken).toBe("string");
     expect(response.body.data.user).not.toHaveProperty("password");
     expect(response.body.data.user).not.toHaveProperty("passwordHash");
   });

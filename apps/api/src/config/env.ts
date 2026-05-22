@@ -11,7 +11,8 @@ const envSchema = z.object({
   PORT: z.coerce.number().default(3000),
   DATABASE_URL: z.url(),
   JWT_SECRET: z.string().min(1, "JWT_SECRET is required"),
-  JWT_EXPIRES_IN: z.string().default("1h"),
+  JWT_EXPIRES_IN: z.string().default("15m"),
+  REFRESH_TOKEN_EXPIRES_IN: z.string().default("7d"),
   REDIS_URL: z.string().default("redis://localhost:6379"),
   CORS_ALLOWED_ORIGINS: z.string().default("http://localhost:8081"),
   R2_ACCOUNT_ID: z.string().min(1),
@@ -38,6 +39,7 @@ export const env = {
   jwt: {
     secret: parsedData.JWT_SECRET,
     expiresIn: parsedData.JWT_EXPIRES_IN as StringValue,
+    refreshExpiresIn: parsedData.REFRESH_TOKEN_EXPIRES_IN as StringValue,
   },
   corsAllowedOrigins: parsedData.CORS_ALLOWED_ORIGINS,
   redis: {

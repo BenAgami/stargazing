@@ -14,7 +14,7 @@ export const useLogin = () => {
     setError(null);
     try {
       const result = await authApi.login(data);
-      await setToken(result.token);
+      await setToken(result.token, result.refreshToken);
       router.replace("/");
     } catch (err) {
       if (err instanceof ApiError && err.status === StatusCodes.UNAUTHORIZED) {

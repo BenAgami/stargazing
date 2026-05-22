@@ -9,9 +9,7 @@ export type TestAppContext = {
   prisma: ReturnType<typeof getPrismaClient>;
 };
 
-const cleanupDatabase = async (
-  prisma: ReturnType<typeof getPrismaClient>,
-) => {
+const cleanupDatabase = async (prisma: ReturnType<typeof getPrismaClient>) => {
   await prisma.analysisFinding.deleteMany();
   await prisma.analysisResult.deleteMany();
   await prisma.userMilestone.deleteMany();
@@ -23,6 +21,7 @@ const cleanupDatabase = async (
   await prisma.workout.deleteMany();
   await prisma.milestoneDefinition.deleteMany();
   await prisma.exercise.deleteMany();
+  await prisma.refreshToken.deleteMany();
   await prisma.user.deleteMany();
 };
 

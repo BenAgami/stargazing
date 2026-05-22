@@ -14,7 +14,7 @@ export const useRegister = () => {
     setError(null);
     try {
       const result = await authApi.register(data);
-      await setToken(result.token);
+      await setToken(result.token, result.refreshToken);
       router.replace("/");
     } catch (err) {
       if (err instanceof ApiError && err.status === StatusCodes.CONFLICT) {
