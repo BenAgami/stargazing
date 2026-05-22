@@ -5,6 +5,8 @@
     "allowJs": true,
     "jsx": "react",
     "lib": ["DOM", "ESNext"],
+    "module": "preserve",
+    "moduleResolution": "bundler",
     "noEmit": true,
     "resolveJsonModule": true,
     "target": "ESNext"

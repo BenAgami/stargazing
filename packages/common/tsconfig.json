@@ -3,7 +3,8 @@
   "include": ["src"],
   "exclude": ["dist", "build", "node_modules"],
   "compilerOptions": {
-    "strict": true,
+    "module": "preserve",
+    "moduleResolution": "bundler",
     "types": []
   }
 }
