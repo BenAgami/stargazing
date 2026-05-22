@@ -9,7 +9,7 @@ const fullNameSchema: ZodString = z
   .regex(/^[a-zA-Z\s-]+$/, AUTH_MESSAGES.nameInvalid)
   .refine(
     (val) => val.trim().split(/\s+/).length >= 2,
-    AUTH_MESSAGES.nameTooShort
+    AUTH_MESSAGES.nameTooShort,
   );
 
 const emailSchema: ZodEmail = z.email(AUTH_MESSAGES.emailInvalid);
@@ -33,5 +33,20 @@ export const registerSchema = z.object({
   password: strongPasswordSchema,
 });
 
+const refreshTokenField = z
+  .string()
+  .length(64)
+  .regex(/^[0-9a-f]+$/, "Invalid token format");
+
+export const refreshTokenSchema = z.object({
+  refreshToken: refreshTokenField,
+});
+
+export const logoutSchema = z.object({
+  refreshToken: refreshTokenField,
+});
+
 export type LoginValues = z.infer<typeof loginSchema>;
 export type RegisterValues = z.infer<typeof registerSchema>;
+export type RefreshTokenValues = z.infer<typeof refreshTokenSchema>;
+export type LogoutValues = z.infer<typeof logoutSchema>;
