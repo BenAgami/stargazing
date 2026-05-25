@@ -3,6 +3,7 @@ import z from "zod";
 
 import validateSchema from "../middlewares/validateSchema";
 import { optionalAuth } from "../middlewares/auth";
+
 import { getExerciseByCode, listExercises } from "../controllers/exercise";
 
 const router: Router = Router();

@@ -41,7 +41,9 @@ export class WorkoutService {
       where: { uuid },
       select: { id: true },
     });
-    if (!user) throw new NotFoundError("User not found");
+    if (!user) {
+      throw new NotFoundError("User not found");
+    }
     return user.id;
   }
 
@@ -52,7 +54,9 @@ export class WorkoutService {
       throw new BadRequestError("Cannot specify both reps and durationSecs");
     }
     if (!hasReps && !hasDuration) {
-      throw new BadRequestError("Either reps or durationSecs must be specified");
+      throw new BadRequestError(
+        "Either reps or durationSecs must be specified",
+      );
     }
   }
 
@@ -124,7 +128,11 @@ export class WorkoutService {
     return workout;
   }
 
-  async updateWorkout(userUuid: string, workoutId: number, data: UpdateWorkoutValues) {
+  async updateWorkout(
+    userUuid: string,
+    workoutId: number,
+    data: UpdateWorkoutValues,
+  ) {
     const userId = await this.getUserIdByUuid(userUuid);
     const existing = await this.prisma.workout.findFirst({
       where: { id: workoutId, userId },
@@ -134,7 +142,9 @@ export class WorkoutService {
 
     if (data.exercises) {
       data.exercises.forEach((ex) => this.validateExerciseInput(ex));
-      await this.assertExercisesExist(data.exercises.map((ex) => ex.exerciseId));
+      await this.assertExercisesExist(
+        data.exercises.map((ex) => ex.exerciseId),
+      );
     }
 
     return this.prisma.$transaction(async (tx) => {
@@ -144,6 +154,7 @@ export class WorkoutService {
           data: { name: data.name },
         });
       }
+
       if (data.exercises) {
         await tx.workoutExercise.deleteMany({ where: { workoutId } });
         await tx.workoutExercise.createMany({
@@ -158,6 +169,7 @@ export class WorkoutService {
           })),
         });
       }
+
       const updated = await tx.workout.findUnique({
         where: { id: workoutId },
         include: workoutInclude,
@@ -177,7 +189,11 @@ export class WorkoutService {
     await this.prisma.workout.delete({ where: { id: workoutId } });
   }
 
-  async startWorkoutLog(userUuid: string, workoutId: number, data: WorkoutLogValues) {
+  async startWorkoutLog(
+    userUuid: string,
+    workoutId: number,
+    data: WorkoutLogValues,
+  ) {
     const userId = await this.getUserIdByUuid(userUuid);
     const workout = await this.prisma.workout.findFirst({
       where: { id: workoutId, userId },
@@ -185,7 +201,9 @@ export class WorkoutService {
     });
     if (!workout) throw new NotFoundError("Workout not found");
 
-    const completedAt = data.completedAt ? new Date(data.completedAt) : undefined;
+    const completedAt = data.completedAt
+      ? new Date(data.completedAt)
+      : undefined;
     if (completedAt && Number.isNaN(completedAt.getTime())) {
       throw new BadRequestError("Invalid completedAt value");
     }

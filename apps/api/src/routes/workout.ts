@@ -9,6 +9,7 @@ import {
 
 import validateSchema from "../middlewares/validateSchema";
 import { authenticateToken } from "../middlewares/auth";
+
 import {
   listWorkouts,
   getWorkoutById,
