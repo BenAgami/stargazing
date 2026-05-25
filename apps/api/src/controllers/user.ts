@@ -4,6 +4,8 @@ import { StatusCodes } from "http-status-codes";
 import { UpdateProfileValues, UpsertGoalValues } from "@repo/common";
 
 import asyncHandler from "../utils/asyncWrapper";
+import requireUserUuid from "../utils/requireUserUuid";
+
 import userService from "../services/userService";
 
 type GetUserProfileParams = {
@@ -39,16 +41,10 @@ export const getUserProfile = asyncHandler(
  * @returns {Object} User data
  */
 export const getMyUser = asyncHandler(async (req: Request, res: Response) => {
-  const uuid = req.user?.sub;
+  const userUuid = requireUserUuid(req, res);
+  if (!userUuid) return;
 
-  if (!uuid) {
-    return res.status(StatusCodes.UNAUTHORIZED).json({
-      success: false,
-      message: "Unauthorized access - user UUID is missing",
-    });
-  }
-
-  const user = await userService.getUserByUuid(uuid);
+  const user = await userService.getUserByUuid(userUuid);
 
   res.status(StatusCodes.OK).json({
     success: true,
@@ -66,17 +62,11 @@ export const getMyUser = asyncHandler(async (req: Request, res: Response) => {
  */
 export const updateMyProfile = asyncHandler(
   async (req: Request, res: Response) => {
-    const uuid = req.user?.sub;
-
-    if (!uuid) {
-      return res.status(StatusCodes.UNAUTHORIZED).json({
-        success: false,
-        message: "Unauthorized access - user UUID is missing",
-      });
-    }
+    const userUuid = requireUserUuid(req, res);
+    if (!userUuid) return;
 
     const data: UpdateProfileValues = req.body;
-    const user = await userService.updateProfile(uuid, data);
+    const user = await userService.updateProfile(userUuid, data);
 
     res.status(StatusCodes.OK).json({
       success: true,
@@ -95,16 +85,10 @@ export const updateMyProfile = asyncHandler(
  */
 export const getAvatarUploadUrl = asyncHandler(
   async (req: Request, res: Response) => {
-    const uuid = req.user?.sub;
+    const userUuid = requireUserUuid(req, res);
+    if (!userUuid) return;
 
-    if (!uuid) {
-      return res.status(StatusCodes.UNAUTHORIZED).json({
-        success: false,
-        message: "Unauthorized access - user UUID is missing",
-      });
-    }
-
-    const result = await userService.getAvatarUploadUrl(uuid);
+    const result = await userService.getAvatarUploadUrl(userUuid);
 
     res.status(StatusCodes.OK).json({
       success: true,
@@ -123,17 +107,11 @@ export const getAvatarUploadUrl = asyncHandler(
  */
 export const createMyGoal = asyncHandler(
   async (req: Request, res: Response) => {
-    const uuid = req.user?.sub;
-
-    if (!uuid) {
-      return res.status(StatusCodes.UNAUTHORIZED).json({
-        success: false,
-        message: "Unauthorized access - user UUID is missing",
-      });
-    }
+    const userUuid = requireUserUuid(req, res);
+    if (!userUuid) return;
 
     const data: UpsertGoalValues = req.body;
-    const goal = await userService.createGoal(uuid, data);
+    const goal = await userService.createGoal(userUuid, data);
 
     res.status(StatusCodes.CREATED).json({
       success: true,

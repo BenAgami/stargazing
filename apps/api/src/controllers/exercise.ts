@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
+
 import { Role } from "@repo/db";
 
 import asyncHandler from "../utils/asyncWrapper";
@@ -23,21 +24,19 @@ export const listExercises = asyncHandler(
   ) => {
     const limit = req.query.limit ? Number(req.query.limit) : 20;
     const offset = req.query.offset ? Number(req.query.offset) : 0;
-    const includeInactiveRequested =
+    const shouldIncludeInactive =
       req.query.includeInactive === "true" || req.query.includeInactive === "1";
 
-    if (includeInactiveRequested && req.user?.role !== Role.ADMIN) {
+    if (shouldIncludeInactive && req.user?.role !== Role.ADMIN) {
       throw new ForbiddenError(
         "Admin access required to view inactive exercises",
       );
     }
 
-    const includeInactive = includeInactiveRequested;
-
     const result = await exerciseService.listExercises({
       limit,
       offset,
-      includeInactive,
+      includeInactive: shouldIncludeInactive,
     });
 
     res.status(StatusCodes.OK).json({

@@ -10,16 +10,14 @@ import ConflictError from "../errors/ConflictError";
 import NotFoundError from "../errors/NotFoundError";
 
 import { PrismaErrorCode } from "../utils/prismaErrorCodes";
+import { normalizeString } from "../utils/normalizeString";
+
 import { r2Client } from "../lib/r2";
 import { env } from "../config/env";
 
 export class UserService {
   private get prisma() {
     return getPrismaClient();
-  }
-
-  private static normalizeEmail(email: string): string {
-    return email.toLowerCase().trim();
   }
 
   async getUserByUuid(uuid: string) {
@@ -59,7 +57,7 @@ export class UserService {
   }
 
   async getUserByEmail(email: string) {
-    const normalizedEmail = UserService.normalizeEmail(email);
+    const normalizedEmail = normalizeString(email);
 
     const user = await this.prisma.user.findUnique({
       where: { email: normalizedEmail },

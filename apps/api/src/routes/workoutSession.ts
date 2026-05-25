@@ -5,6 +5,7 @@ import { createWorkoutSessionSchema } from "@repo/common";
 
 import validateSchema from "../middlewares/validateSchema";
 import { authenticateToken } from "../middlewares/auth";
+
 import {
   createWorkoutSession,
   listWorkoutSessions,

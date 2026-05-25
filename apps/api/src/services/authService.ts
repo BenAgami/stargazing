@@ -10,6 +10,7 @@ import UnauthorizedError from "../errors/UnauthorizedError";
 
 import generateJwtToken from "../utils/generateJwtToken";
 import { PrismaErrorCode } from "../utils/prismaErrorCodes";
+import { normalizeString } from "../utils/normalizeString";
 
 import refreshTokenService from "./refreshTokenService";
 
@@ -19,10 +20,6 @@ class AuthService {
 
   private get prisma() {
     return getPrismaClient();
-  }
-
-  private static normalizeEmail(email: string): string {
-    return email.toLowerCase().trim();
   }
 
   private static generateRandomDigits(length: number = 4): string {
@@ -50,7 +47,7 @@ class AuthService {
 
   async register(data: RegisterValues) {
     const { email, password, name } = data;
-    const normalizedEmail = AuthService.normalizeEmail(email);
+    const normalizedEmail = normalizeString(email);
 
     const existingUser = await this.prisma.user.findUnique({
       where: { email: normalizedEmail },
@@ -107,7 +104,7 @@ class AuthService {
 
   async login(data: LoginValues) {
     const { email, password } = data;
-    const normalizedEmail = AuthService.normalizeEmail(email);
+    const normalizedEmail = normalizeString(email);
 
     const user = await this.prisma.user.findUnique({
       where: { email: normalizedEmail },
