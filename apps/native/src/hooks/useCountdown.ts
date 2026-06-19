@@ -43,7 +43,6 @@ export const useCountdown = (initialSeconds: number): UseCountdownReturn => {
     intervalRef.current = setInterval(() => {
       setSecondsLeft((s) => {
         if (s <= 1) {
-          // Defer state update to next tick to avoid setState-during-render warning.
           setIsRunning(false);
           return 0;
         }

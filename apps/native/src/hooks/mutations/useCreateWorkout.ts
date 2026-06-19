@@ -11,7 +11,6 @@ export const useCreateWorkout = () => {
     mutationFn: (data: CreateWorkoutValues) => workoutApi.create(data),
     onSuccess: (created) => {
       queryClient.invalidateQueries({ queryKey: workoutKeys.lists() });
-      // Seed the detail cache so navigating to the new workout is instant.
       queryClient.setQueryData(workoutKeys.detail(created.id), created);
     },
   });

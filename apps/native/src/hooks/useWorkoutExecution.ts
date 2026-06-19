@@ -1,22 +1,23 @@
 import { useState, useEffect, useCallback, useMemo, useRef } from "react";
 
 import { useCountdown } from "@src/hooks/useCountdown";
-import type { WorkoutWithExercises, WorkoutExerciseHydrated } from "@src/types/workout";
+import type {
+  WorkoutWithExercises,
+  WorkoutExerciseHydrated,
+} from "@src/types/workout";
 
 export type ExecutionPhase = "working" | "resting" | "complete";
 
 export interface UseWorkoutExecutionResult {
   phase: ExecutionPhase;
   currentExerciseIndex: number;
-  currentSet: number; // 1-based
+  currentSet: number;
   currentExercise: WorkoutExerciseHydrated | null;
   isLastSet: boolean;
   isLastExercise: boolean;
   totalElapsedSecs: number;
-  // For resting phase:
   restSecondsLeft: number;
   restTotalSecs: number;
-  // Actions:
   completeSet: () => void;
   skipRest: () => void;
 }
@@ -26,7 +27,7 @@ export const useWorkoutExecution = (
 ): UseWorkoutExecutionResult => {
   const exercises = workout?.exercises ?? [];
   const [exerciseIndex, setExerciseIndex] = useState(0);
-  const [setNumber, setSetNumber] = useState(1); // 1-based
+  const [setNumber, setSetNumber] = useState(1);
   const [phase, setPhase] = useState<ExecutionPhase>("working");
   const startedAtRef = useRef<number>(Date.now());
   const [totalElapsed, setTotalElapsed] = useState(0);
@@ -37,7 +38,6 @@ export const useWorkoutExecution = (
 
   const countdown = useCountdown(restTotal);
 
-  // Wall-clock elapsed updater (ticks every second while not complete)
   useEffect(() => {
     if (phase === "complete") return;
     const interval = setInterval(() => {
@@ -46,7 +46,6 @@ export const useWorkoutExecution = (
     return () => clearInterval(interval);
   }, [phase]);
 
-  // When countdown ends naturally during rest, advance to next set/exercise
   useEffect(() => {
     if (phase !== "resting") return;
     if (countdown.isRunning) return;
@@ -58,12 +57,10 @@ export const useWorkoutExecution = (
   const advanceAfterRest = useCallback(() => {
     if (!currentExercise) return;
     if (setNumber < currentExercise.sets) {
-      // More sets remain on the current exercise
       setSetNumber((s) => s + 1);
       setPhase("working");
       return;
     }
-    // Move to next exercise (or complete)
     if (exerciseIndex < exercises.length - 1) {
       setExerciseIndex((i) => i + 1);
       setSetNumber(1);
@@ -85,13 +82,20 @@ export const useWorkoutExecution = (
       return;
     }
     if (currentExercise.restSecs <= 0) {
-      // No rest configured — go straight to the next set/exercise
       advanceAfterRest();
       return;
     }
     setPhase("resting");
     countdown.start(currentExercise.restSecs);
-  }, [currentExercise, phase, setNumber, exerciseIndex, exercises.length, countdown, advanceAfterRest]);
+  }, [
+    currentExercise,
+    phase,
+    setNumber,
+    exerciseIndex,
+    exercises.length,
+    countdown,
+    advanceAfterRest,
+  ]);
 
   const skipRest = useCallback(() => {
     if (phase !== "resting") return;

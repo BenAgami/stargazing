@@ -10,7 +10,7 @@ import { useCreateWorkout } from "@src/hooks/mutations/useCreateWorkout";
 import { useUpdateWorkout } from "@src/hooks/mutations/useUpdateWorkout";
 
 export interface DraftExercise extends DraftExerciseValues {
-  localId: string;          // stable client-side key (random) — survives reorder
+  localId: string;
   exerciseId: number;
   exerciseCode: string;
   exerciseDisplayName: string;
@@ -47,7 +47,6 @@ export const useWorkoutBuilder = (options: UseWorkoutBuilderOptions) => {
   const [exercises, setExercises] = useState<DraftExercise[]>([]);
   const seededRef = useRef(false);
 
-  // Seed draft from server data ONCE in edit mode
   useEffect(() => {
     if (!isEdit) return;
     if (seededRef.current) return;
@@ -99,17 +98,27 @@ export const useWorkoutBuilder = (options: UseWorkoutBuilderOptions) => {
 
   const validation = useMemo(() => {
     const trimmed = name.trim();
-    if (trimmed.length < 1) return { valid: false, message: "Name is required" } as const;
-    if (trimmed.length > 100) return { valid: false, message: "Name max 100 chars" } as const;
-    if (exercises.length < 1) return { valid: false, message: "Add at least one exercise" } as const;
-    if (exercises.length > 50) return { valid: false, message: "Max 50 exercises per workout" } as const;
+    if (trimmed.length < 1)
+      return { valid: false, message: "Name is required" } as const;
+    if (trimmed.length > 100)
+      return { valid: false, message: "Name max 100 chars" } as const;
+    if (exercises.length < 1)
+      return { valid: false, message: "Add at least one exercise" } as const;
+    if (exercises.length > 50)
+      return { valid: false, message: "Max 50 exercises per workout" } as const;
     for (const ex of exercises) {
       const isStatic = ex.exerciseType === "STATIC_HOLD";
       if (isStatic && (ex.durationSecs == null || ex.durationSecs < 1)) {
-        return { valid: false, message: "Static Hold exercises need a duration" } as const;
+        return {
+          valid: false,
+          message: "Static Hold exercises need a duration",
+        } as const;
       }
       if (!isStatic && (ex.reps == null || ex.reps < 1)) {
-        return { valid: false, message: "Dynamic exercises need reps" } as const;
+        return {
+          valid: false,
+          message: "Dynamic exercises need reps",
+        } as const;
       }
     }
     return { valid: true } as const;
@@ -122,7 +131,8 @@ export const useWorkoutBuilder = (options: UseWorkoutBuilderOptions) => {
         exerciseId: ex.exerciseId,
         sets: ex.sets,
         reps: ex.exerciseType === "STATIC_HOLD" ? null : ex.reps,
-        durationSecs: ex.exerciseType === "STATIC_HOLD" ? ex.durationSecs : null,
+        durationSecs:
+          ex.exerciseType === "STATIC_HOLD" ? ex.durationSecs : null,
         restSecs: ex.restSecs,
       })),
     };
@@ -153,7 +163,14 @@ export const useWorkoutBuilder = (options: UseWorkoutBuilderOptions) => {
         Alert.alert("Error", "Could not save workout. Please try again.");
       }
     },
-    [validation, buildPayload, isEdit, options.workoutId, createMutation, updateMutation],
+    [
+      validation,
+      buildPayload,
+      isEdit,
+      options.workoutId,
+      createMutation,
+      updateMutation,
+    ],
   );
 
   return {

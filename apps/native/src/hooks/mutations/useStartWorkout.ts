@@ -15,9 +15,6 @@ export const useStartWorkout = () => {
   return useMutation<WorkoutLogResponse, Error, StartWorkoutVariables>({
     mutationFn: ({ workoutId, data }) => workoutApi.startLog(workoutId, data),
     onSuccess: () => {
-      // Future progress tracking (Phase 7) will read workout logs.
-      // For now, invalidating the all key is a no-op for any current consumer
-      // but leaves the door open without changing the API later.
       queryClient.invalidateQueries({ queryKey: workoutKeys.all });
     },
   });

@@ -7,8 +7,6 @@ export interface PickedExercise {
   exerciseType: ExerciseType;
 }
 
-// Module-level slot. The builder consumes-and-clears on focus, so we never
-// need subscribers — this is a transient hand-off, not reactive state.
 let pending: PickedExercise | undefined;
 
 export const setPickedExercise = (picked: PickedExercise): void => {
