@@ -4,10 +4,6 @@ export const userKeys = {
   byId: (id: string) => ["user", id] as const,
 };
 
-export const authKeys = {
-  all: ["auth"] as const,
-};
-
 export const workoutKeys = {
   all: ["workouts"] as const,
   lists: () => ["workouts", "list"] as const,
