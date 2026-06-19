@@ -27,10 +27,10 @@ const ProfileEditScreen: React.FC = () => {
     avatarUri,
     experienceLevel,
     goalDraft,
-    avatarPickerVisible,
+    isAvatarPickerVisible,
     setExperienceLevel,
     setGoalDraft,
-    setAvatarPickerVisible,
+    setIsAvatarPickerVisible,
     handleUsernameChange,
     handlePickImage,
     handleSave,
@@ -72,7 +72,7 @@ const ProfileEditScreen: React.FC = () => {
         {/* Avatar */}
         <View style={styles.avatarSection}>
           <Pressable
-            onPress={() => setAvatarPickerVisible(true)}
+            onPress={() => setIsAvatarPickerVisible(true)}
             style={({ pressed }) => pressed && styles.pressed}
           >
             <AvatarDisplay
@@ -262,8 +262,8 @@ const ProfileEditScreen: React.FC = () => {
       </ScrollView>
 
       <AvatarPickerModal
-        visible={avatarPickerVisible}
-        onClose={() => setAvatarPickerVisible(false)}
+        visible={isAvatarPickerVisible}
+        onClose={() => setIsAvatarPickerVisible(false)}
         onPickLibrary={() => handlePickImage(false)}
         onPickCamera={() => handlePickImage(true)}
       />

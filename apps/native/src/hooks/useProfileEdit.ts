@@ -6,10 +6,10 @@ import { ImageManipulator, SaveFormat } from "expo-image-manipulator";
 import { StatusCodes } from "http-status-codes";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-import type { ExperienceLevel } from "@repo/common";
 import { userApi, ApiError, userKeys } from "@src/api";
 import { useProfile } from "@src/hooks/queries/useProfile";
 import type { GoalDraft } from "@src/types/user";
+import type { ExperienceLevel } from "@repo/common";
 
 export const useProfileEdit = () => {
   const queryClient = useQueryClient();
@@ -115,41 +115,39 @@ export const useProfileEdit = () => {
 
   const handlePickImage = async (canUseCamera: boolean) => {
     setIsAvatarPickerVisible(false);
+    await new Promise<void>((resolve) => setTimeout(resolve, 750));
 
     if (canUseCamera) {
       const { status } = await ImagePicker.requestCameraPermissionsAsync();
-      if (status !== "granted") {
+      if (status !== ImagePicker.PermissionStatus.GRANTED) {
         Alert.alert(
           "Camera Access Required",
-          "Please enable camera access in your device settings to take a photo."
+          "Please enable camera access in your device settings to take a photo.",
         );
         return;
       }
     } else {
       const { status } =
         await ImagePicker.requestMediaLibraryPermissionsAsync();
-      if (status !== "granted") {
+      if (status !== ImagePicker.PermissionStatus.GRANTED) {
         Alert.alert(
           "Photo Library Access Required",
-          "Please enable photo library access in your device settings to choose a photo."
+          "Please enable photo library access in your device settings to choose a photo.",
         );
         return;
       }
     }
 
+    const pickerOptions: ImagePicker.ImagePickerOptions = {
+      mediaTypes: ["images"],
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 0.8,
+    };
+
     const result = canUseCamera
-      ? await ImagePicker.launchCameraAsync({
-          mediaTypes: ["images"],
-          allowsEditing: true,
-          aspect: [1, 1],
-          quality: 0.8,
-        })
-      : await ImagePicker.launchImageLibraryAsync({
-          mediaTypes: ["images"],
-          allowsEditing: true,
-          aspect: [1, 1],
-          quality: 0.8,
-        });
+      ? await ImagePicker.launchCameraAsync(pickerOptions)
+      : await ImagePicker.launchImageLibraryAsync(pickerOptions);
 
     if (result.canceled || !result.assets?.[0]?.uri) return;
 
@@ -184,10 +182,10 @@ export const useProfileEdit = () => {
     avatarUri,
     experienceLevel,
     goalDraft,
-    avatarPickerVisible: isAvatarPickerVisible,
+    isAvatarPickerVisible,
     setExperienceLevel,
     setGoalDraft,
-    setAvatarPickerVisible: setIsAvatarPickerVisible,
+    setIsAvatarPickerVisible,
     handleUsernameChange,
     handlePickImage,
     handleSave,
