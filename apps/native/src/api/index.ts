@@ -1,3 +1,4 @@
-export { apiClient, ApiError } from "./client";
+export { apiClient } from "./client";
+export { ApiError } from "./errors";
 export { authApi, userApi, workoutApi, exerciseApi } from "./endpoints";
-export { userKeys, authKeys, workoutKeys, exerciseKeys } from "./keys";
+export { userKeys, workoutKeys, exerciseKeys } from "./keys";
