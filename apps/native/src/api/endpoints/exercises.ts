@@ -1,8 +1,6 @@
+import type { ExerciseDetail, ExerciseListResponse } from "@src/types/workout";
+
 import { apiClient } from "../client";
-import type {
-  ExerciseDetail,
-  ExerciseListResponse,
-} from "@src/types/workout";
 
 export const exerciseApi = {
   list: (params?: {
@@ -11,7 +9,8 @@ export const exerciseApi = {
   }): Promise<ExerciseListResponse> => {
     const query = new URLSearchParams();
     if (params?.limit !== undefined) query.set("limit", String(params.limit));
-    if (params?.offset !== undefined) query.set("offset", String(params.offset));
+    if (params?.offset !== undefined)
+      query.set("offset", String(params.offset));
     const qs = query.toString();
     return apiClient.get<ExerciseListResponse>(
       qs ? `/api/exercises?${qs}` : "/api/exercises",

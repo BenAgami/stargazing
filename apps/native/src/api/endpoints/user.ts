@@ -1,5 +1,10 @@
+import type {
+  UserProfile,
+  UpdateProfileValues,
+  UpsertGoalValues,
+} from "@repo/common";
+
 import { apiClient } from "../client";
-import type { UserProfile, UpdateProfileValues, UpsertGoalValues } from "@repo/common";
 
 export const userApi = {
   getMe: (): Promise<UserProfile> =>
@@ -14,10 +19,17 @@ export const userApi = {
       {},
     ),
 
-  uploadAvatarToS3: async (uploadUrl: string, fileUri: string): Promise<void> => {
+  uploadAvatarToS3: async (
+    uploadUrl: string,
+    fileUri: string,
+  ): Promise<void> => {
     const res = await fetch(uploadUrl, {
       method: "PUT",
-      body: { uri: fileUri, type: "image/jpeg", name: "avatar.jpg" } as unknown as BodyInit,
+      body: {
+        uri: fileUri,
+        type: "image/jpeg",
+        name: "avatar.jpg",
+      } as unknown as BodyInit,
       headers: { "Content-Type": "image/jpeg" },
     });
     if (!res.ok) throw new Error("Avatar upload failed");

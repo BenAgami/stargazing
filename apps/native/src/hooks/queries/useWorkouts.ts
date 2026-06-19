@@ -12,6 +12,6 @@ export const useWorkouts = () => {
     queryKey: workoutKeys.lists(),
     queryFn: () => workoutApi.list({ limit: PAGE_SIZE, offset: 0 }),
     enabled: !!token,
-    staleTime: 30 * 1000, // 30s — workouts change frequently while user is editing
+    staleTime: 30 * 1000,
   });
 };
