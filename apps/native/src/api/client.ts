@@ -1,6 +1,7 @@
 import StatusCode from "http-status-codes";
 
 import { tokenStore } from "./tokenStore";
+import { ApiError } from "./errors";
 
 const API_BASE = process.env.EXPO_PUBLIC_API_BASE_URL;
 if (!API_BASE) throw new Error("EXPO_PUBLIC_API_BASE_URL is not set in .env");
@@ -14,17 +15,6 @@ const FALLBACK_MESSAGES: Partial<Record<number, string>> = {
   [StatusCode.NOT_FOUND]: "Not found.",
   [StatusCode.UNPROCESSABLE_ENTITY]: "Invalid data submitted.",
 };
-
-export class ApiError extends Error {
-  public readonly name: string;
-  public readonly status: number;
-
-  constructor(status: number, message: string) {
-    super(message);
-    this.name = "ApiError";
-    this.status = status;
-  }
-}
 
 let onUnauthenticated: (() => void) | null = null;
 
@@ -87,7 +77,6 @@ const sendRequest = async (
 };
 
 const parseResponse = async <T>(res: Response): Promise<T> => {
-  // 204 No Content has no body — resolve immediately without parsing.
   if (res.status === StatusCode.NO_CONTENT) {
     return undefined as unknown as T;
   }
@@ -126,6 +115,7 @@ const tryRefreshAndRetry = async <T>(
               ? data.refreshToken
               : undefined,
           );
+
           const retryRes = await sendRequest(path, init, true);
           return parseResponse<T>(retryRes);
         }
@@ -134,6 +124,7 @@ const tryRefreshAndRetry = async <T>(
       // refresh failed — fall through
     }
   }
+
   await tokenStore.clearTokens();
   onUnauthenticated?.();
   throw new ApiError(
