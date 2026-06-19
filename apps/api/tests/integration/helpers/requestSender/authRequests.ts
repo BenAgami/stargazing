@@ -1,7 +1,12 @@
 import { Application } from "express";
 import supertest from "supertest";
 
-import { LoginValues, RegisterValues } from "@repo/common";
+import {
+  LoginValues,
+  RegisterValues,
+  RefreshTokenValues,
+  LogoutValues,
+} from "@repo/common";
 
 export const registerUser = async (
   app: Application,
@@ -9,7 +14,7 @@ export const registerUser = async (
 ) => {
   return supertest
     .agent(app)
-    .post("/api/users/register")
+    .post("/api/auth/register")
     .set("Content-Type", "application/json")
     .send(userRegisterData);
 };
@@ -20,7 +25,29 @@ export const loginUser = async (
 ) => {
   return supertest
     .agent(app)
-    .post("/api/users/login")
+    .post("/api/auth/login")
     .set("Content-Type", "application/json")
     .send(userLoginData);
+};
+
+export const refreshToken = async (
+  app: Application,
+  refreshTokenValue: RefreshTokenValues["refreshToken"],
+) => {
+  return supertest
+    .agent(app)
+    .post("/api/auth/refresh")
+    .set("Content-Type", "application/json")
+    .send({ refreshToken: refreshTokenValue });
+};
+
+export const logoutUser = async (
+  app: Application,
+  refreshTokenValue: LogoutValues["refreshToken"],
+) => {
+  return supertest
+    .agent(app)
+    .post("/api/auth/logout")
+    .set("Content-Type", "application/json")
+    .send({ refreshToken: refreshTokenValue });
 };

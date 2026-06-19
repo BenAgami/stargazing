@@ -2,6 +2,7 @@
   "expo": {
     "name": "cali-ai",
     "slug": "cali-ai",
+    "owner": "benagami",
     "version": "1.0.0",
     "scheme": "cali-ai",
     "orientation": "portrait",
@@ -18,7 +19,11 @@
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.benagami.caliai",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -30,6 +35,11 @@
     "web": {
       "favicon": "./assets/favicon.png",
       "bundler": "metro"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "24329f1c-2c10-4642-9e82-d8a40330f8b5"
+      }
     },
     "plugins": [
       "expo-router",

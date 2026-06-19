@@ -14,7 +14,7 @@ import {
 } from "../helpers/testSetup";
 import { registerUser } from "../helpers/requestSender/authRequests";
 
-describe("POST /api/users/register", () => {
+describe("POST /api/auth/register", () => {
   let app: Application;
   let prisma: ReturnType<typeof getPrismaClient>;
 
@@ -34,6 +34,8 @@ describe("POST /api/users/register", () => {
     expect(response.status).toBe(StatusCodes.CREATED);
     expect(response.body.data).toHaveProperty("user");
     expect(response.body.data).toHaveProperty("token");
+    expect(response.body.data).toHaveProperty("refreshToken");
+    expect(typeof response.body.data.refreshToken).toBe("string");
     expect(response.body.data.user).toHaveProperty("id");
     expect(response.body.data.user.email).toBe(user.email);
     expect(response.body.data.user).not.toHaveProperty("password");

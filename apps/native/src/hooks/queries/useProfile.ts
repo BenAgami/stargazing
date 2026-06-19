@@ -6,7 +6,6 @@ import type { UserProfile } from "@repo/common";
 
 export const useProfile = () => {
   const { token } = useAuth();
-
   return useQuery<UserProfile, Error>({
     queryKey: userKeys.me(),
     queryFn: () => userApi.getMe(),

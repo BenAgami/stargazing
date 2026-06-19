@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { StatusCodes } from "http-status-codes";
 
 import { useAuth } from "@src/context/AuthContext";
@@ -9,13 +9,15 @@ import type { RegisterValues } from "@repo/common";
 export const useRegister = () => {
   const { setToken } = useAuth();
   const [error, setError] = useState<string | null>(null);
+  const { returnTo } = useLocalSearchParams<{ returnTo?: string }>();
 
   const handleSignUp = async (data: RegisterValues) => {
     setError(null);
     try {
       const result = await authApi.register(data);
-      await setToken(result.token);
-      router.replace("/");
+      await setToken(result.token, result.refreshToken);
+      const destination = returnTo?.startsWith("/") ? returnTo : "/";
+      router.replace(destination as Parameters<typeof router.replace>[0]);
     } catch (err) {
       if (err instanceof ApiError && err.status === StatusCodes.CONFLICT) {
         setError("An account with this email already exists.");

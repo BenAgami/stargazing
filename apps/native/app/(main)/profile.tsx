@@ -4,15 +4,16 @@ import {
   Text,
   Pressable,
   StyleSheet,
-  SafeAreaView,
   ScrollView,
   ActivityIndicator,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { router } from "expo-router";
 
 import { useTheme } from "@src/context/ThemeContext";
 import { useAuth } from "@src/context/AuthContext";
 import { useProfile } from "@src/hooks/queries/useProfile";
+import { useLogout } from "@src/hooks/useLogout";
 import AvatarDisplay from "@src/components/AvatarDisplay";
 import { ApiError } from "@src/api";
 
@@ -23,6 +24,7 @@ const ProfileScreen: React.FC = () => {
   const { colors } = useTheme();
   const { token, isLoading: authLoading } = useAuth();
   const { data: user, isLoading, error } = useProfile();
+  const { handleSignOut, isLoading: isSigningOut } = useLogout();
   const activeGoal = user?.goals?.[0] ?? null;
 
   useEffect(() => {
@@ -118,6 +120,19 @@ const ProfileScreen: React.FC = () => {
             >
               <Text style={styles.editButtonText}>Edit Profile</Text>
             </Pressable>
+
+            <Pressable
+              style={({ pressed }) => [
+                styles.signOutButton,
+                { opacity: pressed || isSigningOut ? 0.7 : 1 },
+              ]}
+              onPress={handleSignOut}
+              disabled={isSigningOut}
+            >
+              <Text style={styles.signOutButtonText}>
+                {isSigningOut ? "Signing out…" : "Sign Out"}
+              </Text>
+            </Pressable>
           </>
         )}
       </ScrollView>
@@ -168,4 +183,15 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   editButtonText: { color: "#FFFFFF", fontSize: 16, fontWeight: "600" },
+  signOutButton: {
+    marginTop: 12,
+    width: "100%",
+    paddingVertical: 16,
+    borderRadius: 12,
+    alignItems: "center",
+    backgroundColor: "transparent",
+    borderWidth: 1,
+    borderColor: "#E57373",
+  },
+  signOutButtonText: { color: "#E57373", fontSize: 16, fontWeight: "600" },
 });

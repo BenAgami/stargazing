@@ -4,11 +4,11 @@ import {
   Text,
   Pressable,
   StyleSheet,
-  SafeAreaView,
   ScrollView,
   TextInput,
   ActivityIndicator,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 import { EXPERIENCE_LEVELS, GOAL_TYPES } from "@repo/common";
 import { useTheme } from "@src/context/ThemeContext";
@@ -27,10 +27,10 @@ const ProfileEditScreen: React.FC = () => {
     avatarUri,
     experienceLevel,
     goalDraft,
-    avatarPickerVisible,
+    isAvatarPickerVisible,
     setExperienceLevel,
     setGoalDraft,
-    setAvatarPickerVisible,
+    setIsAvatarPickerVisible,
     handleUsernameChange,
     handlePickImage,
     handleSave,
@@ -72,7 +72,7 @@ const ProfileEditScreen: React.FC = () => {
         {/* Avatar */}
         <View style={styles.avatarSection}>
           <Pressable
-            onPress={() => setAvatarPickerVisible(true)}
+            onPress={() => setIsAvatarPickerVisible(true)}
             style={({ pressed }) => pressed && styles.pressed}
           >
             <AvatarDisplay
@@ -262,8 +262,8 @@ const ProfileEditScreen: React.FC = () => {
       </ScrollView>
 
       <AvatarPickerModal
-        visible={avatarPickerVisible}
-        onClose={() => setAvatarPickerVisible(false)}
+        visible={isAvatarPickerVisible}
+        onClose={() => setIsAvatarPickerVisible(false)}
         onPickLibrary={() => handlePickImage(false)}
         onPickCamera={() => handlePickImage(true)}
       />

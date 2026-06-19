@@ -4,6 +4,8 @@
   "exclude": ["dist", "build", "node_modules"],
   "compilerOptions": {
     "strict": true,
+    "module": "node16",
+    "moduleResolution": "node16",
     "types": ["node"]
   }
 }

@@ -1,6 +1,7 @@
 import { getPrismaClient } from "@repo/db";
 
 import NotFoundError from "../errors/NotFoundError";
+import { normalizeString } from "../utils/normalizeString";
 
 type ListExercisesInput = {
   limit: number;
@@ -11,10 +12,6 @@ type ListExercisesInput = {
 export class ExerciseService {
   private get prisma() {
     return getPrismaClient();
-  }
-
-  private normalizeExerciseCode(code: string) {
-    return code.trim().toLowerCase();
   }
 
   async listExercises(input: ListExercisesInput) {
@@ -42,7 +39,7 @@ export class ExerciseService {
   }
 
   async getExerciseByCode(code: string, includeInactive = false) {
-    const normalizedCode = this.normalizeExerciseCode(code);
+    const normalizedCode = normalizeString(code);
 
     const exercise = await this.prisma.exercise.findFirst({
       where: {

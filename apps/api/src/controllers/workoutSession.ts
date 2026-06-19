@@ -4,6 +4,8 @@ import { StatusCodes } from "http-status-codes";
 import { CreateWorkoutSessionValues } from "@repo/common";
 
 import asyncHandler from "../utils/asyncWrapper";
+import requireUserUuid from "../utils/requireUserUuid";
+
 import workoutSessionService from "../services/workoutSessionService";
 
 type ListWorkoutSessionsQuery = {
@@ -28,14 +30,8 @@ const serializeSession = <T extends { videoSizeBytes?: bigint | null }>(
  */
 export const createWorkoutSession = asyncHandler(
   async (req: Request, res: Response) => {
-    const userUuid = req.user?.sub;
-
-    if (!userUuid) {
-      return res.status(StatusCodes.UNAUTHORIZED).json({
-        success: false,
-        message: "Unauthorized access - user UUID is missing",
-      });
-    }
+    const userUuid = requireUserUuid(req, res);
+    if (!userUuid) return;
 
     const data: CreateWorkoutSessionValues = req.body;
     const session = await workoutSessionService.createSession(userUuid, data);
@@ -53,15 +49,12 @@ export const createWorkoutSession = asyncHandler(
  * @route GET /api/sessions
  */
 export const listWorkoutSessions = asyncHandler(
-  async (req: Request<unknown, unknown, unknown, ListWorkoutSessionsQuery>, res: Response) => {
-    const userUuid = req.user?.sub;
-
-    if (!userUuid) {
-      return res.status(StatusCodes.UNAUTHORIZED).json({
-        success: false,
-        message: "Unauthorized access - user UUID is missing",
-      });
-    }
+  async (
+    req: Request<unknown, unknown, unknown, ListWorkoutSessionsQuery>,
+    res: Response,
+  ) => {
+    const userUuid = requireUserUuid(req, res);
+    if (!userUuid) return;
 
     const limit = req.query.limit ? Number(req.query.limit) : 20;
     const offset = req.query.offset ? Number(req.query.offset) : 0;

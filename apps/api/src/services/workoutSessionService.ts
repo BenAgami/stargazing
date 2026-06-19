@@ -4,6 +4,8 @@ import { CreateWorkoutSessionValues } from "@repo/common";
 import NotFoundError from "../errors/NotFoundError";
 import BadRequestError from "../errors/BadRequestError";
 
+import { normalizeString } from "../utils/normalizeString";
+
 type ListWorkoutSessionsInput = {
   userUuid: string;
   limit: number;
@@ -14,10 +16,6 @@ type ListWorkoutSessionsInput = {
 export class WorkoutSessionService {
   private get prisma() {
     return getPrismaClient();
-  }
-
-  private normalizeExerciseCode(code: string) {
-    return code.trim().toLowerCase();
   }
 
   private async getUserIdByUuid(uuid: string) {
@@ -53,7 +51,7 @@ export class WorkoutSessionService {
 
   async createSession(userUuid: string, data: CreateWorkoutSessionValues) {
     const userId = await this.getUserIdByUuid(userUuid);
-    const exerciseCode = this.normalizeExerciseCode(data.exerciseCode);
+    const exerciseCode = normalizeString(data.exerciseCode);
     const exercise = await this.getExerciseByCode(exerciseCode);
 
     const performedAt = data.performedAt
@@ -94,7 +92,7 @@ export class WorkoutSessionService {
     const { userUuid, limit, offset, exerciseCode } = input;
     const userId = await this.getUserIdByUuid(userUuid);
     const normalizedExerciseCode = exerciseCode
-      ? this.normalizeExerciseCode(exerciseCode)
+      ? normalizeString(exerciseCode)
       : undefined;
 
     const sessions = await this.prisma.workoutSession.findMany({

@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
-import * as Notifications from "expo-notifications";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Platform } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as Notifications from "expo-notifications";
 
 import { DayOfWeek, type ReminderConfig } from "@src/types/reminder";
 
@@ -53,7 +53,7 @@ export const useNotificationReminder = () => {
     const { status } = await Notifications.requestPermissionsAsync({
       ios: { allowAlert: true, allowBadge: true, allowSound: true },
     });
-    return status === "granted";
+    return status === Notifications.PermissionStatus.GRANTED;
   }, []);
 
   const scheduleReminder = useCallback(
@@ -117,5 +117,10 @@ export const useNotificationReminder = () => {
     setReminderConfig(null);
   }, []);
 
-  return { reminderConfig, loading: isLoading, scheduleReminder, cancelReminder };
+  return {
+    reminderConfig,
+    loading: isLoading,
+    scheduleReminder,
+    cancelReminder,
+  };
 };

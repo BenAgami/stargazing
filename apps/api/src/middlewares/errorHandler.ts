@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from "express";
+import { StatusCodes } from "http-status-codes";
 
 import { env } from "../config/env";
 
@@ -6,7 +7,7 @@ const errorHandler = (
   error: unknown,
   _req: Request,
   res: Response,
-  _next: NextFunction
+  _next: NextFunction,
 ) => {
   if (env.runtimeEnv !== "production") {
     console.error(error);
@@ -15,10 +16,10 @@ const errorHandler = (
   const status =
     typeof (error as { status?: unknown }).status === "number"
       ? (error as { status: number }).status
-      : 500;
+      : StatusCodes.INTERNAL_SERVER_ERROR;
 
   const message =
-    status < 500 && error instanceof Error
+    status < StatusCodes.INTERNAL_SERVER_ERROR && error instanceof Error
       ? error.message
       : "Internal Server Error";
 

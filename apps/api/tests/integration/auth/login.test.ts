@@ -15,7 +15,7 @@ import {
 import { LoginUserBuilder, LoginUserDto } from "../builders/loginUserBuilder";
 import { registerUser, loginUser } from "../helpers/requestSender/authRequests";
 
-describe("POST /api/users/login", () => {
+describe("POST /api/auth/login", () => {
   let app: Application;
   let prisma: ReturnType<typeof getPrismaClient>;
 
@@ -41,6 +41,8 @@ describe("POST /api/users/login", () => {
     expect(response.status).toBe(StatusCodes.OK);
     expect(response.body.data).toHaveProperty("user");
     expect(response.body.data).toHaveProperty("token");
+    expect(response.body.data).toHaveProperty("refreshToken");
+    expect(typeof response.body.data.refreshToken).toBe("string");
     expect(response.body.data.user).not.toHaveProperty("password");
     expect(response.body.data.user).not.toHaveProperty("passwordHash");
   });
