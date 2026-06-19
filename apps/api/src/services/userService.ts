@@ -167,6 +167,110 @@ export class UserService {
 
     return goal;
   }
+
+  /**
+   * Update user profile
+   * @param uuid - User UUID
+   * @param data - Profile update data
+   * @returns Updated user
+   */
+  async updateProfile(uuid: string, data: UpdateProfileValues) {
+    try {
+      const user = await this.prisma.user.update({
+        where: { uuid },
+        data: {
+          ...(data.username && { username: data.username }),
+          ...(data.avatarUrl && { avatarUrl: data.avatarUrl }),
+          ...(data.experienceLevel && { experienceLevel: data.experienceLevel }),
+        },
+        select: {
+          uuid: true,
+          username: true,
+          email: true,
+          fullName: true,
+          avatarUrl: true,
+          experienceLevel: true,
+          createdAt: true,
+          updatedAt: true,
+          role: true,
+        },
+      });
+
+      return user;
+    } catch (error: unknown) {
+      if (
+        typeof error === "object" &&
+        error !== null &&
+        "code" in error &&
+        (error as { code: string }).code === "P2002"
+      ) {
+        throw new ConflictError("Username already taken");
+      }
+      throw error;
+    }
+  }
+
+  /**
+   * Get presigned URL for avatar upload
+   * @param userUuid - User UUID
+   * @returns Upload URL, key, and public URL
+   */
+  async getAvatarUploadUrl(userUuid: string) {
+    const key = `avatars/${userUuid}/${Date.now()}.jpg`;
+
+    const command = new PutObjectCommand({
+      Bucket: env.r2.bucketName,
+      Key: key,
+      ContentType: "image/jpeg",
+    });
+
+    const uploadUrl = await getSignedUrl(r2Client, command, { expiresIn: 300 });
+
+    return {
+      uploadUrl,
+      key,
+      publicUrl: `https://${env.r2.publicDomain}/${key}`,
+    };
+  }
+
+  /**
+   * Create a goal for a user
+   * @param uuid - User UUID
+   * @param data - Goal data
+   * @returns Created goal
+   */
+  async createGoal(uuid: string, data: UpsertGoalValues) {
+    const user = await this.prisma.user.findUnique({
+      where: { uuid },
+      select: { id: true },
+    });
+
+    if (!user) {
+      throw new NotFoundError("User not found");
+    }
+
+    const goal = await this.prisma.userGoal.create({
+      data: {
+        userId: user.id,
+        goalType: data.goalType,
+        title: data.title,
+        targetValue: data.targetValue,
+        targetUnit: data.targetUnit,
+        status: "ACTIVE",
+      },
+      select: {
+        id: true,
+        goalType: true,
+        title: true,
+        targetValue: true,
+        targetUnit: true,
+        status: true,
+        createdAt: true,
+      },
+    });
+
+    return goal;
+  }
 }
 
 export default new UserService();
