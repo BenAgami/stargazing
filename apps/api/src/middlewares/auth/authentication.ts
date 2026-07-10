@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import jwt, { JsonWebTokenError, TokenExpiredError } from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 
 import UnauthorizedError from "../../errors/UnauthorizedError";
 import ForbiddenError from "../../errors/ForbiddenError";
@@ -18,10 +18,10 @@ const authenticateToken = (req: Request, _: Response, next: NextFunction) => {
   const token = authHeader.split(" ")[1];
 
   jwt.verify(token, env.jwt.secret, (err, user) => {
-    if (err instanceof TokenExpiredError) {
+    if (err instanceof jwt.TokenExpiredError) {
       return next(new UnauthorizedError("Token expired: " + err.message));
     }
-    if (err instanceof JsonWebTokenError) {
+    if (err instanceof jwt.JsonWebTokenError) {
       return next(new ForbiddenError("Invalid token: " + err.message));
     }
     req.user = user as MyJwtPayload;
