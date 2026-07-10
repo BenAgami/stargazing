@@ -1,7 +1,5 @@
 import bcrypt from "bcrypt";
 
-import { PrismaClientKnownRequestError } from "@prisma/client/runtime/client";
-
 import { getPrismaClient } from "@repo/db";
 import { RegisterValues, LoginValues } from "@repo/common";
 
@@ -9,7 +7,10 @@ import ConflictError from "../errors/ConflictError";
 import UnauthorizedError from "../errors/UnauthorizedError";
 
 import generateJwtToken from "../utils/generateJwtToken";
-import { PrismaErrorCode } from "../utils/prismaErrorCodes";
+import {
+  PrismaErrorCode,
+  isPrismaKnownRequestError,
+} from "../utils/prismaErrorCodes";
 import { normalizeString } from "../utils/normalizeString";
 
 import refreshTokenService from "./refreshTokenService";
@@ -90,7 +91,7 @@ class AuthService {
 
       return { user, token, refreshToken };
     } catch (error) {
-      if (error instanceof PrismaClientKnownRequestError) {
+      if (isPrismaKnownRequestError(error)) {
         if (
           error.code === PrismaErrorCode.UNIQUE_CONSTRAINT_VIOLATION &&
           Array.isArray(error.meta?.target) &&

@@ -13,7 +13,7 @@
     "test": "cross-env NODE_ENV=test vitest",
     "test:watch": "cross-env NODE_ENV=test vitest --watch",
     "typecheck": "tsc --noEmit",
-    "build": "tsc --noEmit && tsup src/index.ts --format esm --platform node --out-dir dist --no-splitting",
+    "build": "tsc --noEmit && tsup",
     "lint": "eslint . --ext .ts",
     "clean": "rm -rf dist"
   },
