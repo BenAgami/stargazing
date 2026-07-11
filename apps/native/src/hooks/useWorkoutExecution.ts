@@ -4,7 +4,7 @@ import { useCountdown } from "@src/hooks/useCountdown";
 import type {
   WorkoutWithExercises,
   WorkoutExerciseHydrated,
-} from "@src/types/workout";
+} from "@repo/common";
 
 export type ExecutionPhase = "working" | "resting" | "complete";
 

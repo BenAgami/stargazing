@@ -1,4 +1,4 @@
-import type { ExerciseDetail, ExerciseListResponse } from "@src/types/workout";
+import type { ExerciseDetail, ExerciseListResponse } from "@repo/common";
 
 import { apiClient } from "../client";
 import { EXERCISE_ROUTES } from "@src/constants/routes";

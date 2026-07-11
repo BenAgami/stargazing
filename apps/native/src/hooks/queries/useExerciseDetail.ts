@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 
 import { useAuth } from "@src/context/AuthContext";
 import { exerciseApi, exerciseKeys } from "@src/api";
-import type { ExerciseDetail } from "@src/types/workout";
+import type { ExerciseDetail } from "@repo/common";
 
 export const useExerciseDetail = (code: string | undefined) => {
   const { token } = useAuth();

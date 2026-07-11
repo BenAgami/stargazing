@@ -2,12 +2,10 @@ import type {
   CreateWorkoutValues,
   UpdateWorkoutValues,
   WorkoutLogValues,
-} from "@repo/common";
-import type {
   WorkoutWithExercises,
   WorkoutListResponse,
   WorkoutLogResponse,
-} from "@src/types/workout";
+} from "@repo/common";
 
 import { apiClient } from "../client";
 import { WORKOUT_ROUTES } from "@src/constants/routes";

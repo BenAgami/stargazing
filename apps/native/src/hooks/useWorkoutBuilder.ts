@@ -1,8 +1,11 @@
 import { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { Alert } from "react-native";
 
-import type { CreateWorkoutValues } from "@repo/common";
-import type { WorkoutWithExercises, ExerciseType } from "@src/types/workout";
+import type {
+  CreateWorkoutValues,
+  WorkoutWithExercises,
+  ExerciseType,
+} from "@repo/common";
 import type { DraftExerciseValues } from "@src/components/WorkoutExerciseRow";
 
 import { useWorkoutDetail } from "@src/hooks/queries/useWorkoutDetail";

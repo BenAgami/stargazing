@@ -1,4 +1,4 @@
-import type { ExerciseType } from "@src/types/workout";
+import type { ExerciseType } from "@repo/common";
 
 export interface PickedExercise {
   exerciseId: number;

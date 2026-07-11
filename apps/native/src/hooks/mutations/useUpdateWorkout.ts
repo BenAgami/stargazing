@@ -1,8 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { workoutApi, workoutKeys } from "@src/api";
-import type { UpdateWorkoutValues } from "@repo/common";
-import type { WorkoutWithExercises } from "@src/types/workout";
+import type { UpdateWorkoutValues, WorkoutWithExercises } from "@repo/common";
 
 interface UpdateWorkoutVariables {
   id: number;

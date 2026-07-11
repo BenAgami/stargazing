@@ -2,7 +2,7 @@ import React from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
 import { useTheme } from "@src/context/ThemeContext";
-import type { WorkoutWithExercises } from "@src/types/workout";
+import type { WorkoutWithExercises } from "@repo/common";
 
 const formatDate = (iso: string): string => {
   const d = new Date(iso);

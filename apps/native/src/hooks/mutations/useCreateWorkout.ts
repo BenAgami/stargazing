@@ -1,8 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { workoutApi, workoutKeys } from "@src/api";
-import type { CreateWorkoutValues } from "@repo/common";
-import type { WorkoutWithExercises } from "@src/types/workout";
+import type { CreateWorkoutValues, WorkoutWithExercises } from "@repo/common";
 
 export const useCreateWorkout = () => {
   const queryClient = useQueryClient();
