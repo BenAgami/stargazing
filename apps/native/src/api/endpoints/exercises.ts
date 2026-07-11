@@ -1,6 +1,7 @@
 import type { ExerciseDetail, ExerciseListResponse } from "@src/types/workout";
 
 import { apiClient } from "../client";
+import { EXERCISE_ROUTES } from "@src/constants/routes";
 
 export const exerciseApi = {
   list: (params?: {
@@ -13,10 +14,10 @@ export const exerciseApi = {
       query.set("offset", String(params.offset));
     const qs = query.toString();
     return apiClient.get<ExerciseListResponse>(
-      qs ? `/api/exercises?${qs}` : "/api/exercises",
+      qs ? `${EXERCISE_ROUTES.list}?${qs}` : EXERCISE_ROUTES.list,
     );
   },
 
   getByCode: (code: string): Promise<ExerciseDetail> =>
-    apiClient.get<ExerciseDetail>(`/api/exercises/${encodeURIComponent(code)}`),
+    apiClient.get<ExerciseDetail>(EXERCISE_ROUTES.byCode(code)),
 };

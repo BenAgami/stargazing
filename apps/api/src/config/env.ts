@@ -1,8 +1,14 @@
 import "dotenv/config";
 import { z } from "zod";
-import type { StringValue } from "ms";
+import ms, { type StringValue } from "ms";
 
 import { getZodErrorMessage } from "../utils/zodErrorMessage";
+
+const durationString = () =>
+  z.custom<StringValue>(
+    (val) => typeof val === "string" && ms(val as StringValue) !== undefined,
+    { message: "Must be a valid duration string (e.g. '15m', '7d')" },
+  );
 
 const envSchema = z.object({
   NODE_ENV: z
@@ -10,9 +16,11 @@ const envSchema = z.object({
     .default("development"),
   PORT: z.coerce.number().default(3000),
   DATABASE_URL: z.url(),
-  JWT_SECRET: z.string().min(1, "JWT_SECRET is required"),
-  JWT_EXPIRES_IN: z.string().default("15m"),
-  REFRESH_TOKEN_EXPIRES_IN: z.string().default("7d"),
+  JWT_SECRET: z
+    .string()
+    .min(32, "JWT_SECRET must be at least 32 characters"),
+  JWT_EXPIRES_IN: durationString().default("15m" as StringValue),
+  REFRESH_TOKEN_EXPIRES_IN: durationString().default("7d" as StringValue),
   REDIS_URL: z.string().default("redis://localhost:6379"),
   CORS_ALLOWED_ORIGINS: z.string().default("http://localhost:8081"),
   R2_ACCOUNT_ID: z.string().min(1),
@@ -38,8 +46,8 @@ export const env = {
   databaseUrl: parsedData.DATABASE_URL,
   jwt: {
     secret: parsedData.JWT_SECRET,
-    expiresIn: parsedData.JWT_EXPIRES_IN as StringValue,
-    refreshExpiresIn: parsedData.REFRESH_TOKEN_EXPIRES_IN as StringValue,
+    expiresIn: parsedData.JWT_EXPIRES_IN,
+    refreshExpiresIn: parsedData.REFRESH_TOKEN_EXPIRES_IN,
   },
   corsAllowedOrigins: parsedData.CORS_ALLOWED_ORIGINS,
   redis: {

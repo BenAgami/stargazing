@@ -10,6 +10,7 @@ import type {
 } from "@src/types/workout";
 
 import { apiClient } from "../client";
+import { WORKOUT_ROUTES } from "@src/constants/routes";
 
 export const workoutApi = {
   list: (params?: {
@@ -22,25 +23,25 @@ export const workoutApi = {
       query.set("offset", String(params.offset));
     const qs = query.toString();
     return apiClient.get<WorkoutListResponse>(
-      qs ? `/api/workouts?${qs}` : "/api/workouts",
+      qs ? `${WORKOUT_ROUTES.list}?${qs}` : WORKOUT_ROUTES.list,
     );
   },
 
   get: (id: number): Promise<WorkoutWithExercises> =>
-    apiClient.get<WorkoutWithExercises>(`/api/workouts/${id}`),
+    apiClient.get<WorkoutWithExercises>(WORKOUT_ROUTES.detail(id)),
 
   create: (data: CreateWorkoutValues): Promise<WorkoutWithExercises> =>
-    apiClient.post<WorkoutWithExercises>("/api/workouts", data),
+    apiClient.post<WorkoutWithExercises>(WORKOUT_ROUTES.list, data),
 
   update: (
     id: number,
     data: UpdateWorkoutValues,
   ): Promise<WorkoutWithExercises> =>
-    apiClient.patch<WorkoutWithExercises>(`/api/workouts/${id}`, data),
+    apiClient.patch<WorkoutWithExercises>(WORKOUT_ROUTES.detail(id), data),
 
   remove: (id: number): Promise<void> =>
-    apiClient.delete<void>(`/api/workouts/${id}`),
+    apiClient.delete<void>(WORKOUT_ROUTES.detail(id)),
 
   startLog: (id: number, data: WorkoutLogValues): Promise<WorkoutLogResponse> =>
-    apiClient.post<WorkoutLogResponse>(`/api/workouts/${id}/logs`, data),
+    apiClient.post<WorkoutLogResponse>(WORKOUT_ROUTES.logs(id), data),
 };
