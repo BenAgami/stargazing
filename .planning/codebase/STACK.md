@@ -50,7 +50,7 @@
 - `ms` ^2.1.3 — JWT expiry duration strings
 
 **Build/Dev:**
-- `ts-node-dev` ^2.0.0 — Dev server with hot reload (`--respawn --transpile-only`)
+- `tsx` ^4.22.4 — Dev server with hot reload (`tsx watch`)
 - `tsc` — Production build to `dist/`
 
 **Testing:**

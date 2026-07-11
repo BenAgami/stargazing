@@ -130,7 +130,7 @@
 
 **API Server:**
 - Location: `apps/api/src/index.ts`
-- Triggers: `node dist/index.js` (prod) / `ts-node-dev` (dev)
+- Triggers: `node dist/index.js` (prod) / `tsx watch` (dev)
 - Responsibilities: Env validation, Prisma connect, Express listen, graceful SIGINT/SIGTERM shutdown
 
 **Native App:**

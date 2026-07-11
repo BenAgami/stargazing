@@ -4,12 +4,13 @@ import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { getPrismaClient } from "@repo/db";
 import { UpdateProfileValues, UpsertGoalValues } from "@repo/common";
 
-import { PrismaClientKnownRequestError } from "@prisma/client/runtime/client";
-
 import ConflictError from "../errors/ConflictError";
 import NotFoundError from "../errors/NotFoundError";
 
-import { PrismaErrorCode } from "../utils/prismaErrorCodes";
+import {
+  PrismaErrorCode,
+  isPrismaKnownRequestError,
+} from "../utils/prismaErrorCodes";
 import { normalizeString } from "../utils/normalizeString";
 
 import { r2Client } from "../lib/r2";
@@ -108,7 +109,7 @@ export class UserService {
       return user;
     } catch (error) {
       if (
-        error instanceof PrismaClientKnownRequestError &&
+        isPrismaKnownRequestError(error) &&
         error.code === PrismaErrorCode.UNIQUE_CONSTRAINT_VIOLATION
       ) {
         throw new ConflictError("Username already taken");
