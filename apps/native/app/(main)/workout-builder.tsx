@@ -56,7 +56,7 @@ const WorkoutBuilderScreen: React.FC = () => {
   };
 
   const handleSave = () => {
-    builder.save(
+    void builder.save(
       (createdId) => {
         // Replace so the back button skips the builder.
         router.replace({

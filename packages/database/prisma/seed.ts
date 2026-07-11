@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient, ExerciseType } from "../generated/prisma/client";
 
@@ -55,7 +54,7 @@ async function main() {
 }
 
 main()
-  .catch(async (error) => {
+  .catch((error: unknown) => {
     console.error(error);
     process.exit(1);
   })

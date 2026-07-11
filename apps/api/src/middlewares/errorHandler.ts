@@ -2,24 +2,28 @@ import { Request, Response, NextFunction } from "express";
 import { StatusCodes } from "http-status-codes";
 
 import { env } from "../config/env";
+import { logger } from "../lib/logger";
 
 const errorHandler = (
   error: unknown,
-  _req: Request,
+  req: Request,
   res: Response,
   _next: NextFunction,
 ) => {
-  if (env.runtimeEnv !== "production") {
-    console.error(error);
-  }
-
   const status =
     typeof (error as { status?: unknown }).status === "number"
       ? (error as { status: number }).status
       : StatusCodes.INTERNAL_SERVER_ERROR;
 
+  const logContext = { err: error, method: req.method, url: req.originalUrl };
+  if (status >= Number(StatusCodes.INTERNAL_SERVER_ERROR)) {
+    logger.error(logContext, "Unhandled server error");
+  } else if (env.runtimeEnv !== "production") {
+    logger.debug(logContext, "Request error");
+  }
+
   const message =
-    status < StatusCodes.INTERNAL_SERVER_ERROR && error instanceof Error
+    status < Number(StatusCodes.INTERNAL_SERVER_ERROR) && error instanceof Error
       ? error.message
       : "Internal Server Error";
 

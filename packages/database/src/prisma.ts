@@ -31,11 +31,9 @@ export const disconnectPrisma = async () => {
   if (globalForPrisma.prisma) {
     await globalForPrisma.prisma.$disconnect();
     delete globalForPrisma.prisma;
-    // eslint-disable-next-line no-console
     console.log("Prisma disconnected");
   } else if (prisma) {
     await prisma.$disconnect();
-    // eslint-disable-next-line no-console
     console.log("Prisma disconnected");
   }
 };

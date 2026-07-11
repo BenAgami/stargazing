@@ -26,6 +26,7 @@ import AuthFormFields, {
   type FieldConfig,
 } from "@src/components/AuthFormFields";
 import { useLogin } from "@src/hooks/useLogin";
+import marsImage from "@assets/images/mars.png";
 
 const defaultFormData: LoginValues = {
   email: "",
@@ -78,7 +79,7 @@ const SignInScreen: React.FC = () => {
             <Text style={styles.backButtonText}>{"←"}</Text>
           </Pressable>
           <AuthImageHeader
-            image={require("@assets/images/mars.png")}
+            image={marsImage}
             overlay={
               <LinearGradient
                 colors={["transparent", "rgba(10, 10, 10, 0.8)"]}

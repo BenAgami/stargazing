@@ -16,19 +16,20 @@ export const useNotificationReminder = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    (async () => {
+    void (async () => {
       const stored = await AsyncStorage.getItem(REMINDER_CONFIG_KEY);
       if (stored) {
-        setReminderConfig(JSON.parse(stored));
+        setReminderConfig(JSON.parse(stored) as ReminderConfig);
       }
       setIsLoading(false);
     })();
   }, []);
 
   useEffect(() => {
-    (async () => {
+    void (async () => {
       const storedIds = await AsyncStorage.getItem(REMINDER_IDS_KEY);
-      if (!storedIds || JSON.parse(storedIds).length === 0) {
+      const parsedIds = storedIds ? (JSON.parse(storedIds) as string[]) : [];
+      if (parsedIds.length === 0) {
         const scheduled =
           await Notifications.getAllScheduledNotificationsAsync();
         if (scheduled.length > 0) {
@@ -67,7 +68,7 @@ export const useNotificationReminder = () => {
       if (!isGranted) return false;
 
       const stored = await AsyncStorage.getItem(REMINDER_IDS_KEY);
-      const prevIds: string[] = stored ? JSON.parse(stored) : [];
+      const prevIds: string[] = stored ? (JSON.parse(stored) as string[]) : [];
       await Promise.all(
         prevIds.map((id) => Notifications.cancelScheduledNotificationAsync(id)),
       );
@@ -108,7 +109,7 @@ export const useNotificationReminder = () => {
 
   const cancelReminder = useCallback(async () => {
     const stored = await AsyncStorage.getItem(REMINDER_IDS_KEY);
-    const prevIds: string[] = stored ? JSON.parse(stored) : [];
+    const prevIds: string[] = stored ? (JSON.parse(stored) as string[]) : [];
     await Promise.all(
       prevIds.map((id) => Notifications.cancelScheduledNotificationAsync(id)),
     );

@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { Alert } from "react-native";
 
-import type { CreateWorkoutValues, UpdateWorkoutValues } from "@repo/common";
+import type { CreateWorkoutValues } from "@repo/common";
 import type { WorkoutWithExercises, ExerciseType } from "@src/types/workout";
 import type { DraftExerciseValues } from "@src/components/WorkoutExerciseRow";
 
@@ -152,7 +152,7 @@ export const useWorkoutBuilder = (options: UseWorkoutBuilderOptions) => {
         if (isEdit && options.workoutId != null) {
           const updated = await updateMutation.mutateAsync({
             id: options.workoutId,
-            data: payload as UpdateWorkoutValues,
+            data: payload,
           });
           onUpdated(updated.id);
         } else {

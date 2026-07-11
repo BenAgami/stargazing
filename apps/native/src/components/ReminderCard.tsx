@@ -48,7 +48,7 @@ const ReminderCard: React.FC<Props> = ({ username }) => {
     setSelectedDays((prev) =>
       prev.includes(day)
         ? prev.filter((d) => d !== day)
-        : ([...prev, day].sort((a, b) => a - b) as DayOfWeek[]),
+        : [...prev, day].sort((a, b) => a - b),
     );
   };
 
@@ -135,7 +135,9 @@ const ReminderCard: React.FC<Props> = ({ username }) => {
                 <Text style={styles.buttonText}>Edit</Text>
               </Pressable>
               <Pressable
-                onPress={cancelReminder}
+                onPress={() => {
+                  void cancelReminder();
+                }}
                 style={({ pressed }) => pressed && styles.pressed}
               >
                 <Text
@@ -157,7 +159,9 @@ const ReminderCard: React.FC<Props> = ({ username }) => {
           onTimeChange={handleTimeChange}
           onShowPicker={() => setShowPicker(true)}
           onToggleDay={handleToggleDay}
-          onSave={handleSave}
+          onSave={() => {
+            void handleSave();
+          }}
           onCancel={() => setExpanded(false)}
         />
       )}

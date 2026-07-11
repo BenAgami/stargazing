@@ -65,7 +65,7 @@ export const updateMyProfile = asyncHandler(
     const userUuid = requireUserUuid(req, res);
     if (!userUuid) return;
 
-    const data: UpdateProfileValues = req.body;
+    const data = req.body as UpdateProfileValues;
     const user = await userService.updateProfile(userUuid, data);
 
     res.status(StatusCodes.OK).json({
@@ -110,7 +110,7 @@ export const createMyGoal = asyncHandler(
     const userUuid = requireUserUuid(req, res);
     if (!userUuid) return;
 
-    const data: UpsertGoalValues = req.body;
+    const data = req.body as UpsertGoalValues;
     const goal = await userService.createGoal(userUuid, data);
 
     res.status(StatusCodes.CREATED).json({

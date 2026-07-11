@@ -8,7 +8,7 @@ export const useDeleteWorkout = () => {
   return useMutation({
     mutationFn: (id: number) => workoutApi.remove(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: workoutKeys.all });
+      void queryClient.invalidateQueries({ queryKey: workoutKeys.all });
     },
   });
 };

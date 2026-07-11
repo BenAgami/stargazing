@@ -15,7 +15,7 @@ export const useStartWorkout = () => {
   return useMutation<WorkoutLogResponse, Error, StartWorkoutVariables>({
     mutationFn: ({ workoutId, data }) => workoutApi.startLog(workoutId, data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: workoutKeys.all });
+      void queryClient.invalidateQueries({ queryKey: workoutKeys.all });
     },
   });
 };

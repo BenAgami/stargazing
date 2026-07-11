@@ -4,11 +4,13 @@ import express, { Application, Request, Response } from "express";
 import cors from "cors";
 import helmet from "helmet";
 import morgan from "morgan";
+import pinoHttp from "pino-http";
 import { StatusCodes } from "http-status-codes";
 
 import routes from "./routes";
 import errorHandler from "./middlewares/errorHandler";
 import { env } from "./config/env";
+import { logger } from "./lib/logger";
 
 export const createApp = (): Application => {
   const app: Application = express();
@@ -23,7 +25,9 @@ export const createApp = (): Application => {
   app.use(express.json({ limit: "10mb" }));
   app.use(express.urlencoded({ extended: true }));
 
-  if (env.runtimeEnv !== "production") {
+  if (env.runtimeEnv === "production") {
+    app.use(pinoHttp({ logger }));
+  } else {
     app.use(morgan("dev"));
   }
 

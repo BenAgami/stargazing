@@ -3,7 +3,7 @@ import StatusCode from "http-status-codes";
 import { tokenStore } from "./tokenStore";
 import { ApiError } from "./errors";
 
-const API_BASE = process.env.EXPO_PUBLIC_API_BASE_URL;
+const API_BASE = process.env.EXPO_PUBLIC_API_BASE_URL as string | undefined;
 if (!API_BASE) throw new Error("EXPO_PUBLIC_API_BASE_URL is not set in .env");
 
 const TIMEOUT_MS = 10_000;

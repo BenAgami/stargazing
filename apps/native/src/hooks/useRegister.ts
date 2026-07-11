@@ -17,9 +17,12 @@ export const useRegister = () => {
       const result = await authApi.register(data);
       await setToken(result.token, result.refreshToken);
       const destination = returnTo?.startsWith("/") ? returnTo : "/";
-      router.replace(destination as Parameters<typeof router.replace>[0]);
+      router.replace(destination);
     } catch (err) {
-      if (err instanceof ApiError && err.status === StatusCodes.CONFLICT) {
+      if (
+        err instanceof ApiError &&
+        err.status === Number(StatusCodes.CONFLICT)
+      ) {
         setError("An account with this email already exists.");
       } else {
         setError("Something went wrong. Please try again.");

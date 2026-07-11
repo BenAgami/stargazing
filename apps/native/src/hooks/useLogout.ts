@@ -11,8 +11,9 @@ export const useLogout = () => {
     setIsLoading(true);
     try {
       await authApi.logout();
-    } catch {}
-    finally {
+    } catch {
+      // best-effort server logout; local token is always cleared below
+    } finally {
       try {
         await setToken(null);
       } finally {

@@ -19,7 +19,10 @@
       "env": ["DATABASE_URL"]
     },
     "lint": {
-      "dependsOn": ["^lint"]
+      "dependsOn": ["db:generate", "^build", "^lint"]
+    },
+    "check-types": {
+      "dependsOn": ["db:generate", "^build", "^check-types"]
     },
     "clean": {
       "cache": false

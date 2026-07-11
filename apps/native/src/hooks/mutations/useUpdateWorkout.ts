@@ -15,7 +15,7 @@ export const useUpdateWorkout = () => {
   return useMutation<WorkoutWithExercises, Error, UpdateWorkoutVariables>({
     mutationFn: ({ id, data }) => workoutApi.update(id, data),
     onSuccess: (updated) => {
-      queryClient.invalidateQueries({ queryKey: workoutKeys.lists() });
+      void queryClient.invalidateQueries({ queryKey: workoutKeys.lists() });
       queryClient.setQueryData(workoutKeys.detail(updated.id), updated);
     },
   });

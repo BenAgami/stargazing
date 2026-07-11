@@ -33,7 +33,7 @@ export const createWorkoutSession = asyncHandler(
     const userUuid = requireUserUuid(req, res);
     if (!userUuid) return;
 
-    const data: CreateWorkoutSessionValues = req.body;
+    const data = req.body as CreateWorkoutSessionValues;
     const session = await workoutSessionService.createSession(userUuid, data);
 
     res.status(StatusCodes.CREATED).json({

@@ -51,34 +51,6 @@ router.post(
 );
 
 /**
- * PATCH /me
- * Update current authenticated user's profile
- */
-router.patch(
-  "/me",
-  authenticateToken,
-  validateSchema(z.object({ body: updateProfileSchema })),
-  updateMyProfile,
-);
-
-/**
- * POST /me/avatar-upload-url
- * Get presigned URL for avatar upload
- */
-router.post("/me/avatar-upload-url", authenticateToken, getAvatarUploadUrl);
-
-/**
- * POST /me/goals
- * Create a goal for the current authenticated user
- */
-router.post(
-  "/me/goals",
-  authenticateToken,
-  validateSchema(z.object({ body: upsertGoalSchema })),
-  createMyGoal,
-);
-
-/**
  * GET /:uuid
  * Get user profile by UUID (requires authentication)
  */

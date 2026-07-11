@@ -10,7 +10,7 @@ export const useCreateWorkout = () => {
   return useMutation<WorkoutWithExercises, Error, CreateWorkoutValues>({
     mutationFn: (data: CreateWorkoutValues) => workoutApi.create(data),
     onSuccess: (created) => {
-      queryClient.invalidateQueries({ queryKey: workoutKeys.lists() });
+      void queryClient.invalidateQueries({ queryKey: workoutKeys.lists() });
       queryClient.setQueryData(workoutKeys.detail(created.id), created);
     },
   });

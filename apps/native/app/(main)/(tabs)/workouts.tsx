@@ -27,7 +27,7 @@ const WorkoutsTab: React.FC = () => {
   // so that returning from create/edit/delete shows the latest data.
   useFocusEffect(
     useCallback(() => {
-      queryClient.invalidateQueries({ queryKey: workoutKeys.lists() });
+      void queryClient.invalidateQueries({ queryKey: workoutKeys.lists() });
     }, [queryClient]),
   );
 

@@ -1,7 +1,7 @@
 import { execSync } from "node:child_process";
 import path from "node:path";
 
-export default async function globalSetup() {
+export default function globalSetup() {
   if (process.env.NODE_ENV !== "test") {
     throw new Error("globalSetup aborted: NODE_ENV is not 'test'");
   }
