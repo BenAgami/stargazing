@@ -51,8 +51,10 @@
   },
   "devDependencies": {
     "@babel/core": "^7.23.7",
+    "@repo/eslint-config": "*",
     "@expo/webpack-config": "19.0.1",
-    "@types/react": "~19.1.10"
+    "@types/react": "~19.1.10",
+    "eslint-plugin-react-hooks": "^5"
   },
   "expo": {
     "doctor": {

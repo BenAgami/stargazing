@@ -10,6 +10,7 @@ import {
 
 import validateSchema from "../middlewares/validateSchema";
 import authRateLimiter from "../middlewares/authRateLimiter";
+
 import {
   registerUser,
   loginUser,

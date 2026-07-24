@@ -1,11 +1,11 @@
-import tseslint from "typescript-eslint";
+import { defineConfig } from "eslint/config";
 import globals from "globals";
 
-import { baseRules, sharedIgnores } from "../../eslint.config.mjs";
+import { baseRules, sharedIgnores } from "@repo/eslint-config";
 
-export default tseslint.config(
+export default defineConfig(
   { ignores: sharedIgnores },
-  ...baseRules,
+  baseRules,
   {
     languageOptions: {
       parserOptions: {
@@ -16,9 +16,6 @@ export default tseslint.config(
     },
   },
   {
-    // supertest's Response#body is typed `any` by design (arbitrary JSON
-    // payloads); test assertions on res.body.* trip the unsafe-* family
-    // for reasons unrelated to real bugs.
     files: ["tests/**/*.ts"],
     rules: {
       "@typescript-eslint/no-unsafe-assignment": "off",

@@ -1,10 +1,10 @@
-import tseslint from "typescript-eslint";
+import { defineConfig } from "eslint/config";
 import reactHooks from "eslint-plugin-react-hooks";
 import globals from "globals";
 
-import { baseRules, sharedIgnores } from "../../eslint.config.mjs";
+import { baseRules, sharedIgnores } from "@repo/eslint-config";
 
-export default tseslint.config(
+export default defineConfig(
   {
     ignores: [
       ...sharedIgnores,
@@ -13,7 +13,7 @@ export default tseslint.config(
       "jest.config.js",
     ],
   },
-  ...baseRules,
+  baseRules,
   reactHooks.configs["recommended-latest"],
   {
     languageOptions: {

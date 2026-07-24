@@ -1,18 +1,14 @@
-import tseslint from "typescript-eslint";
+import { defineConfig } from "eslint/config";
 import globals from "globals";
 
-import { baseRules, sharedIgnores } from "../../eslint.config.mjs";
+import { baseRules, sharedIgnores } from "@repo/eslint-config";
 
-export default tseslint.config(
-  { ignores: sharedIgnores },
-  ...baseRules,
-  {
-    languageOptions: {
-      parserOptions: {
-        projectService: true,
-        tsconfigRootDir: import.meta.dirname,
-      },
-      globals: globals.node,
+export default defineConfig({ ignores: sharedIgnores }, baseRules, {
+  languageOptions: {
+    parserOptions: {
+      projectService: true,
+      tsconfigRootDir: import.meta.dirname,
     },
+    globals: globals.node,
   },
-);
+});
