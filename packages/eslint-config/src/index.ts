@@ -6,7 +6,6 @@ export const sharedIgnores = [
   "**/dist/**",
   "**/build/**",
   "**/.expo/**",
-  "**/.next/**",
   "**/node_modules/**",
   "**/coverage/**",
   "**/android/**",

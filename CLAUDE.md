@@ -11,7 +11,6 @@ Mobile-only for v1. Core exercises: push-up, pull-up, dip, squat.
 ```
 apps/api          Express 5 REST API (TypeScript)
 apps/native       React Native + Expo SDK 54 (Expo Router)
-apps/web          Next.js placeholder — out of scope for v1
 packages/database Prisma 7 schema + generated client (@repo/db)
 packages/common   Zod schemas shared across apps (@repo/common)
 packages/ui       React Native component library (@repo/ui)
