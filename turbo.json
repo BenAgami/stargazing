@@ -1,12 +1,13 @@
 {
   "$schema": "https://turborepo.com/schema.json",
   "ui": "tui",
+  "envMode": "loose",
+  "globalDependencies": ["packages/typescript-config/**"],
   "tasks": {
     "build": {
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
-      "outputs": ["dist/**", ".next/**", "!.next/cache/**"],
-      "dependsOn": ["db:generate", "^build"],
-      "env": ["DATABASE_URL"]
+      "outputs": ["dist/**"],
+      "dependsOn": ["db:generate", "^build"]
     },
     "dev": {
       "dependsOn": ["^build"],
@@ -14,31 +15,33 @@
       "persistent": true
     },
     "test": {
-      "dependsOn": ["^build"],
-      "cache": true,
-      "env": ["DATABASE_URL"]
+      "inputs": ["$TURBO_DEFAULT$", ".env*"],
+      "outputs": [],
+      "dependsOn": ["^build"]
     },
     "lint": {
-      "dependsOn": ["db:generate", "^build", "^lint"]
+      "dependsOn": ["db:generate", "^build"]
     },
     "check-types": {
-      "dependsOn": ["db:generate", "^build", "^check-types"]
+      "dependsOn": ["db:generate", "^build"]
     },
     "clean": {
       "cache": false
     },
     "db:generate": {
-      "cache": false
+      "inputs": ["prisma/**", "prisma.config.ts"],
+      "outputs": ["generated/prisma/**"]
     },
     "db:migrate:dev": {
       "cache": false,
-      "persistent": true
+      "interactive": true
     },
     "db:migrate:deploy": {
       "cache": false
     },
     "db:migrate:reset": {
-      "cache": false
+      "cache": false,
+      "interactive": true
     }
   }
 }

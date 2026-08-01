@@ -35,6 +35,7 @@
   },
   "devDependencies": {
     "@repo/eslint-config": "*",
+    "@repo/typescript-config": "*",
     "prisma": "^7.2.0"
   }
 }

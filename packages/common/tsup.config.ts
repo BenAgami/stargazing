@@ -7,9 +7,9 @@ export default defineConfig((options: Options) => ({
   banner: {
     js: "'use client'",
   },
-  clean: true,
   format: ["cjs", "esm"],
   external: ["react", "zod"],
   dts: true,
   ...options,
+  clean: !options.watch,
 }));

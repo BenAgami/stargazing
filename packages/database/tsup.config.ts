@@ -8,6 +8,6 @@ export default defineConfig((options: Options) => ({
   splitting: false,
   sourcemap: false,
   shims: true,
-  clean: true,
   ...options,
+  clean: !options.watch,
 }));

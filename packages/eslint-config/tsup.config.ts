@@ -5,6 +5,6 @@ export default defineConfig((options: Options) => ({
   format: ["cjs", "esm"],
   external: ["eslint", "@eslint/js", "typescript-eslint"],
   dts: true,
-  clean: true,
   ...options,
+  clean: !options.watch,
 }));
