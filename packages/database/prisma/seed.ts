@@ -35,7 +35,7 @@ const exercises = [
   },
 ];
 
-async function main() {
+const main = async () => {
   for (const exercise of exercises) {
     await prisma.exercise.upsert({
       where: { code: exercise.code },
@@ -51,7 +51,7 @@ async function main() {
       },
     });
   }
-}
+};
 
 main()
   .catch((error: unknown) => {
