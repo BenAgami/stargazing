@@ -39,7 +39,13 @@ describe("PATCH /api/workouts/:id", () => {
       userId: dbUser!.id,
       name: "Old Name",
       exercises: [
-        { exerciseId: exercise.id, position: 0, sets: 3, reps: 10, restSecs: 60 },
+        {
+          exerciseId: exercise.id,
+          position: 0,
+          sets: 3,
+          reps: 10,
+          restSecs: 60,
+        },
       ],
     });
 
@@ -77,9 +83,7 @@ describe("PATCH /api/workouts/:id", () => {
     });
 
     const response = await updateWorkout(app, token, workout.id, {
-      exercises: [
-        { exerciseId: newEx.id, sets: 4, reps: 8, restSecs: 90 },
-      ],
+      exercises: [{ exerciseId: newEx.id, sets: 4, reps: 8, restSecs: 90 }],
     });
 
     expect(response.status).toBe(StatusCodes.OK);

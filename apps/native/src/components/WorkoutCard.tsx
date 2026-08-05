@@ -59,6 +59,10 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   name: { fontSize: 18, fontWeight: "700" },
-  metaRow: { flexDirection: "row", justifyContent: "space-between", marginTop: 8 },
+  metaRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginTop: 8,
+  },
   meta: { fontSize: 13, opacity: 0.7 },
 });

@@ -73,11 +73,7 @@ describe("PATCH /api/users/me", () => {
     const token2 = registerRes2.body.data.token;
     const username1 = registerRes1.body.data.user.username;
 
-    const response = await patchMyProfile(
-      app,
-      { username: username1 },
-      token2,
-    );
+    const response = await patchMyProfile(app, { username: username1 }, token2);
 
     expect(response.status).toBe(StatusCodes.CONFLICT);
   });

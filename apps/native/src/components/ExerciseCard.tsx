@@ -4,9 +4,16 @@ import { Pressable, StyleSheet, Text, View } from "react-native";
 import type { ExerciseSummary } from "@repo/common";
 
 const CARD_PALETTE = [
-  "#E57373", "#F06292", "#BA68C8", "#7986CB",
-  "#4FC3F7", "#4DB6AC", "#81C784", "#FFD54F",
-  "#FF8A65", "#A1887F",
+  "#E57373",
+  "#F06292",
+  "#BA68C8",
+  "#7986CB",
+  "#4FC3F7",
+  "#4DB6AC",
+  "#81C784",
+  "#FFD54F",
+  "#FF8A65",
+  "#A1887F",
 ];
 
 const cardColor = (code: string): string => {

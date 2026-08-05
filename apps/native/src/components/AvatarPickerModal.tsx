@@ -27,7 +27,9 @@ const AvatarPickerModal: React.FC<Props> = ({
     >
       <Pressable style={styles.overlay} onPress={onClose}>
         <View style={[styles.sheet, { backgroundColor: colors.surface }]}>
-          <Text style={[styles.title, { color: colors.text }]}>Change Avatar</Text>
+          <Text style={[styles.title, { color: colors.text }]}>
+            Change Avatar
+          </Text>
           <Pressable
             style={({ pressed }) => [styles.option, pressed && styles.pressed]}
             onPress={onPickLibrary}

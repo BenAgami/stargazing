@@ -44,7 +44,10 @@ const Stepper: React.FC<StepperProps> = ({
           disabled={atMin}
           style={({ pressed }) => [
             styles.button,
-            { backgroundColor: colors.surface, opacity: atMin ? 0.4 : pressed ? 0.7 : 1 },
+            {
+              backgroundColor: colors.surface,
+              opacity: atMin ? 0.4 : pressed ? 0.7 : 1,
+            },
           ]}
           accessibilityRole="button"
           accessibilityLabel={`Decrease ${label}`}
@@ -65,7 +68,10 @@ const Stepper: React.FC<StepperProps> = ({
           disabled={atMax}
           style={({ pressed }) => [
             styles.button,
-            { backgroundColor: colors.surface, opacity: atMax ? 0.4 : pressed ? 0.7 : 1 },
+            {
+              backgroundColor: colors.surface,
+              opacity: atMax ? 0.4 : pressed ? 0.7 : 1,
+            },
           ]}
           accessibilityRole="button"
           accessibilityLabel={`Increase ${label}`}

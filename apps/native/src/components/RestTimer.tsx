@@ -16,13 +16,20 @@ export interface RestTimerProps {
   onSkip: () => void;
 }
 
-const RestTimer: React.FC<RestTimerProps> = ({ secondsLeft, totalSeconds, onSkip }) => {
+const RestTimer: React.FC<RestTimerProps> = ({
+  secondsLeft,
+  totalSeconds,
+  onSkip,
+}) => {
   const { colors } = useTheme();
   return (
     <View style={[styles.container, { backgroundColor: colors.surface }]}>
       <Text style={[styles.label, { color: colors.text }]}>Rest</Text>
       <Text
-        style={[styles.count, { color: colors.text, fontVariant: ["tabular-nums"] }]}
+        style={[
+          styles.count,
+          { color: colors.text, fontVariant: ["tabular-nums"] },
+        ]}
         accessibilityLiveRegion="polite"
         accessibilityLabel={`Rest timer, ${secondsLeft} seconds remaining`}
       >
@@ -55,7 +62,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginHorizontal: 16,
   },
-  label: { fontSize: 14, fontWeight: "600", textTransform: "uppercase", opacity: 0.6 },
+  label: {
+    fontSize: 14,
+    fontWeight: "600",
+    textTransform: "uppercase",
+    opacity: 0.6,
+  },
   count: { fontSize: 64, fontWeight: "800", marginVertical: 8 },
   totalLabel: { fontSize: 13, opacity: 0.5, marginBottom: 16 },
   skipButton: {

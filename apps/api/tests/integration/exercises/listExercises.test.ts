@@ -73,7 +73,9 @@ describe("GET /api/exercises", () => {
     const response = await listExercises(app);
 
     expect(response.status).toBe(StatusCodes.OK);
-    const codes = response.body.data.items.map((item: { code: string }) => item.code);
+    const codes = response.body.data.items.map(
+      (item: { code: string }) => item.code,
+    );
     expect(codes).toContain(activeExercise.code);
     expect(codes).not.toContain(inactiveExercise.code);
   });
@@ -96,7 +98,9 @@ describe("GET /api/exercises", () => {
     const response = await listExercises(app, { includeInactive: true }, token);
 
     expect(response.status).toBe(StatusCodes.OK);
-    const codes = response.body.data.items.map((item: { code: string }) => item.code);
+    const codes = response.body.data.items.map(
+      (item: { code: string }) => item.code,
+    );
     expect(codes).toContain(activeExercise.code);
     expect(codes).toContain(inactiveExercise.code);
   });

@@ -43,6 +43,7 @@ ESLint 9 flat config (typescript-eslint, type-checked rules) at the repo root in
 ## Phase 1 Scope (Infrastructure)
 
 What Phase 1 is building:
+
 - **Async video upload**: `POST /api/sessions/:id/recording` returns 202 + job ID immediately
 - **BullMQ job queue** (Redis-backed): worker processes video analysis off the request thread
 - **SSE endpoint**: `GET /api/sessions/:id/status` streams job progress events to the client
@@ -52,6 +53,7 @@ What Phase 1 is building:
 ## Database
 
 PostgreSQL via Prisma 7. Two instances run locally via Docker:
+
 - `:5434` — development
 - `:5433` — test
 

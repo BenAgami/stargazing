@@ -35,7 +35,9 @@ describe("POST /api/workouts", () => {
       exerciseType: ExerciseType.DYNAMIC,
     });
     const workoutDto = new WorkoutBuilder()
-      .setExercises([{ exerciseId: exercise.id, sets: 3, reps: 10, restSecs: 60 }])
+      .setExercises([
+        { exerciseId: exercise.id, sets: 3, reps: 10, restSecs: 60 },
+      ])
       .build();
 
     const response = await createWorkout(app, token, workoutDto);
@@ -109,7 +111,9 @@ describe("POST /api/workouts", () => {
   it("should return 401 without auth token", async () => {
     const exercise = await createExercise(prisma);
     const workoutDto = new WorkoutBuilder()
-      .setExercises([{ exerciseId: exercise.id, sets: 3, reps: 10, restSecs: 60 }])
+      .setExercises([
+        { exerciseId: exercise.id, sets: 3, reps: 10, restSecs: 60 },
+      ])
       .build();
 
     const response = await createWorkout(app, undefined, workoutDto);

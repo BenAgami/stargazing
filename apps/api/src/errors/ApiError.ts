@@ -6,7 +6,7 @@ class ApiError extends Error {
 
   constructor(
     message: string,
-    status: number = StatusCodes.INTERNAL_SERVER_ERROR
+    status: number = StatusCodes.INTERNAL_SERVER_ERROR,
   ) {
     super(message);
     this.status = this.statusCode = status;

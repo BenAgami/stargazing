@@ -58,7 +58,11 @@ const WorkoutExerciseRow: React.FC<WorkoutExerciseRowProps> = ({
           accessibilityRole="button"
           accessibilityLabel={`Reorder ${exerciseDisplayName}`}
         >
-          <Ionicons name="reorder-three-outline" size={22} color={colors.text} />
+          <Ionicons
+            name="reorder-three-outline"
+            size={22}
+            color={colors.text}
+          />
         </Pressable>
         <Pressable
           onPress={() => setExpanded((v) => !v)}
@@ -115,7 +119,9 @@ const WorkoutExerciseRow: React.FC<WorkoutExerciseRowProps> = ({
               value={values.reps ?? 8}
               min={1}
               max={50}
-              onChange={(reps) => onChange({ ...values, reps, durationSecs: null })}
+              onChange={(reps) =>
+                onChange({ ...values, reps, durationSecs: null })
+              }
             />
           )}
           <Stepper
@@ -143,7 +149,12 @@ const styles = StyleSheet.create({
     overflow: "hidden",
   },
   active: { opacity: 0.85, transform: [{ scale: 1.02 }] },
-  headerRow: { flexDirection: "row", alignItems: "center", padding: 12, gap: 8 },
+  headerRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    padding: 12,
+    gap: 8,
+  },
   dragHandle: { padding: 4 },
   headerLabel: { flex: 1 },
   name: { fontSize: 15, fontWeight: "700" },

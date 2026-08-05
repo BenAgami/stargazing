@@ -11,9 +11,7 @@ const PALETTE = [
 ];
 
 const avatarColor = (username: string): string => {
-  const hash = username
-    .split("")
-    .reduce((acc, c) => acc + c.charCodeAt(0), 0);
+  const hash = username.split("").reduce((acc, c) => acc + c.charCodeAt(0), 0);
   return PALETTE[hash % PALETTE.length];
 };
 

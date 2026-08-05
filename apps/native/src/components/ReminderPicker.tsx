@@ -1,6 +1,8 @@
 import React from "react";
 import { View, Text, Pressable, StyleSheet, Platform } from "react-native";
-import DateTimePicker, { DateTimePickerEvent } from "@react-native-community/datetimepicker";
+import DateTimePicker, {
+  DateTimePickerEvent,
+} from "@react-native-community/datetimepicker";
 
 import { useTheme } from "@src/context/ThemeContext";
 import { baseColors } from "@src/theme/colors";
@@ -118,8 +120,13 @@ const ReminderPicker: React.FC<Props> = ({
         >
           <Text style={styles.saveButtonText}>Save</Text>
         </Pressable>
-        <Pressable onPress={onCancel} style={({ pressed }) => pressed && styles.pressed}>
-          <Text style={[styles.cancelLink, { color: baseColors.grayDark }]}>Cancel</Text>
+        <Pressable
+          onPress={onCancel}
+          style={({ pressed }) => pressed && styles.pressed}
+        >
+          <Text style={[styles.cancelLink, { color: baseColors.grayDark }]}>
+            Cancel
+          </Text>
         </Pressable>
       </View>
     </View>

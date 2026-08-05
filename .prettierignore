@@ -1,0 +1,17 @@
+node_modules
+dist
+build
+coverage
+.turbo
+.expo
+android
+ios
+
+# Generated Prisma client
+packages/database/generated
+
+# Tool-managed: agent skills/commands and planning docs
+.claude
+.planning
+
+yarn.lock
