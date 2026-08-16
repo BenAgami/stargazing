@@ -5,16 +5,20 @@
 ## Test Framework
 
 **Runner:**
+
 - Vitest 4.x
 - Config: `apps/api/vitest.config.ts`
 
 **Assertion Library:**
+
 - Vitest built-in (Jest-compatible API via `globals: true`)
 
 **HTTP Testing:**
+
 - `supertest` 7.x — used for all HTTP request assertions
 
 **Run Commands:**
+
 ```bash
 cross-env NODE_ENV=test vitest          # Run all tests
 cross-env NODE_ENV=test vitest --watch  # Watch mode
@@ -22,6 +26,7 @@ cross-env NODE_ENV=test vitest --watch  # Watch mode
 ```
 
 From the monorepo root:
+
 ```bash
 yarn test    # Runs turbo run test across all packages
 ```
@@ -40,14 +45,15 @@ export default defineConfig({
     globalSetup: ["tests/globalSetup.ts"],
     clearMocks: true,
     restoreMocks: true,
-    fileParallelism: false,         // Tests run sequentially across files
+    fileParallelism: false, // Tests run sequentially across files
     sequence: { concurrent: false }, // Tests within a file run sequentially
-    pool: "forks",                  // Each test file runs in a separate process
+    pool: "forks", // Each test file runs in a separate process
   },
 });
 ```
 
 Key decisions:
+
 - `fileParallelism: false` and `sequence: { concurrent: false }` ensure serial execution — required because all tests share a single test database
 - `pool: "forks"` isolates each test file in a subprocess
 - `.env.test` is loaded automatically (via `dotenv` in `vitest.config.ts`)
@@ -57,6 +63,7 @@ Key decisions:
 **Location:** Separate `tests/` directory at `apps/api/tests/`, not co-located with source
 
 **Structure:**
+
 ```
 apps/api/tests/
 ├── globalSetup.ts                        # One-time DB reset before all suites
@@ -92,6 +99,7 @@ apps/api/tests/
 ```
 
 **Naming:**
+
 - Test files: `[action|resource].test.ts` (e.g., `listExercises.test.ts`, `login.test.ts`)
 - Builders: `[resource]Builder.ts`
 - Request senders: `[resource]Requests.ts`
@@ -124,20 +132,24 @@ describe("POST /api/users/register", () => {
 **it label convention:** `"should [expected behavior]"` or `"should return [status] for [condition]"`
 
 **Setup/Teardown:**
+
 - `beforeAll` + `afterAll` are used (not `beforeEach`/`afterEach`) for most suites — the full DB is cleaned once per describe block
 - Exception: `listExercises.test.ts` and `getExerciseByCode.test.ts` use `afterEach` to delete only the specific records they created (tracked via `createdExerciseIds` array), allowing fine-grained cleanup between tests within a suite
 
 ## Test Setup Infrastructure
 
 **`tests/globalSetup.ts`** — runs once before the entire test run:
+
 - Guards: aborts if `NODE_ENV !== "test"` or `DATABASE_URL` does not contain `_test`
 - Resets the test database by running `yarn db:migrate:reset` via `execSync`
 
 **`tests/setup.ts`** — runs before each worker:
+
 - Validates `NODE_ENV === "test"` and `DATABASE_URL` includes `_test`
 - Prevents accidental execution against non-test databases
 
 **`tests/integration/helpers/testSetup.ts`** — per-suite lifecycle:
+
 ```typescript
 export const setupIntegrationTest = async (): Promise<TestAppContext> => {
   const app = createApp();
@@ -147,12 +159,13 @@ export const setupIntegrationTest = async (): Promise<TestAppContext> => {
 };
 
 export const teardownIntegrationTest = async (prisma) => {
-  await cleanupDatabase(prisma);  // deleteMany on all tables in dependency order
+  await cleanupDatabase(prisma); // deleteMany on all tables in dependency order
   await prisma.$disconnect();
 };
 ```
 
 `cleanupDatabase` deletes in foreign-key safe order:
+
 ```typescript
 await prisma.analysisFinding.deleteMany();
 await prisma.analysisResult.deleteMany();
@@ -168,6 +181,7 @@ await prisma.user.deleteMany();
 ## Test Data Builders
 
 The Builder pattern is used for all test data. Each builder:
+
 - Has a constructor with sensible defaults (using `randomUUID().split("-")[0]` for unique suffixes)
 - Has fluent `set*` methods returning `this` for chaining
 - Has a `build()` method returning a plain DTO object
@@ -179,16 +193,15 @@ const user = new RegisterUserBuilder().build();
 // Override specific fields
 const user = new RegisterUserBuilder()
   .setEmail("duplicate@example.com")
-  .setPassword(undefined)   // force missing field
+  .setPassword(undefined) // force missing field
   .build();
 
 // Cross-builder initialization
-const loginDto = new LoginUserBuilder()
-  .fromRegisterDto(registerDto)
-  .build();
+const loginDto = new LoginUserBuilder().fromRegisterDto(registerDto).build();
 ```
 
 **Builder files:** `apps/api/tests/integration/builders/`
+
 - `registerUserBuilder.ts` — `RegisterUserBuilder`, `RegisterUserDto`
 - `loginUserBuilder.ts` — `LoginUserBuilder`, `LoginUserDto`
 - `exerciseBuilder.ts` — `ExerciseBuilder`, `ExerciseDto`
@@ -197,6 +210,7 @@ const loginDto = new LoginUserBuilder()
 ## DB Helpers
 
 **`tests/integration/helpers/db/exerciseHelper.ts`:**
+
 ```typescript
 export const createExercise = async (
   prisma: ReturnType<typeof getPrismaClient>,
@@ -216,13 +230,17 @@ Each resource has a typed request sender file in `tests/integration/helpers/requ
 ```typescript
 // Auth requests (no token required)
 export const registerUser = async (app, userRegisterData) =>
-  supertest.agent(app).post("/api/users/register")
+  supertest
+    .agent(app)
+    .post("/api/users/register")
     .set("Content-Type", "application/json")
     .send(userRegisterData);
 
 // Authenticated requests (optional token)
 export const createWorkoutSession = async (app, token, data) => {
-  const request = supertest.agent(app).post("/api/sessions")
+  const request = supertest
+    .agent(app)
+    .post("/api/sessions")
     .set("Content-Type", "application/json");
   if (token) request.set("Authorization", `Bearer ${token}`);
   return request.send(data);
@@ -247,6 +265,7 @@ export const listExercises = async (app, query?) => {
 ## Common Assertion Patterns
 
 **Happy path — check status, shape, and specific field values:**
+
 ```typescript
 expect(response.status).toBe(StatusCodes.CREATED);
 expect(response.body.success).toBe(true);
@@ -257,15 +276,19 @@ expect(response.body.data.user).not.toHaveProperty("password");
 ```
 
 **Error path — check status code and message:**
+
 ```typescript
 expect(response.status).toBe(StatusCodes.BAD_REQUEST);
-expect(response.body.details[0].message).toBe("body.email - Enter a valid email");
+expect(response.body.details[0].message).toBe(
+  "body.email - Enter a valid email",
+);
 
 expect(response.status).toBe(StatusCodes.CONFLICT);
 expect(response.body.message).toBe("User with this email already exists");
 ```
 
 **Pagination assertions:**
+
 ```typescript
 expect(response.body.data.items).toHaveLength(2);
 expect(response.body.data.page.hasMore).toBe(true);
@@ -273,6 +296,7 @@ expect(response.body.data.page.nextOffset).toBe(2);
 ```
 
 **DB state verification (used when HTTP response alone is insufficient):**
+
 ```typescript
 const storedSession = await prisma.workoutSession.findUnique({
   where: { id: response.body.data.id },
@@ -287,10 +311,12 @@ expect(storedSession?.exercise.code).toBe(exercise.code);
 **Requirements:** None enforced (no coverage thresholds configured in `vitest.config.ts`)
 
 **What is tested:**
+
 - All API routes have integration test files covering: success path, validation errors, auth errors, and business logic errors (not found, conflict)
 - Pagination behavior (limit, offset, hasMore, nextOffset) is tested for list endpoints
 
 **What is NOT tested:**
+
 - No unit tests for service classes in isolation
 - No unit tests for utility functions (`asyncWrapper`, `generateJwtToken`, `zodErrorMessage`)
 - No unit tests for middleware (`authentication`, `authorization`, `validateSchema`)
@@ -298,4 +324,4 @@ expect(storedSession?.exercise.code).toBe(exercise.code);
 
 ---
 
-*Testing analysis: 2026-03-21*
+_Testing analysis: 2026-03-21_

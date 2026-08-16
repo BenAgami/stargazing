@@ -87,20 +87,20 @@ The pipeline has two execution modes — **real-time** (on-device, during the se
 
 ### Component Responsibilities
 
-| Component | Responsibility | Typical Implementation |
-|-----------|----------------|------------------------|
-| Camera Layer | Capture video frames, give access to recorded file | `expo-camera` for post-set recording; `react-native-vision-camera` with frame processors for real-time |
-| Pose Estimation Layer | Convert each camera frame to 17 body keypoints (x, y, confidence) | TFLite MoveNet Lightning on-device via `@tensorflow-models/pose-detection` + TFJS React Native adapter |
-| Form Analysis Client | Calculate joint angles, flag deviation, throttle feedback calls | Custom hook in `apps/native`; uses pose stream, no server round-trip for basic cues |
-| Upload Client | Compress, chunk, and POST video; subscribe to SSE for job progress | Expo FileSystem + `fetch` with FormData; `react-native-sse` for event stream |
-| Analysis Job Route / Controller | Accept multipart upload, validate, return job ID immediately | New `apps/api/src/routes/analysisJob.ts` following existing route pattern |
-| Analysis Job Service | Write file to disk, create DB record, enqueue BullMQ job | `apps/api/src/services/analysisJobService.ts` |
-| Analysis Worker | Frame extraction, Claude API call, persist feedback, emit SSE event | Separate BullMQ worker — can run in same Node.js process or separately |
-| Frame Extractor | Sample meaningful frames (e.g., every N frames or at detected reps) | `ffmpeg` via `fluent-ffmpeg` or manual sampling from video buffer |
-| Claude API Client | Build multi-image message with exercise context, parse structured feedback | Thin wrapper around Anthropic SDK in `apps/api/src/services/` |
-| SSE Endpoint | Stream job status updates (queued → processing → done/error) to mobile client | Express `res.write('data: ...\n\n')` with `text/event-stream` |
-| AI Workout Generator | Accept goal description, return structured workout plan | Separate service calling Claude text API; no vision needed |
-| @repo/db | Persist all entities: jobs, feedback records, workouts, sets, progress | Prisma 7 + PostgreSQL via existing `packages/database` |
+| Component                       | Responsibility                                                                | Typical Implementation                                                                                 |
+| ------------------------------- | ----------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
+| Camera Layer                    | Capture video frames, give access to recorded file                            | `expo-camera` for post-set recording; `react-native-vision-camera` with frame processors for real-time |
+| Pose Estimation Layer           | Convert each camera frame to 17 body keypoints (x, y, confidence)             | TFLite MoveNet Lightning on-device via `@tensorflow-models/pose-detection` + TFJS React Native adapter |
+| Form Analysis Client            | Calculate joint angles, flag deviation, throttle feedback calls               | Custom hook in `apps/native`; uses pose stream, no server round-trip for basic cues                    |
+| Upload Client                   | Compress, chunk, and POST video; subscribe to SSE for job progress            | Expo FileSystem + `fetch` with FormData; `react-native-sse` for event stream                           |
+| Analysis Job Route / Controller | Accept multipart upload, validate, return job ID immediately                  | New `apps/api/src/routes/analysisJob.ts` following existing route pattern                              |
+| Analysis Job Service            | Write file to disk, create DB record, enqueue BullMQ job                      | `apps/api/src/services/analysisJobService.ts`                                                          |
+| Analysis Worker                 | Frame extraction, Claude API call, persist feedback, emit SSE event           | Separate BullMQ worker — can run in same Node.js process or separately                                 |
+| Frame Extractor                 | Sample meaningful frames (e.g., every N frames or at detected reps)           | `ffmpeg` via `fluent-ffmpeg` or manual sampling from video buffer                                      |
+| Claude API Client               | Build multi-image message with exercise context, parse structured feedback    | Thin wrapper around Anthropic SDK in `apps/api/src/services/`                                          |
+| SSE Endpoint                    | Stream job status updates (queued → processing → done/error) to mobile client | Express `res.write('data: ...\n\n')` with `text/event-stream`                                          |
+| AI Workout Generator            | Accept goal description, return structured workout plan                       | Separate service calling Claude text API; no vision needed                                             |
+| @repo/db                        | Persist all entities: jobs, feedback records, workouts, sets, progress        | Prisma 7 + PostgreSQL via existing `packages/database`                                                 |
 
 ---
 
@@ -174,15 +174,17 @@ packages/database/prisma/models/
 **When to use:** Always for the real-time path; for the post-set path when device GPU is insufficient to run heavier analysis locally.
 
 **Trade-offs:**
+
 - Pro: Zero video upload latency for real-time cues; privacy-preserving option (keypoints only, no video); reduces server compute for the hot path
 - Pro: MoveNet Lightning runs at 50+ FPS on modern phones — well within budget
 - Con: On-device model adds ~10-15 MB to the app bundle; requires `expo-gl` and `@tensorflow/tfjs-react-native`
 - Con: TFLite + TFJS React Native adapter has version coupling with Expo SDK — verify compatibility at integration time
 
 **Example keypoint structure:**
+
 ```typescript
 // Output of usePoseEstimation hook
-type Keypoint = { x: number; y: number; score: number; name: string }
+type Keypoint = { x: number; y: number; score: number; name: string };
 // 17 named keypoints: nose, left_eye, right_eye, left_ear, right_ear,
 // left_shoulder, right_shoulder, left_elbow, right_elbow, left_wrist,
 // right_wrist, left_hip, right_hip, left_knee, right_knee, left_ankle, right_ankle
@@ -195,20 +197,22 @@ type Keypoint = { x: number; y: number; score: number; name: string }
 **When to use:** Post-set analysis — the operation takes 10-30 seconds (frame extraction + Claude API latency); cannot block an HTTP request.
 
 **Trade-offs:**
+
 - Pro: HTTP request returns instantly with job ID; no timeout risk; natural retry/failure handling via BullMQ
 - Pro: Worker can be horizontally scaled independently of the API
 - Con: Adds Redis as a new infrastructure dependency; adds complexity vs. synchronous processing
 - Con: SSE connections require that the mobile client stays in the foreground — must handle reconnect gracefully
 
 **Example job contract:**
+
 ```typescript
 // queues/analysisQueue.ts
 interface AnalysisJobPayload {
-  jobId: string          // DB record UUID
-  userId: string
-  exerciseCode: string   // e.g. 'PUSH_UP'
-  videoPath: string      // local filesystem path (temp storage)
-  repCount: number       // from rep counter during recording
+  jobId: string; // DB record UUID
+  userId: string;
+  exerciseCode: string; // e.g. 'PUSH_UP'
+  videoPath: string; // local filesystem path (temp storage)
+  repCount: number; // from rep counter during recording
 }
 ```
 
@@ -219,12 +223,14 @@ interface AnalysisJobPayload {
 **When to use:** Post-set analysis; the only viable approach given Claude's lack of native video input support as of March 2026.
 
 **Trade-offs:**
+
 - Pro: Claude supports up to 600 images per request; 8-12 frames are trivially within bounds and cost-effective
 - Pro: Augmenting frames with pre-computed keypoint data (angles, velocity) dramatically improves feedback quality — the model spends less effort on geometry and more on coaching
 - Con: Frame selection matters; a bad sampling strategy misses the error moments (e.g., lower-back rounding at rep 6)
 - Con: 8-12 frames at ~1MB each = 8-12MB per request payload — use the Files API to avoid re-uploading the same reference frames across multiple analyses
 
 **Recommended frame selection strategy:**
+
 ```
 1. Uniform sample: 1 frame per second of movement
 2. Apex detection: frames at top and bottom of rep arc (via y-velocity of hip keypoint crossing zero)
@@ -239,6 +245,7 @@ Max: 12 frames. Resize to 640x480 before upload.
 **When to use:** Real-time cue generation during a set.
 
 **Trade-offs:**
+
 - Pro: Instant (<16ms) deterministic cues with no API latency; works offline
 - Pro: Claude API calls stay below ~1/minute per user, making cost manageable
 - Con: Rule engine requires exercise-specific configuration per movement; push-up rules differ from pull-up rules
@@ -367,11 +374,11 @@ Phase 5: Progress tracking (depends on Phase 2 feedback data existing)
 
 ## Scaling Considerations
 
-| Scale | Architecture Adjustments |
-|-------|--------------------------|
-| 0-1k users | Monolith fine — BullMQ worker runs in same Node.js process; video stored on local filesystem; Redis single instance |
-| 1k-10k users | Move videos to object storage (S3 or R2) — local disk won't survive multi-instance deploy; add Redis Sentinel or managed Redis; extract worker to separate Dockerfile |
-| 10k+ users | Worker autoscaling (separate service with multiple BullMQ consumers); CDN for video delivery if storing user recordings long-term; rate-limit Claude API calls per user |
+| Scale        | Architecture Adjustments                                                                                                                                                |
+| ------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 0-1k users   | Monolith fine — BullMQ worker runs in same Node.js process; video stored on local filesystem; Redis single instance                                                     |
+| 1k-10k users | Move videos to object storage (S3 or R2) — local disk won't survive multi-instance deploy; add Redis Sentinel or managed Redis; extract worker to separate Dockerfile   |
+| 10k+ users   | Worker autoscaling (separate service with multiple BullMQ consumers); CDN for video delivery if storing user recordings long-term; rate-limit Claude API calls per user |
 
 ### Scaling Priorities
 
@@ -428,24 +435,24 @@ Phase 5: Progress tracking (depends on Phase 2 feedback data existing)
 
 ### External Services
 
-| Service | Integration Pattern | Notes |
-|---------|---------------------|-------|
-| Claude API (Anthropic) | REST HTTP via `@anthropic-ai/sdk` inside analysis worker | Add `ANTHROPIC_API_KEY` to env; use `claude-sonnet-4-5` or current Sonnet for vision; 5MB per image limit, 32MB request limit |
-| Redis | BullMQ backing store; `REDIS_URL` env var | Required for BullMQ. Can use managed Redis (Upstash, Redis Cloud) in production. Not needed for workout generation or progress — only for the analysis job queue |
-| ffmpeg / fluent-ffmpeg | Child process or native binding in API worker | Used for frame extraction. Requires `ffmpeg` binary present on server. Alternative: use `canvas` + video decode in Node.js (heavier, slower) |
+| Service                | Integration Pattern                                      | Notes                                                                                                                                                            |
+| ---------------------- | -------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Claude API (Anthropic) | REST HTTP via `@anthropic-ai/sdk` inside analysis worker | Add `ANTHROPIC_API_KEY` to env; use `claude-sonnet-4-5` or current Sonnet for vision; 5MB per image limit, 32MB request limit                                    |
+| Redis                  | BullMQ backing store; `REDIS_URL` env var                | Required for BullMQ. Can use managed Redis (Upstash, Redis Cloud) in production. Not needed for workout generation or progress — only for the analysis job queue |
+| ffmpeg / fluent-ffmpeg | Child process or native binding in API worker            | Used for frame extraction. Requires `ffmpeg` binary present on server. Alternative: use `canvas` + video decode in Node.js (heavier, slower)                     |
 
 ### Internal Boundaries
 
-| Boundary | Communication | Notes |
-|----------|---------------|-------|
-| native ↔ API (video upload) | Multipart POST over HTTPS | `FormData` with video file URI from expo-camera; standard `multer` on Express side |
-| native ↔ API (job status) | SSE stream (`text/event-stream`) | `react-native-sse` on client; `res.write()` loop on Express side tied to BullMQ job events |
-| native ↔ on-device ML | In-process via TFLite | No network; TFJS React Native adapter, `expo-gl` for GPU; keypoints stay on device |
-| API route ↔ Analysis Worker | BullMQ job queue via Redis | Service enqueues; worker consumes. Decouple timing entirely. |
-| Analysis Worker ↔ Claude API | HTTPS REST (`@anthropic-ai/sdk`) | Runs inside worker process; retry logic via BullMQ job retry settings |
-| Worker ↔ SSE Endpoint | In-process event emission or Redis pub/sub | Simple case: both run in same Node.js process, use Node EventEmitter. Multi-instance case: use Redis pub/sub to fanout SSE events |
-| All API layers ↔ DB | `@repo/db` (getPrismaClient) | Existing pattern — no direct Prisma imports outside `packages/database` |
-| API ↔ @repo/common | Zod schema import | Add new schemas for `AnalysisJob`, `FormFeedback`, `WorkoutPlan` to `packages/common` |
+| Boundary                     | Communication                              | Notes                                                                                                                             |
+| ---------------------------- | ------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------- |
+| native ↔ API (video upload)  | Multipart POST over HTTPS                  | `FormData` with video file URI from expo-camera; standard `multer` on Express side                                                |
+| native ↔ API (job status)    | SSE stream (`text/event-stream`)           | `react-native-sse` on client; `res.write()` loop on Express side tied to BullMQ job events                                        |
+| native ↔ on-device ML        | In-process via TFLite                      | No network; TFJS React Native adapter, `expo-gl` for GPU; keypoints stay on device                                                |
+| API route ↔ Analysis Worker  | BullMQ job queue via Redis                 | Service enqueues; worker consumes. Decouple timing entirely.                                                                      |
+| Analysis Worker ↔ Claude API | HTTPS REST (`@anthropic-ai/sdk`)           | Runs inside worker process; retry logic via BullMQ job retry settings                                                             |
+| Worker ↔ SSE Endpoint        | In-process event emission or Redis pub/sub | Simple case: both run in same Node.js process, use Node EventEmitter. Multi-instance case: use Redis pub/sub to fanout SSE events |
+| All API layers ↔ DB          | `@repo/db` (getPrismaClient)               | Existing pattern — no direct Prisma imports outside `packages/database`                                                           |
+| API ↔ @repo/common           | Zod schema import                          | Add new schemas for `AnalysisJob`, `FormFeedback`, `WorkoutPlan` to `packages/common`                                             |
 
 ---
 
@@ -473,5 +480,5 @@ Phase 5: Progress tracking (depends on Phase 2 feedback data existing)
 
 ---
 
-*Architecture research for: AI calisthenics form analysis pipeline*
-*Researched: 2026-03-21*
+_Architecture research for: AI calisthenics form analysis pipeline_
+_Researched: 2026-03-21_

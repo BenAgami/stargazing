@@ -37,15 +37,15 @@ Plan: Not started
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
-|-------|-------|-------|----------|
-| - | - | - | - |
+| ----- | ----- | ----- | -------- |
+| -     | -     | -     | -        |
 
 **Recent Trend:**
 
 - Last 5 plans: -
 - Trend: -
 
-*Updated after each plan completion*
+_Updated after each plan completion_
 | Phase 02-user-profile P01 | 9 | 2 tasks | 12 files |
 | Phase 02-user-profile P02 | 5 | 2 tasks | 8 files |
 | Phase 02-user-profile P03 | 15 | 2 tasks | 5 files |

@@ -37,13 +37,14 @@ Inspect the working tree, craft a conventional commit message with a descriptive
    - Keep lines ≤72 chars
 
 4. **Commit** using a HEREDOC to preserve formatting. Never append a `Co-Authored-By` trailer:
+
    ```bash
    git commit -m "$(cat <<'EOF'
    type(scope): subject
 
    Body here.
-EOF
-)"
+   EOF
+   )"
    ```
 
 5. **Verify** with `git status` — confirm the commit landed cleanly.
@@ -58,6 +59,7 @@ EOF
 ## Examples
 
 **Example 1 — new feature:**
+
 ```
 feat(auth): add JWT refresh token rotation
 
@@ -67,6 +69,7 @@ concurrent requests within the grace period still succeed.
 ```
 
 **Example 2 — bug fix:**
+
 ```
 fix(queue): prevent PROCESSING jobs from hanging indefinitely
 
@@ -76,6 +79,7 @@ crashed mid-job and left no tombstone.
 ```
 
 **Example 3 — chore:**
+
 ```
 chore(deps): upgrade Prisma to 7.1.2
 
