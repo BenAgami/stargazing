@@ -7,7 +7,11 @@ import { getZodErrorMessage } from "../utils/zodErrorMessage";
 const validateSchema =
   (schema: ZodType) => (req: Request, res: Response, next: NextFunction) => {
     try {
-      schema.parse({ body: req.body, query: req.query, params: req.params });
+      schema.parse({
+        body: req.body as unknown,
+        query: req.query,
+        params: req.params,
+      });
       next();
     } catch (error) {
       if (error instanceof ZodError) {

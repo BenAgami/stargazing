@@ -1,7 +1,7 @@
 import React from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
-import type { ExerciseSummary } from "@src/types/workout";
+import type { ExerciseSummary } from "@repo/common";
 
 const CARD_PALETTE = [
   "#E57373", "#F06292", "#BA68C8", "#7986CB",

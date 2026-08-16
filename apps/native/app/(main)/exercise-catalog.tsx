@@ -17,7 +17,7 @@ import ExerciseCard from "@src/components/ExerciseCard";
 import ExerciseTypeSegmented, {
   type ExerciseTypeFilter,
 } from "@src/components/ExerciseTypeSegmented";
-import type { ExerciseSummary } from "@src/types/workout";
+import type { ExerciseSummary } from "@repo/common";
 
 type CatalogParams = { pickerReturnTo?: string };
 

@@ -5,10 +5,16 @@
     "apps/*",
     "packages/*"
   ],
+  "version": "1.0.0",
+  "engines": {
+    "node": ">=22"
+  },
+  "packageManager": "yarn@1.22.19",
   "scripts": {
     "dev": "turbo run dev",
     "build": "turbo run build",
     "lint": "turbo run lint",
+    "check-types": "turbo run check-types",
     "test": "turbo run test",
     "clean": "turbo run clean && rm -rf node_modules",
     "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\" --ignore-path .gitignore",
@@ -16,17 +22,15 @@
     "ios": "expo run:ios"
   },
   "devDependencies": {
+    "@repo/eslint-config": "*",
+    "eslint": "^9",
+    "globals": "^15",
     "prettier": "^3.1.1",
     "tsup": "^8.5.1",
     "tsx": "^4.21.0",
     "turbo": "^2.5.6",
     "typescript": "^5.9.3"
   },
-  "packageManager": "yarn@1.22.19",
-  "engines": {
-    "node": ">=18"
-  },
-  "version": "1.0.0",
   "dependencies": {
     "expo": "~54.0.33",
     "react": "19.1.0",

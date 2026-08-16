@@ -18,9 +18,12 @@ export const useLogin = () => {
       const result = await authApi.login(data);
       await setToken(result.token, result.refreshToken);
       const destination = returnTo?.startsWith("/") ? returnTo : "/";
-      router.replace(destination as Parameters<typeof router.replace>[0]);
+      router.replace(destination);
     } catch (err) {
-      if (err instanceof ApiError && err.status === StatusCodes.UNAUTHORIZED) {
+      if (
+        err instanceof ApiError &&
+        err.status === Number(StatusCodes.UNAUTHORIZED)
+      ) {
         setError("Invalid email or password.");
       } else {
         setError("Something went wrong. Please try again.");

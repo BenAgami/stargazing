@@ -1,0 +1,115 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+env:
+  NODE_VERSION: "22"
+  DATABASE_URL: "postgresql://postgres:postgres@localhost:5432/app_test?schema=public"
+  REDIS_URL: "redis://localhost:6379"
+  JWT_SECRET: "ci-only-secret-do-not-use-in-prod-aaaaaaaaaaaaaaaaaaaaaaaaaa"
+  JWT_EXPIRES_IN: "15m"
+  REFRESH_TOKEN_EXPIRES_IN: "7d"
+  CORS_ALLOWED_ORIGINS: "http://localhost:8081"
+  R2_ACCOUNT_ID: "ci-account-id"
+  R2_ACCESS_KEY_ID: "ci-access-key-id"
+  R2_SECRET_ACCESS_KEY: "ci-secret-access-key"
+  R2_BUCKET_NAME: "ci-bucket"
+  R2_PUBLIC_DOMAIN: "ci.example.com"
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:18-alpine
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: app_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: yarn
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Build
+        run: yarn build
+
+      - name: Lint
+        run: yarn lint
+
+      - name: Check types
+        run: yarn check-types
+
+      - name: Test
+        run: yarn workspace api test
+
+      - name: Boot smoke test (apps/api production build)
+        working-directory: apps/api
+        run: |
+          set -e
+          NODE_ENV=production node dist/index.js &
+          SERVER_PID=$!
+
+          echo "Waiting for server to become healthy..."
+          for i in $(seq 1 30); do
+            if curl -sf http://localhost:3000/api/health > /dev/null; then
+              echo "Server is healthy."
+              break
+            fi
+            if [ "$i" -eq 30 ]; then
+              echo "Server did not become healthy in time."
+              kill "$SERVER_PID" 2>/dev/null || true
+              exit 1
+            fi
+            sleep 1
+          done
+
+          HEALTH_BODY=$(curl -sf http://localhost:3000/api/health)
+          echo "Health response: $HEALTH_BODY"
+          echo "$HEALTH_BODY" | grep -q '"status":"ok"' || (echo "Unexpected health response" && exit 1)
+
+          echo "Sending SIGTERM and verifying graceful shutdown..."
+          kill -TERM "$SERVER_PID"
+          for i in $(seq 1 15); do
+            if ! kill -0 "$SERVER_PID" 2>/dev/null; then
+              echo "Server exited cleanly after SIGTERM."
+              exit 0
+            fi
+            sleep 1
+          done
+          echo "Server did not exit within 15s of SIGTERM."
+          kill -9 "$SERVER_PID" 2>/dev/null || true
+          exit 1

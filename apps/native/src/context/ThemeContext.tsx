@@ -11,7 +11,7 @@ import { themes, ThemeNames, ThemeColors } from "../theme/colors";
 
 type ThemeContextType = {
   currentTheme: ThemeNames;
-  toggleTheme: () => void;
+  toggleTheme: () => void | Promise<void>;
   colors: ThemeColors;
 };
 
@@ -38,7 +38,7 @@ const ThemeProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
         console.warn("[ThemeContext] Failed to load theme from storage", e);
       }
     };
-    getTheme();
+    void getTheme();
   }, []);
 
   const toggleTheme = async () => {

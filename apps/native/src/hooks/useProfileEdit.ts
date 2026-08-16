@@ -78,11 +78,14 @@ export const useProfileEdit = () => {
       }
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: userKeys.all });
+      void queryClient.invalidateQueries({ queryKey: userKeys.all });
       router.back();
     },
     onError: (err) => {
-      if (err instanceof ApiError && err.status === StatusCodes.CONFLICT) {
+      if (
+        err instanceof ApiError &&
+        err.status === Number(StatusCodes.CONFLICT)
+      ) {
         setUsernameError("Username already taken.");
         return;
       }
@@ -100,7 +103,7 @@ export const useProfileEdit = () => {
     onSuccess: (publicUrl) => {
       // Append timestamp to bust React Native's Image cache when the URL is unchanged
       setAvatarUri(`${publicUrl}?t=${Date.now()}`);
-      queryClient.invalidateQueries({ queryKey: userKeys.all });
+      void queryClient.invalidateQueries({ queryKey: userKeys.all });
     },
     onError: () => {
       Alert.alert("Error", "Something went wrong with the avatar upload.");

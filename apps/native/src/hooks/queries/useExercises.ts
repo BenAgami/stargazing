@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 
 import { useAuth } from "@src/context/AuthContext";
 import { exerciseApi, exerciseKeys } from "@src/api";
-import type { ExerciseListResponse } from "@src/types/workout";
+import type { ExerciseListResponse } from "@repo/common";
 
 const PAGE_SIZE = 100;
 

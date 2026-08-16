@@ -27,6 +27,7 @@ import AuthFormFields, {
 } from "@src/components/AuthFormFields";
 import { useRegister } from "@src/hooks/useRegister";
 import { baseColors } from "@src/theme/colors";
+import saturnImage from "@assets/images/saturn.png";
 
 const defaultFormData: RegisterValues = {
   name: "",
@@ -94,7 +95,7 @@ const RegistrationScreen: React.FC = () => {
             </Pressable>
 
             <AuthImageHeader
-              image={require("@assets/images/saturn.png")}
+              image={saturnImage}
               overlay={
                 <LinearGradient
                   colors={["transparent", "rgba(30, 27, 75, 0.8)"]}

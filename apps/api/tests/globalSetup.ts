@@ -1,14 +1,14 @@
 import { execSync } from "node:child_process";
 import path from "node:path";
 
-export default async function globalSetup() {
+const globalSetup = () => {
   if (process.env.NODE_ENV !== "test") {
     throw new Error("globalSetup aborted: NODE_ENV is not 'test'");
   }
 
   if (!process.env.DATABASE_URL?.includes("_test")) {
     throw new Error(
-      "globalSetup aborted: DATABASE_URL does not point to a test database"
+      "globalSetup aborted: DATABASE_URL does not point to a test database",
     );
   }
 
@@ -26,4 +26,6 @@ export default async function globalSetup() {
   }
 
   console.log("Test database migrations applied");
-}
+};
+
+export default globalSetup;

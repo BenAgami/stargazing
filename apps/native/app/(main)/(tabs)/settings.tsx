@@ -42,7 +42,9 @@ const Settings: React.FC = () => {
                   <SwitchRow
                     label="Dark Mode"
                     isEnabled={currentTheme === "dark"}
-                    onToggle={toggleTheme}
+                    onToggle={() => {
+                      void toggleTheme();
+                    }}
                     colors={colors}
                     iconName="moon"
                     iconBackground={baseColors.blue}

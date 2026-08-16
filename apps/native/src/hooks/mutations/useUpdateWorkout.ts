@@ -1,8 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { workoutApi, workoutKeys } from "@src/api";
-import type { UpdateWorkoutValues } from "@repo/common";
-import type { WorkoutWithExercises } from "@src/types/workout";
+import type { UpdateWorkoutValues, WorkoutWithExercises } from "@repo/common";
 
 interface UpdateWorkoutVariables {
   id: number;
@@ -15,7 +14,7 @@ export const useUpdateWorkout = () => {
   return useMutation<WorkoutWithExercises, Error, UpdateWorkoutVariables>({
     mutationFn: ({ id, data }) => workoutApi.update(id, data),
     onSuccess: (updated) => {
-      queryClient.invalidateQueries({ queryKey: workoutKeys.lists() });
+      void queryClient.invalidateQueries({ queryKey: workoutKeys.lists() });
       queryClient.setQueryData(workoutKeys.detail(updated.id), updated);
     },
   });

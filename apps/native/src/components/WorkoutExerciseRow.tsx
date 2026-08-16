@@ -4,7 +4,7 @@ import { Ionicons } from "@expo/vector-icons";
 
 import { useTheme } from "@src/context/ThemeContext";
 import Stepper from "@src/components/Stepper";
-import type { ExerciseType } from "@src/types/workout";
+import type { ExerciseType } from "@repo/common";
 
 export interface DraftExerciseValues {
   sets: number;

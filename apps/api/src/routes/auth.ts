@@ -9,6 +9,8 @@ import {
 } from "@repo/common";
 
 import validateSchema from "../middlewares/validateSchema";
+import authRateLimiter from "../middlewares/authRateLimiter";
+
 import {
   registerUser,
   loginUser,
@@ -20,12 +22,14 @@ const router: Router = Router();
 
 router.post(
   "/register",
+  authRateLimiter,
   validateSchema(z.object({ body: registerSchema })),
   registerUser,
 );
 
 router.post(
   "/login",
+  authRateLimiter,
   validateSchema(z.object({ body: loginSchema })),
   loginUser,
 );

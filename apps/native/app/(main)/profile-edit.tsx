@@ -264,8 +264,12 @@ const ProfileEditScreen: React.FC = () => {
       <AvatarPickerModal
         visible={isAvatarPickerVisible}
         onClose={() => setIsAvatarPickerVisible(false)}
-        onPickLibrary={() => handlePickImage(false)}
-        onPickCamera={() => handlePickImage(true)}
+        onPickLibrary={() => {
+          void handlePickImage(false);
+        }}
+        onPickCamera={() => {
+          void handlePickImage(true);
+        }}
       />
     </SafeAreaView>
   );

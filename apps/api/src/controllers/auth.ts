@@ -22,7 +22,7 @@ import asyncHandler from "../utils/asyncWrapper";
  */
 export const registerUser = asyncHandler(
   async (req: Request, res: Response) => {
-    const { name, email, password }: RegisterValues = req.body;
+    const { name, email, password } = req.body as RegisterValues;
 
     const { user, token, refreshToken } = await authService.register({
       name,
@@ -46,7 +46,7 @@ export const registerUser = asyncHandler(
  * @returns {Object} User data, access token, and refresh token
  */
 export const loginUser = asyncHandler(async (req: Request, res: Response) => {
-  const { email, password }: LoginValues = req.body;
+  const { email, password } = req.body as LoginValues;
 
   const { user, token, refreshToken } = await authService.login({
     email,
@@ -69,7 +69,7 @@ export const loginUser = asyncHandler(async (req: Request, res: Response) => {
  */
 export const refreshUserToken = asyncHandler(
   async (req: Request, res: Response) => {
-    const { refreshToken }: RefreshTokenValues = req.body;
+    const { refreshToken } = req.body as RefreshTokenValues;
 
     const { token, refreshToken: newRefreshToken } =
       await authService.refresh(refreshToken);
@@ -90,7 +90,7 @@ export const refreshUserToken = asyncHandler(
  * @returns {Object} Success message
  */
 export const logoutUser = asyncHandler(async (req: Request, res: Response) => {
-  const { refreshToken }: LogoutValues = req.body;
+  const { refreshToken } = req.body as LogoutValues;
 
   await refreshTokenService.revokeToken(refreshToken);
 

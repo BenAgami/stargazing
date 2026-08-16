@@ -5,6 +5,7 @@ import {
   Controller,
   FieldValues,
   DefaultValues,
+  Path,
 } from "react-hook-form";
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -17,10 +18,10 @@ export type FieldConfig<T> = {
 } & AuthInputProps;
 
 type AuthFormFieldsProps<T extends FieldValues> = {
-  schema: ZodType<any, any>;
+  schema: ZodType<T, T>;
   defaultValues: DefaultValues<T>;
   fields: FieldConfig<T>[];
-  onSubmit: (values: T) => void;
+  onSubmit: (values: T) => void | Promise<void>;
   extraRow?: React.ReactNode;
   renderSubmit: (submit: () => void) => React.ReactNode;
 };
@@ -48,7 +49,7 @@ const AuthFormFields = <T extends FieldValues>({
         <Controller
           key={f.name}
           control={control}
-          name={f.name as any}
+          name={f.name as Path<T>}
           render={({ field }) => {
             const value = field.value;
             const error = errors[f.name]?.message as string | undefined;
@@ -72,7 +73,9 @@ const AuthFormFields = <T extends FieldValues>({
 
       {extraRow}
 
-      {renderSubmit(() => handleSubmit(onSubmit)())}
+      {renderSubmit(() => {
+        void handleSubmit(onSubmit)();
+      })}
     </View>
   );
 };

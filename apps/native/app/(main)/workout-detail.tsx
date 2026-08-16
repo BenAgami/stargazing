@@ -14,7 +14,7 @@ import { router, useLocalSearchParams } from "expo-router";
 import { useTheme } from "@src/context/ThemeContext";
 import { useWorkoutDetail } from "@src/hooks/queries/useWorkoutDetail";
 import { useDeleteWorkout } from "@src/hooks/mutations/useDeleteWorkout";
-import type { WorkoutExerciseHydrated } from "@src/types/workout";
+import type { WorkoutExerciseHydrated } from "@repo/common";
 
 type DetailParams = { id?: string };
 

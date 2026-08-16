@@ -126,7 +126,9 @@ const ProfileScreen: React.FC = () => {
                 styles.signOutButton,
                 { opacity: pressed || isSigningOut ? 0.7 : 1 },
               ]}
-              onPress={handleSignOut}
+              onPress={() => {
+                void handleSignOut();
+              }}
               disabled={isSigningOut}
             >
               <Text style={styles.signOutButtonText}>

@@ -7,6 +7,8 @@
   "scripts": {
     "dev": "tsup --watch",
     "build": "tsup",
+    "lint": "eslint .",
+    "check-types": "tsc --noEmit",
     "clean": "rm -rf dist",
     "db:generate": "prisma generate",
     "db:migrate:dev": "prisma migrate dev",
@@ -32,6 +34,8 @@
     "dotenv": "^17.2.3"
   },
   "devDependencies": {
+    "@repo/eslint-config": "*",
+    "@repo/typescript-config": "*",
     "prisma": "^7.2.0"
   }
 }

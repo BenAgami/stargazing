@@ -9,6 +9,8 @@
     "ios": "expo run:ios",
     "web": "expo start --web",
     "eject": "expo eject",
+    "lint": "eslint .",
+    "check-types": "tsc --noEmit",
     "clean": "rm -rf dist"
   },
   "dependencies": {
@@ -49,8 +51,10 @@
   },
   "devDependencies": {
     "@babel/core": "^7.23.7",
+    "@repo/eslint-config": "*",
     "@expo/webpack-config": "19.0.1",
-    "@types/react": "~19.1.10"
+    "@types/react": "~19.1.10",
+    "eslint-plugin-react-hooks": "^5"
   },
   "expo": {
     "doctor": {

@@ -11,7 +11,6 @@ Mobile-only for v1. Core exercises: push-up, pull-up, dip, squat.
 ```
 apps/api          Express 5 REST API (TypeScript)
 apps/native       React Native + Expo SDK 54 (Expo Router)
-apps/web          Next.js placeholder — out of scope for v1
 packages/database Prisma 7 schema + generated client (@repo/db)
 packages/common   Zod schemas shared across apps (@repo/common)
 packages/ui       React Native component library (@repo/ui)
@@ -25,7 +24,9 @@ Package manager: Yarn Classic 1.22.19. Task runner: Turborepo.
 
 **Always wrap async route handlers** with `asyncWrapper` from `apps/api/src/utils/asyncWrapper.ts`. Never use try/catch in controllers.
 
-**Zod validation at boundaries.** Validate all request bodies in middleware before they reach controllers. Schemas live in `packages/common/src/schemas/`.
+**Zod validation at boundaries.** Validate all request bodies in middleware before they reach controllers. Schemas live in `packages/common/src/validations/`.
+
+**Response shapes are shared, not duplicated.** Server response shapes used by `apps/native` (e.g. `WorkoutWithExercises`, `ExerciseSummary`) and by `apps/api/src/openapi/schemas.ts` are defined once in `packages/common/src/validations/` and imported by both — never hand-rolled a second time in `apps/native/src/types/` or the OpenAPI registry. `@repo/common` schemas stay framework-agnostic (no `.openapi()` calls) since `apps/native` also consumes them; add OpenAPI-only presentation metadata at the registration site in `apps/api/src/openapi/schemas.ts` instead. `apps/native/src/types/` is for local-only UI/form-state shapes that never cross the API boundary.
 
 **HTTP error hierarchy** is in `apps/api/src/errors/`. Throw typed errors (e.g. `NotFoundError`, `UnauthorizedError`) — the error handler catches them.
 
@@ -33,16 +34,11 @@ Package manager: Yarn Classic 1.22.19. Task runner: Turborepo.
 
 **Environment variables** are validated at startup via Zod in `apps/api/src/config/env.ts`. Add new vars there with a schema entry — never read `process.env` directly elsewhere in the API.
 
-## Known Tech Debt — Do NOT Replicate
+**Logging** goes through the structured `pino` logger (`apps/api/src/lib/logger.ts`) — never `console.log`/`console.error` in `apps/api/src`. 5xx errors are always logged regardless of `NODE_ENV`. `pino-http` is the only HTTP request logger — it is mounted in every environment, with `autoLogging` disabled under `test` to keep Vitest output clean; dev readability comes from the logger's `pino-pretty` transport, which stays a devDependency since production sets `transport: undefined`. Every log line carries `service`/`env` via the logger's `base` config, and `Error` objects passed as `err` are run through `pino.stdSerializers.err` — always log errors as `{ err: error }`, never interpolate `error.message`/`error.stack` into the message string yourself. `catch (error)` bindings and rejection handlers are typed `unknown` — never pass one straight to `logger`; normalize it first with `toError` from `apps/api/src/utils/toError.ts` (e.g. `logger.error({ err: toError(error) }, "message")`), since a non-`Error` value passed bare to pino silently replaces your log message with the thrown value. Outside HTTP request context (e.g. the BullMQ worker), derive a `logger.child({ jobId, sessionId })` once per job and log through that child so job logs stay correlated — don't log through the bare `logger` singleton from within job processing.
 
-These exist in the codebase but must not be copied into new code:
+## Linting & Type Checking
 
-- `error: any` in `errorHandler.ts` — use `unknown` + type narrowing
-- `fn: Function` in `asyncWrapper.ts` — use a typed Express handler signature
-- `origin: true` in CORS config — origin wildcard + credentials disables CORS protection
-- `morgan("dev")` active regardless of `NODE_ENV` — log format should differ in production
-- `GET /api/users/:uuid` is unauthenticated — new profile endpoints must require auth
-- `includeInactive` query param on exercises is unguarded — new admin-only params need auth checks
+ESLint 9 flat config (typescript-eslint, type-checked rules) at the repo root in `eslint.config.mjs`, extended by each workspace's own `eslint.config.mjs`. `apps/native` additionally applies `eslint-plugin-react-hooks`. Run `yarn lint` / `yarn check-types` from the root (Turborepo tasks) or per-workspace. `apps/api/tests/**` relaxes the `no-unsafe-*` rules since `supertest`'s `Response#body` is typed `any` by design.
 
 ## Phase 1 Scope (Infrastructure)
 
@@ -53,19 +49,17 @@ What Phase 1 is building:
 - **State machine**: `WorkoutSession.processingStatus` transitions PENDING → PROCESSING → COMPLETED | FAILED; stuck PROCESSING jobs auto-fail after 10 minutes
 - **Custom Expo dev build**: `react-native-vision-camera` + `react-native-fast-tflite` configured in `apps/native`
 
-Phase 1 must also fix the critical tech debt items above (error handler typing, asyncWrapper typing, CORS origin restriction, health check DB probe).
-
 ## Database
 
 PostgreSQL via Prisma 7. Two instances run locally via Docker:
-- `:5432` — development
+- `:5434` — development
 - `:5433` — test
 
 Schema: `packages/database/prisma/schema.prisma`. After schema changes run `yarn workspace @repo/db db:generate` to regenerate the client.
 
 ## Testing
 
-Vitest + Supertest for API integration tests. Tests live in `apps/api/src/tests/integration/`. Each suite wipes relevant tables before running. Never mock the database in integration tests.
+Vitest + Supertest for API integration tests. Tests live in `apps/api/tests/integration/`. Each suite wipes relevant tables before running. Never mock the database in integration tests.
 
 Zero unit tests currently exist — don't add them unless a phase plan explicitly calls for it.
 

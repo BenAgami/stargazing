@@ -8,10 +8,7 @@ node_modules
 # testing
 coverage
 
-# next.js
-.next/
-.swc/
-out/
+# build output
 build
 
 # expo

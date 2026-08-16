@@ -1,0 +1,33 @@
+{
+  "name": "@repo/eslint-config",
+  "version": "0.0.0",
+  "private": true,
+  "publishConfig": {
+    "access": "public"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsup",
+    "check-types": "tsc --noEmit",
+    "clean": "rm -rf dist"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    }
+  },
+  "dependencies": {
+    "@eslint/js": "^9",
+    "typescript-eslint": "^8"
+  },
+  "devDependencies": {
+    "@repo/typescript-config": "*",
+    "tsup": "^8.5.1"
+  },
+  "peerDependencies": {
+    "eslint": "^9"
+  }
+}

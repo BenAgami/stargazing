@@ -15,9 +15,14 @@ import {
   createWorkoutSessionSchema,
   EXPERIENCE_LEVELS,
   GOAL_TYPES,
+  EXERCISE_TYPES,
+  exerciseDetailSchema,
+  workoutWithExercisesSchema,
+  workoutLogResponseSchema,
+  pageMetaSchema,
 } from "@repo/common";
 
-import { Role, GoalStatus, ExerciseType, SessionStatus } from "@repo/db";
+import { Role, GoalStatus, SessionStatus } from "@repo/db";
 
 // ── Primitive helpers ─────────────────────────────────────────────────────────
 
@@ -39,7 +44,7 @@ const RoleEnum = z.enum(enumValues(Role));
 const ExperienceLevelEnum = z.enum(EXPERIENCE_LEVELS);
 const GoalTypeEnum = z.enum(GOAL_TYPES);
 const GoalStatusEnum = z.enum(enumValues(GoalStatus));
-const ExerciseTypeEnum = z.enum(enumValues(ExerciseType));
+const ExerciseTypeEnum = z.enum(EXERCISE_TYPES);
 const SessionStatusEnum = z.enum(enumValues(SessionStatus));
 
 // ── Request bodies (reuse the shared @repo/common schemas) ────────────────────
@@ -120,15 +125,7 @@ export const messageResponse = (description: string) => ({
   },
 });
 
-export const PageMeta = registry.register(
-  "PageMeta",
-  z.object({
-    limit: z.number().int(),
-    offset: z.number().int(),
-    hasMore: z.boolean(),
-    nextOffset: z.number().int().nullable(),
-  }),
-);
+export const PageMeta = registry.register("PageMeta", pageMetaSchema);
 
 export const paginatedData = (itemSchema: z.ZodTypeAny) =>
   z.object({
@@ -252,65 +249,24 @@ export const GoalResponse = registry.register(
 );
 
 // ── Exercise responses ────────────────────────────────────────────────────────
+// Reuses the response shapes shared with apps/native via @repo/common so the
+// two clients of this API can't drift apart.
 
 export const ExerciseResponse = registry.register(
   "Exercise",
-  z.object({
-    id: z.number().int(),
-    code: z.string(),
-    displayName: z.string(),
-    exerciseType: ExerciseTypeEnum,
-    isActive: z.boolean(),
-    description: z.string().nullable(),
-    createdAt: isoDateTime(),
-    updatedAt: isoDateTime(),
-  }),
+  exerciseDetailSchema,
 );
 
 // ── Workout responses ─────────────────────────────────────────────────────────
 
-const WorkoutExerciseRef = z.object({
-  id: z.number().int(),
-  code: z.string(),
-  displayName: z.string(),
-  exerciseType: ExerciseTypeEnum,
-});
-
-const WorkoutExerciseResponse = z.object({
-  id: z.number().int(),
-  workoutId: z.number().int(),
-  exerciseId: z.number().int(),
-  position: z.number().int(),
-  sets: z.number().int(),
-  reps: z.number().int().nullable(),
-  durationSecs: z.number().int().nullable(),
-  restSecs: z.number().int(),
-  createdAt: isoDateTime(),
-  exercise: WorkoutExerciseRef,
-});
-
 export const WorkoutResponse = registry.register(
   "Workout",
-  z.object({
-    id: z.number().int(),
-    userId: z.number().int(),
-    name: z.string(),
-    createdAt: isoDateTime(),
-    updatedAt: isoDateTime(),
-    exercises: z.array(WorkoutExerciseResponse),
-  }),
+  workoutWithExercisesSchema,
 );
 
 export const WorkoutLogResponse = registry.register(
   "WorkoutLog",
-  z.object({
-    id: z.number().int(),
-    userId: z.number().int(),
-    workoutId: z.number().int(),
-    completedAt: isoDateTime(),
-    durationSecs: z.number().int(),
-    createdAt: isoDateTime(),
-  }),
+  workoutLogResponseSchema,
 );
 
 // ── Workout session responses ─────────────────────────────────────────────────

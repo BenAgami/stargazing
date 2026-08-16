@@ -39,7 +39,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
         setIsLoading(false);
       }
     };
-    loadToken();
+    void loadToken();
   }, []);
 
   useEffect(() => {

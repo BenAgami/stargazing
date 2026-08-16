@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient, ExerciseType } from "../generated/prisma/client";
 
@@ -36,7 +35,7 @@ const exercises = [
   },
 ];
 
-async function main() {
+const main = async () => {
   for (const exercise of exercises) {
     await prisma.exercise.upsert({
       where: { code: exercise.code },
@@ -52,10 +51,10 @@ async function main() {
       },
     });
   }
-}
+};
 
 main()
-  .catch(async (error) => {
+  .catch((error: unknown) => {
     console.error(error);
     process.exit(1);
   })
