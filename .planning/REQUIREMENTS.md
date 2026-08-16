@@ -86,63 +86,65 @@ Deferred to future release. Tracked but not in current roadmap.
 
 Explicitly excluded. Documented to prevent scope creep.
 
-| Feature | Reason |
-|---------|--------|
-| Auto-detect exercise from video | Pose estimation alone cannot reliably distinguish bodyweight movements (~60-70% accuracy). User must select exercise before recording. |
-| In-app social feed | Social content moderation + feed ranking is a separate product. Dilutes focus from AI coaching. |
-| Nutrition / meal planning | Regulated domain, doubles product surface, does not advance core value |
-| Wearable integration | Adds third SDK surface; biometric data doesn't improve form analysis quality |
-| Live video streaming / virtual trainer | WebRTC + server-side real-time AI inference is extreme infrastructure complexity |
-| Full exercise catalog AI coverage (2500+) | Deep accuracy on 4 core moves beats shallow coverage on hundreds |
-| Web app as primary surface | Mobile-first; Next.js app remains a placeholder |
+| Feature                                   | Reason                                                                                                                                 |
+| ----------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| Auto-detect exercise from video           | Pose estimation alone cannot reliably distinguish bodyweight movements (~60-70% accuracy). User must select exercise before recording. |
+| In-app social feed                        | Social content moderation + feed ranking is a separate product. Dilutes focus from AI coaching.                                        |
+| Nutrition / meal planning                 | Regulated domain, doubles product surface, does not advance core value                                                                 |
+| Wearable integration                      | Adds third SDK surface; biometric data doesn't improve form analysis quality                                                           |
+| Live video streaming / virtual trainer    | WebRTC + server-side real-time AI inference is extreme infrastructure complexity                                                       |
+| Full exercise catalog AI coverage (2500+) | Deep accuracy on 4 core moves beats shallow coverage on hundreds                                                                       |
+| Web app as primary surface                | Mobile-first; Next.js app remains a placeholder                                                                                        |
 
 ## Traceability
 
 Which phases cover which requirements. Updated during roadmap creation.
 
-| Requirement | Phase | Status |
-|-------------|-------|--------|
-| INFRA-01 | Phase 1 | Pending |
-| INFRA-02 | Phase 1 | Pending |
-| INFRA-03 | Phase 1 | Pending |
-| INFRA-04 | Phase 1 | Pending |
-| INFRA-05 | Phase 1 | Pending |
-| PROF-01 | Phase 2 | Complete |
-| PROF-02 | Phase 2 | Complete |
-| PROF-03 | Phase 2 | Complete |
-| PROF-04 | Phase 2 | Complete |
-| PROF-05 | Phase 2 | Complete |
-| WKT-01 | Phase 3 | Pending |
-| WKT-02 | Phase 3 | Pending |
-| WKT-03 | Phase 3 | Pending |
-| WKT-04 | Phase 3 | Pending |
-| WKT-05 | Phase 4 | Pending |
-| WKT-06 | Phase 4 | Pending |
-| WKT-07 | Phase 4 | Pending |
-| FORM-01 | Phase 5 | Pending |
-| FORM-02 | Phase 5 | Pending |
-| FORM-03 | Phase 5 | Pending |
-| FORM-04 | Phase 5 | Pending |
-| FORM-05 | Phase 5 | Pending |
-| FORM-06 | Phase 5 | Pending |
-| FORM-07 | Phase 5 | Pending |
-| FORM-08 | Phase 5 | Pending |
-| RT-01 | Phase 6 | Pending |
-| RT-02 | Phase 6 | Pending |
-| RT-03 | Phase 6 | Pending |
-| RT-04 | Phase 6 | Pending |
-| PROG-01 | Phase 7 | Pending |
-| PROG-02 | Phase 7 | Pending |
-| PROG-03 | Phase 7 | Pending |
-| PROG-04 | Phase 7 | Pending |
-| NOTF-01 | Phase 2 | Complete |
-| NOTF-02 | Phase 5 | Pending |
+| Requirement | Phase   | Status   |
+| ----------- | ------- | -------- |
+| INFRA-01    | Phase 1 | Pending  |
+| INFRA-02    | Phase 1 | Pending  |
+| INFRA-03    | Phase 1 | Pending  |
+| INFRA-04    | Phase 1 | Pending  |
+| INFRA-05    | Phase 1 | Pending  |
+| PROF-01     | Phase 2 | Complete |
+| PROF-02     | Phase 2 | Complete |
+| PROF-03     | Phase 2 | Complete |
+| PROF-04     | Phase 2 | Complete |
+| PROF-05     | Phase 2 | Complete |
+| WKT-01      | Phase 3 | Pending  |
+| WKT-02      | Phase 3 | Pending  |
+| WKT-03      | Phase 3 | Pending  |
+| WKT-04      | Phase 3 | Pending  |
+| WKT-05      | Phase 4 | Pending  |
+| WKT-06      | Phase 4 | Pending  |
+| WKT-07      | Phase 4 | Pending  |
+| FORM-01     | Phase 5 | Pending  |
+| FORM-02     | Phase 5 | Pending  |
+| FORM-03     | Phase 5 | Pending  |
+| FORM-04     | Phase 5 | Pending  |
+| FORM-05     | Phase 5 | Pending  |
+| FORM-06     | Phase 5 | Pending  |
+| FORM-07     | Phase 5 | Pending  |
+| FORM-08     | Phase 5 | Pending  |
+| RT-01       | Phase 6 | Pending  |
+| RT-02       | Phase 6 | Pending  |
+| RT-03       | Phase 6 | Pending  |
+| RT-04       | Phase 6 | Pending  |
+| PROG-01     | Phase 7 | Pending  |
+| PROG-02     | Phase 7 | Pending  |
+| PROG-03     | Phase 7 | Pending  |
+| PROG-04     | Phase 7 | Pending  |
+| NOTF-01     | Phase 2 | Complete |
+| NOTF-02     | Phase 5 | Pending  |
 
 **Coverage:**
+
 - v1 requirements: 35 total
 - Mapped to phases: 35
 - Unmapped: 0 ✓
 
 ---
-*Requirements defined: 2026-03-21*
-*Last updated: 2026-03-21 after initial definition*
+
+_Requirements defined: 2026-03-21_
+_Last updated: 2026-03-21 after initial definition_

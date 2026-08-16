@@ -8,17 +8,18 @@ type AsyncHandler<
 > = (
   req: Request<P, ResBody, ReqBody, ReqQuery>,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => Promise<unknown>;
 
-const asyncHandler = <
-  P = Record<string, string>,
-  ResBody = unknown,
-  ReqBody = unknown,
-  ReqQuery = qs.ParsedQs,
->(
-  fn: AsyncHandler<P, ResBody, ReqBody, ReqQuery>,
-): RequestHandler<P, ResBody, ReqBody, ReqQuery> =>
+const asyncHandler =
+  <
+    P = Record<string, string>,
+    ResBody = unknown,
+    ReqBody = unknown,
+    ReqQuery = qs.ParsedQs,
+  >(
+    fn: AsyncHandler<P, ResBody, ReqBody, ReqQuery>,
+  ): RequestHandler<P, ResBody, ReqBody, ReqQuery> =>
   (req, res, next): void => {
     Promise.resolve(fn(req, res, next)).catch(next);
   };

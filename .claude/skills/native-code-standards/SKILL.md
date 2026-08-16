@@ -39,12 +39,14 @@ packages/database     ← Prisma schema + generated client. No business logic.
 Domain models, API response shapes, request bodies, and enums are defined **once** in `packages/common/src/` and imported everywhere. There is no reason for the same shape to exist in both `apps/api` and `apps/native`.
 
 **What goes in @repo/common:**
+
 - Zod schemas + their inferred types (`z.infer<typeof schema>`)
 - API response shapes (what the server returns, what the client receives)
 - Domain enums (`ExperienceLevel`, `GoalType`, `ProcessingStatus`)
 - Validation error messages (already in `packages/common/src/constants/messages.ts`)
 
 **What stays local to apps/native/src/types/:**
+
 - UI-only state shapes (form drafts, local component state interfaces)
 - Props interfaces that don't cross the API boundary
 
@@ -87,6 +89,7 @@ After adding, run: `yarn workspace @repo/common build` to regenerate.
 `apps/native/src/lib/api.ts` is the HTTP primitive. It is not called from hooks, components, or screens. It is called **only** from `apps/native/src/services/`.
 
 Services are thin wrappers that:
+
 1. Call `apiClient` with the correct path + token
 2. Return a typed value using a type from `@repo/common`
 3. Do nothing else — no state, no side effects, no UI logic
@@ -101,12 +104,16 @@ export const userService = {
   getMe: (token: string): Promise<UserProfile> =>
     apiClient.get<UserProfile>(USER_ROUTES.me, token),
 
-  updateProfile: (token: string, data: UpdateProfileValues): Promise<UserProfile> =>
+  updateProfile: (
+    token: string,
+    data: UpdateProfileValues,
+  ): Promise<UserProfile> =>
     apiClient.patch<UserProfile>(USER_ROUTES.me, data, token),
 };
 ```
 
 **Services never:**
+
 - Import React or hooks
 - Hold state
 - Call `router`
@@ -135,7 +142,10 @@ export function useProfile() {
   const [error, setError] = useState<string | null>(null);
 
   const fetchUser = useCallback(async () => {
-    if (!token) { router.replace("/(auth)/login"); return; }
+    if (!token) {
+      router.replace("/(auth)/login");
+      return;
+    }
     setLoading(true);
     setError(null);
     try {
@@ -151,7 +161,11 @@ export function useProfile() {
     }
   }, [token]);
 
-  useFocusEffect(useCallback(() => { fetchUser(); }, [fetchUser]));
+  useFocusEffect(
+    useCallback(() => {
+      fetchUser();
+    }, [fetchUser]),
+  );
 
   return { user, loading, error };
 }
@@ -170,6 +184,7 @@ Use TanStack Query instead of manual `useState`/`useEffect` patterns when any of
 - You want **deduplication** of parallel fetches to the same endpoint
 
 Stick to manual `useState` + `useCallback` for:
+
 - Fire-and-forget side effects (e.g. logging an event)
 - Streaming/SSE data that doesn't fit the request-response model
 - Local UI state that never touches the network
@@ -218,6 +233,7 @@ export function useUpdateProfile() {
 ```
 
 **Query key conventions:**
+
 - First element is the resource name: `["profile"]`, `["sessions"]`, `["exercises"]`
 - Add scoping params after: `["sessions", sessionId]`, `["profile", token]`
 - Keep keys in a constants file when they're shared across hooks:
@@ -238,6 +254,7 @@ export const QUERY_KEYS = {
 ## Rule 4 — Screens Are Thin
 
 A screen file contains JSX and wiring. It does not contain:
+
 - `try/catch` blocks
 - `async` functions beyond trivial event handlers
 - Direct `apiClient` or `fetch` calls
@@ -324,6 +341,7 @@ style={{ color: colors.error, fontSize: typography.sm }}
 Never hardcode API keys, auth tokens, credentials, or service URLs in source files. This includes `.ts`, `.tsx`, `.json`, and config files committed to the repo.
 
 **The pattern:**
+
 1. Add the variable to `apps/native/.env` (gitignored)
 2. Expose it via `app.json` → `extra` → accessed via `expo-constants`
 3. Or for server-side: add to `apps/api/src/config/env.ts` with a Zod schema entry
@@ -346,16 +364,16 @@ If you're writing a URL, key, or token as a string literal — stop. Put it in `
 
 This project targets **Expo SDK 54** and modern React Native. Use current APIs.
 
-| Deprecated | Use Instead |
-|---|---|
-| `TouchableOpacity` | `Pressable` |
-| `TouchableHighlight` | `Pressable` |
-| `TouchableNativeFeedback` | `Pressable` |
-| `ActivityIndicator` from `react-native` in new UI | Keep using it — it's fine |
-| `StyleSheet.create` with magic values | `StyleSheet.create` + theme tokens |
-| `AsyncStorage` from `@react-native-async-storage/async-storage` without error handling | Always wrap with try/catch |
-| `console.log` left in committed code | Remove or use a proper logger |
-| `useNavigation()` for push/replace | `router` from `expo-router` |
+| Deprecated                                                                             | Use Instead                        |
+| -------------------------------------------------------------------------------------- | ---------------------------------- |
+| `TouchableOpacity`                                                                     | `Pressable`                        |
+| `TouchableHighlight`                                                                   | `Pressable`                        |
+| `TouchableNativeFeedback`                                                              | `Pressable`                        |
+| `ActivityIndicator` from `react-native` in new UI                                      | Keep using it — it's fine          |
+| `StyleSheet.create` with magic values                                                  | `StyleSheet.create` + theme tokens |
+| `AsyncStorage` from `@react-native-async-storage/async-storage` without error handling | Always wrap with try/catch         |
+| `console.log` left in committed code                                                   | Remove or use a proper logger      |
+| `useNavigation()` for push/replace                                                     | `router` from `expo-router`        |
 
 ```tsx
 // WRONG — in login.tsx
@@ -410,8 +428,12 @@ Enums from `@repo/common` schemas eliminate stringly-typed fields:
 experienceLevel: string; // "BEGINNER" | "INTERMEDIATE" | "ADVANCED" — but invisible
 
 // RIGHT — define once in @repo/common
-export const EXPERIENCE_LEVELS = ["BEGINNER", "INTERMEDIATE", "ADVANCED"] as const;
-export type ExperienceLevel = typeof EXPERIENCE_LEVELS[number];
+export const EXPERIENCE_LEVELS = [
+  "BEGINNER",
+  "INTERMEDIATE",
+  "ADVANCED",
+] as const;
+export type ExperienceLevel = (typeof EXPERIENCE_LEVELS)[number];
 // Use everywhere: experienceLevel: ExperienceLevel
 ```
 

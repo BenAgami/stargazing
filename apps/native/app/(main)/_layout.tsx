@@ -27,7 +27,11 @@ const MainLayout: React.FC = () => {
       />
       <Stack.Screen
         name="workout-execute"
-        options={{ headerShown: true, title: "Workout in progress", gestureEnabled: false }}
+        options={{
+          headerShown: true,
+          title: "Workout in progress",
+          gestureEnabled: false,
+        }}
       />
       <Stack.Screen
         name="workout-builder"

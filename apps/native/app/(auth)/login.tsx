@@ -74,7 +74,10 @@ const SignInScreen: React.FC = () => {
         >
           <Pressable
             onPress={() => router.push("/")}
-            style={({ pressed }) => [styles.backButton, pressed && styles.pressed]}
+            style={({ pressed }) => [
+              styles.backButton,
+              pressed && styles.pressed,
+            ]}
           >
             <Text style={styles.backButtonText}>{"←"}</Text>
           </Pressable>
@@ -95,9 +98,7 @@ const SignInScreen: React.FC = () => {
             />
 
             <View style={styles.formContainer}>
-              {error && (
-                <Text style={styles.errorText}>{error}</Text>
-              )}
+              {error && <Text style={styles.errorText}>{error}</Text>}
               <AuthFormFields
                 schema={loginSchema}
                 defaultValues={defaultFormData}
@@ -112,7 +113,10 @@ const SignInScreen: React.FC = () => {
                 }
                 renderSubmit={(submit) => (
                   <Pressable
-                    style={({ pressed }) => [styles.submitButton, pressed && styles.pressed]}
+                    style={({ pressed }) => [
+                      styles.submitButton,
+                      pressed && styles.pressed,
+                    ]}
                     onPress={submit}
                   >
                     <LinearGradient

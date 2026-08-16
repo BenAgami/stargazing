@@ -7,6 +7,7 @@
 **Overall:** Turborepo monorepo with layered REST API backend, React Native mobile client, and Next.js web client. Shared packages provide the database layer and common validation schemas.
 
 **Key Characteristics:**
+
 - Three-tier API: Routes → Controllers → Services, all wired through Express 5
 - Database access is centralised in `packages/database` (`@repo/db`); no other app touches Prisma directly
 - Zod schemas are defined once in `packages/common` (`@repo/common`) and imported by both the API and the native client for runtime validation
@@ -16,16 +17,19 @@
 ## Layers (API — `apps/api`)
 
 **Entry Point:**
+
 - Purpose: Boot sequence — validates env, connects Prisma, starts Express
 - Location: `apps/api/src/index.ts`
 - Depends on: `@repo/db` (connectPrisma), `./config/env`, `./app`
 
 **App Factory:**
+
 - Purpose: Registers global middleware and mounts route groups
 - Location: `apps/api/src/app.ts`
 - Middleware stack (in order): helmet → cors → json → urlencoded → morgan → `/api` routes → 404 handler → errorHandler
 
 **Routes Layer:**
+
 - Purpose: Declares HTTP verbs + paths, wires middleware + controller functions
 - Location: `apps/api/src/routes/`
 - Key files:
@@ -37,6 +41,7 @@
 - Depends on: Middleware (`validateSchema`, `authenticateToken`, `authorize`), Controllers
 
 **Controllers Layer:**
+
 - Purpose: Parse validated request data, call service, format JSON response
 - Location: `apps/api/src/controllers/`
 - Key files:
@@ -47,6 +52,7 @@
 - Depends on: Services, `@repo/common` (typed DTOs)
 
 **Services Layer:**
+
 - Purpose: Business logic, data access via Prisma, error throwing
 - Location: `apps/api/src/services/`
 - Key files:
@@ -57,6 +63,7 @@
 - Depends on: `@repo/db` (getPrismaClient, enums), `@repo/common` (value types), `apps/api/src/errors/*`
 
 **Middleware Layer:**
+
 - Purpose: Cross-cutting request concerns
 - Location: `apps/api/src/middlewares/`
 - Key files:
@@ -66,6 +73,7 @@
   - `apps/api/src/middlewares/errorHandler.ts` — terminal Express error middleware; reads `error.status`
 
 **Error Layer:**
+
 - Purpose: Typed HTTP error classes; carry a `status` property consumed by `errorHandler`
 - Location: `apps/api/src/errors/`
 - Base: `ApiError` extends `Error` with `status` + `statusCode`
@@ -74,6 +82,7 @@
 ## Data Flow
 
 **Authenticated Request:**
+
 1. Request arrives at Express
 2. `helmet` / `cors` / `morgan` middleware execute
 3. Route-level `validateSchema` parses and coerces `body`, `query`, `params` via Zod; returns 400 on failure
@@ -87,41 +96,49 @@
 11. On error path: `errorHandler` middleware reads `error.status` and sends a `{ success: false, message }` response
 
 **Unauthenticated Request (register/login):**
+
 - Steps 1–4 run without `authenticateToken`
 - `validateSchema` still enforces Zod schemas from `@repo/common`
 
 **State Management (Native App):**
+
 - Theme preference persisted to `AsyncStorage` via `ThemeContext` (`apps/native/src/context/ThemeContext.tsx`)
 - No global auth state management present yet (login handlers are stubbed in `apps/native/app/(auth)/login.tsx`)
 
 ## Key Abstractions
 
 **`asyncWrapper`:**
+
 - Purpose: Eliminates try/catch boilerplate in controllers
 - Location: `apps/api/src/utils/asyncWrapper.ts`
 - Pattern: `(fn) => (req, res, next) => Promise.resolve(fn(req, res, next)).catch(next)`
 
 **`validateSchema` middleware:**
+
 - Purpose: Single validation point; routes pass a Zod schema wrapping `body`, `query`, and `params`
 - Location: `apps/api/src/middlewares/validateSchema.ts`
 - Pattern: `validateSchema(z.object({ body: someSchema, query: otherSchema }))`
 
 **`@repo/db` package:**
+
 - Purpose: Wraps Prisma client lifecycle; exports `connectPrisma`, `disconnectPrisma`, `getPrismaClient`, and all generated Prisma types/enums
 - Location: `packages/database/src/prisma.ts`, `packages/database/src/index.ts`
 - Uses `@prisma/adapter-pg` (native pg driver adapter) instead of Prisma's default driver
 
 **`@repo/common` package:**
+
 - Purpose: Shared Zod schemas and inferred TypeScript types consumed by both API and native client
 - Location: `packages/common/src/validations/auth.ts`, `packages/common/src/validations/workoutSession.ts`
 - Exports: `loginSchema`, `registerSchema`, `createWorkoutSessionSchema` and their inferred `*Values` types
 
 **`@repo/ui` package:**
+
 - Purpose: Shared React Native UI primitives, primarily auth-screen components
 - Location: `packages/ui/src/`
 - Exports: `AuthHeader`, `AuthInput`, `AuthImageHeader`, `AuthFooter`, `AuthOrDivider`, `GoogleSignInButton`, `AuthRememberRow`, `ScreenHeader`, `SwitchRow`
 
 **Offset Pagination Pattern:**
+
 - All list endpoints (exercises, sessions) use `limit + 1` over-fetch to determine `hasMore`
 - Response shape: `{ items, page: { limit, offset, hasMore, nextOffset } }`
 - Implemented in: `apps/api/src/services/exerciseService.ts`, `apps/api/src/services/workoutSessionService.ts`
@@ -129,16 +146,19 @@
 ## Entry Points
 
 **API Server:**
+
 - Location: `apps/api/src/index.ts`
 - Triggers: `node dist/index.js` (prod) / `tsx watch` (dev)
 - Responsibilities: Env validation, Prisma connect, Express listen, graceful SIGINT/SIGTERM shutdown
 
 **Native App:**
+
 - Location: `apps/native/app/_layout.tsx`
 - Triggers: `expo start`
 - Responsibilities: Root Stack navigator setup, `ThemeProvider` wrapping, `SafeAreaProvider`
 
 **Web App:**
+
 - Location: `apps/web/app/layout.tsx`, `apps/web/app/page.tsx`
 - Triggers: `next dev` / `next build`
 - Responsibilities: Minimal Next.js 14 app router scaffold (largely a placeholder)
@@ -148,6 +168,7 @@
 **Strategy:** Typed error class hierarchy; all async errors funnel to Express's global error handler via `asyncWrapper`
 
 **Patterns:**
+
 - Services throw `ApiError` subclasses (`NotFoundError`, `ConflictError`, etc.) which carry the correct HTTP status code
 - `validateSchema` middleware returns 400 directly without throwing (does not forward to `errorHandler`)
 - `errorHandler` uses `error.status || 500` — custom errors are transparently mapped to HTTP status codes
@@ -165,4 +186,4 @@
 
 ---
 
-*Architecture analysis: 2026-03-21*
+_Architecture analysis: 2026-03-21_

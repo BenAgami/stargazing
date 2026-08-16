@@ -54,10 +54,10 @@ registry.registerPath({
         .min(0)
         .optional()
         .openapi({ description: "Number of items to skip", example: 0 }),
-      exerciseCode: z
-        .string()
-        .optional()
-        .openapi({ description: "Filter by exercise code", example: "push-up" }),
+      exerciseCode: z.string().optional().openapi({
+        description: "Filter by exercise code",
+        example: "push-up",
+      }),
     }),
   },
   responses: {

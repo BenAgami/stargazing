@@ -111,9 +111,7 @@ const RegistrationScreen: React.FC = () => {
               />
 
               <View style={styles.formContainer}>
-                {error && (
-                  <Text style={styles.errorText}>{error}</Text>
-                )}
+                {error && <Text style={styles.errorText}>{error}</Text>}
                 <AuthFormFields
                   schema={registerSchema}
                   defaultValues={defaultFormData}
