@@ -9,6 +9,9 @@ import type {
 import NotFoundError from "../errors/NotFoundError";
 import BadRequestError from "../errors/BadRequestError";
 
+import { lookAheadTake, paginate } from "../utils/pagination";
+import { parseOptionalDate } from "../utils/parseDate";
+
 type ListWorkoutsInput = {
   userUuid: string;
   limit: number;
@@ -77,20 +80,11 @@ export class WorkoutService {
       where: { userId },
       orderBy: [{ updatedAt: "desc" }, { id: "desc" }],
       skip: input.offset,
-      take: input.limit + 1,
+      take: lookAheadTake(input.limit),
       include: workoutInclude,
     });
-    const hasMore = workouts.length > input.limit;
-    const items = hasMore ? workouts.slice(0, input.limit) : workouts;
-    return {
-      items,
-      page: {
-        limit: input.limit,
-        offset: input.offset,
-        hasMore,
-        nextOffset: hasMore ? input.offset + input.limit : null,
-      },
-    };
+
+    return paginate(workouts, input.limit, input.offset);
   }
 
   async getWorkoutById(userUuid: string, workoutId: number) {
@@ -201,12 +195,7 @@ export class WorkoutService {
     });
     if (!workout) throw new NotFoundError("Workout not found");
 
-    const completedAt = data.completedAt
-      ? new Date(data.completedAt)
-      : undefined;
-    if (completedAt && Number.isNaN(completedAt.getTime())) {
-      throw new BadRequestError("Invalid completedAt value");
-    }
+    const completedAt = parseOptionalDate(data.completedAt, "completedAt");
 
     return this.prisma.workoutLog.create({
       data: {

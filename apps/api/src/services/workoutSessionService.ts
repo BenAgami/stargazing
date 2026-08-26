@@ -2,9 +2,10 @@ import { getPrismaClient, SessionStatus } from "@repo/db";
 import { CreateWorkoutSessionValues } from "@repo/common";
 
 import NotFoundError from "../errors/NotFoundError";
-import BadRequestError from "../errors/BadRequestError";
 
 import { normalizeString } from "../utils/normalizeString";
+import { lookAheadTake, paginate } from "../utils/pagination";
+import { parseOptionalDate } from "../utils/parseDate";
 
 type ListWorkoutSessionsInput = {
   userUuid: string;
@@ -54,12 +55,7 @@ export class WorkoutSessionService {
     const exerciseCode = normalizeString(data.exerciseCode);
     const exercise = await this.getExerciseByCode(exerciseCode);
 
-    const performedAt = data.performedAt
-      ? new Date(data.performedAt)
-      : undefined;
-    if (performedAt && Number.isNaN(performedAt.getTime())) {
-      throw new BadRequestError("Invalid performedAt value");
-    }
+    const performedAt = parseOptionalDate(data.performedAt, "performedAt");
 
     const session = await this.prisma.workoutSession.create({
       data: {
@@ -104,7 +100,7 @@ export class WorkoutSessionService {
       },
       orderBy: [{ performedAt: "desc" }, { id: "desc" }],
       skip: offset,
-      take: limit + 1,
+      take: lookAheadTake(limit),
       include: {
         exercise: {
           select: {
@@ -123,18 +119,7 @@ export class WorkoutSessionService {
       },
     });
 
-    const hasMore = sessions.length > limit;
-    const items = hasMore ? sessions.slice(0, limit) : sessions;
-
-    return {
-      items,
-      page: {
-        limit,
-        offset,
-        hasMore,
-        nextOffset: hasMore ? offset + limit : null,
-      },
-    };
+    return paginate(sessions, limit, offset);
   }
 }
 
