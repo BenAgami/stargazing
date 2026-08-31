@@ -17,6 +17,7 @@ const validateSchema =
       if (error instanceof ZodError) {
         const errorMessage = getZodErrorMessage(error);
         res.status(StatusCodes.BAD_REQUEST).json({
+          success: false,
           message: "Validation Error",
           details: errorMessage,
         });
