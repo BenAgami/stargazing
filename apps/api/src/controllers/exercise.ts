@@ -7,9 +7,9 @@ import exerciseService from "../services/exerciseService";
 import ForbiddenError from "../errors/ForbiddenError";
 
 type ListExercisesQuery = {
-  limit?: string;
-  offset?: string;
-  includeInactive?: string;
+  limit?: number;
+  offset?: number;
+  includeInactive?: boolean;
 };
 
 /**
@@ -20,10 +20,9 @@ export const listExercises = async (
   req: Request<unknown, unknown, unknown, ListExercisesQuery>,
   res: Response,
 ) => {
-  const limit = req.query.limit ? Number(req.query.limit) : 20;
-  const offset = req.query.offset ? Number(req.query.offset) : 0;
-  const shouldIncludeInactive =
-    req.query.includeInactive === "true" || req.query.includeInactive === "1";
+  const limit = req.query.limit ?? 20;
+  const offset = req.query.offset ?? 0;
+  const shouldIncludeInactive = req.query.includeInactive ?? false;
 
   if (shouldIncludeInactive && req.user?.role !== Role.ADMIN) {
     throw new ForbiddenError(

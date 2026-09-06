@@ -12,20 +12,21 @@ import {
   jsonBody,
 } from "../helpers/expressMocks";
 
-const run = (schema: ZodType, req: Partial<Request>) => {
+const run = async (schema: ZodType, reqOverrides: Partial<Request>) => {
+  const req = createMockRequest(reqOverrides);
   const res = createMockResponse();
   const next = createMockNext();
 
-  validateSchema(schema)(createMockRequest(req), res, next);
+  await validateSchema(schema)(req, res, next);
 
-  return { res, next };
+  return { req, res, next };
 };
 
 const bodySchema = z.object({ body: z.object({ email: z.email() }) });
 
 describe("validateSchema", () => {
-  it("calls next with no arguments when the request is valid", () => {
-    const { res, next } = run(bodySchema, {
+  it("calls next with no arguments when the request is valid", async () => {
+    const { res, next } = await run(bodySchema, {
       body: { email: "user@example.com" },
     });
 
@@ -34,14 +35,14 @@ describe("validateSchema", () => {
     expect(res.status).not.toHaveBeenCalled();
   });
 
-  it("validates body, query and params together", () => {
+  it("validates body, query and params together", async () => {
     const schema = z.object({
       body: z.object({ name: z.string() }),
       query: z.object({ limit: z.string() }),
       params: z.object({ id: z.string() }),
     });
 
-    const valid = run(schema, {
+    const valid = await run(schema, {
       body: { name: "push day" },
       query: { limit: "10" },
       params: { id: "7" },
@@ -49,7 +50,7 @@ describe("validateSchema", () => {
     expect(valid.next).toHaveBeenCalledWith();
 
     // Dropping any one of the three sources must fail validation.
-    const missingParams = run(schema, {
+    const missingParams = await run(schema, {
       body: { name: "push day" },
       query: { limit: "10" },
       params: {},
@@ -60,8 +61,8 @@ describe("validateSchema", () => {
     );
   });
 
-  it("responds 400 with details built by getZodErrorMessage", () => {
-    const { res, next } = run(bodySchema, { body: { email: "nope" } });
+  it("responds 400 with details built by getZodErrorMessage", async () => {
+    const { res, next } = await run(bodySchema, { body: { email: "nope" } });
 
     const expected = getZodErrorMessage(
       bodySchema.safeParse({ body: { email: "nope" }, query: {}, params: {} })
@@ -77,15 +78,65 @@ describe("validateSchema", () => {
     expect(next).not.toHaveBeenCalled();
   });
 
-  it("forwards a non-ZodError to next and leaves the response untouched", () => {
+  it("forwards a non-ZodError to next and leaves the response untouched", async () => {
     const boom = new Error("schema exploded");
     const throwingSchema = z.custom(() => {
       throw boom;
     });
 
-    const { res, next } = run(throwingSchema, { body: {} });
+    const { res, next } = await run(throwingSchema, { body: {} });
 
     expect(next).toHaveBeenCalledWith(boom);
     expect(res.status).not.toHaveBeenCalled();
+  });
+
+  it("assigns the parsed (coerced/transformed) values back onto req.body and req.params", async () => {
+    const schema = z.object({
+      body: z.object({ name: z.string().trim() }),
+      params: z.object({ id: z.coerce.number() }),
+    });
+
+    const { req, next } = await run(schema, {
+      body: { name: "  push day  " },
+      params: { id: "42" },
+    });
+
+    expect(req.body).toEqual({ name: "push day" });
+    expect(req.params).toEqual({ id: 42 });
+    expect(next).toHaveBeenCalledWith();
+  });
+
+  it("overwrites req.query even when it is a getter-only accessor, as in Express 5", async () => {
+    const schema = z.object({ query: z.object({ limit: z.coerce.number() }) });
+    const res = createMockResponse();
+    const next = createMockNext();
+
+    const req = { body: {}, params: {} } as Request;
+    Object.defineProperty(req, "query", {
+      configurable: true,
+      enumerable: true,
+      get: () => ({ limit: "5" }),
+    });
+
+    await validateSchema(schema)(req, res, next);
+
+    expect(req.query).toEqual({ limit: 5 });
+    expect(next).toHaveBeenCalledWith();
+  });
+
+  it("leaves req.body and req.query untouched when the schema only validates params", async () => {
+    const schema = z.object({ params: z.object({ id: z.string() }) });
+    const originalBody = { untouched: true };
+    const originalQuery = { untouched: "true" };
+
+    const { req, next } = await run(schema, {
+      body: originalBody,
+      query: originalQuery,
+      params: { id: "7" },
+    });
+
+    expect(req.body).toBe(originalBody);
+    expect(req.query).toBe(originalQuery);
+    expect(next).toHaveBeenCalledWith();
   });
 });
